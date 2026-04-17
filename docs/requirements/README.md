@@ -12,6 +12,7 @@ docs/requirements/
   epics/
   features/
   tasks/
+  templates/
 ```
 
 ## 문서 구성
@@ -19,6 +20,7 @@ docs/requirements/
 - `epics/` — Epic 문서
 - `features/` — Feature 문서
 - `tasks/` — Task 문서
+- `templates/` — Epic/Feature/Task 작성 시 참고하는 기본 템플릿
 
 ## 읽는 순서
 
@@ -35,3 +37,8 @@ docs/requirements/
 ## 관련 규칙
 
 - 요구사항 문서 작성 및 운영 규칙: `../process/phase-1.md`
+- Epic 기본 템플릿: `./templates/EPIC-TEMPLATE.md`
+- Feature 기본 템플릿: `./templates/FEATURE-TEMPLATE.md`
+- Task 기본 템플릿: `./templates/TASK-TEMPLATE.md`
+- 추후 계획 공용 문서: `../roadmap/README.md`
+- 현재 진행 계획 문서: `../process/current-plan.md`
