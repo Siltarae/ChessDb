@@ -3,14 +3,21 @@
   "version": "0.0.0",
   "private": true,
   "description": "Chess DB Monorepo",
+  "packageManager": "pnpm@10.19.0",
   "engines": {
     "node": ">=22.0.0",
     "pnpm": ">=10.0.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "dev": "turbo run dev"
   },
   "keywords": [],
   "author": "Siltarae",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "turbo": "^2.9.6"
+  }
 }
