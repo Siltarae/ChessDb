@@ -1,0 +1,8 @@
+#!/bin/sh
+# pnpm-lock.yaml이 변경되었는지 확인
+changed_files=$(git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD)
+
+if echo "$changed_files" | grep -q "pnpm-lock.yaml"; then
+  echo "📦 의존성 변경이 감지되었습니다. pnpm install을 실행합니다..."
+  pnpm install
+fi

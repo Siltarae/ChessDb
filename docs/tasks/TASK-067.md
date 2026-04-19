@@ -1,6 +1,6 @@
 # 📋 개별 작업 지침서: 전역 ESLint 및 Prettier 설정 구축 (TASK-067)
 
-**작업 상태**: 진행 중
+**작업 상태**: 완료  
 **선행 작업**: `[TASK-064]`, `[TASK-066]`
 **후속 작업**: `[TASK-068]`
 **연관 설계**: `[../architecture/tech-stack.md]`, `[../architecture/project-rules.md]`
