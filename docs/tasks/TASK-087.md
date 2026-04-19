@@ -37,3 +37,8 @@
 
 - [ ] `pnpm --filter @chess-db/shared test` 실행 시 테스트가 수행된다.
 - [ ] `zod`가 의존성에 추가되어 정상적으로 import 가능하다.
+
+
+## 💬 9. 추천 커밋 메시지
+
+- `test: packages/shared 테스트 및 검증 환경 구축 (TASK-087)`

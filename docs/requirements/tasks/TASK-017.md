@@ -21,3 +21,8 @@
 ## 관련 메모
 
 - PGN 포맷 연동은 [EPIC-996](../epics/EPIC-996.md)에서 다룬다.
+
+
+## 💬 9. 추천 커밋 메시지
+
+- `chore: update TASK-017.md`

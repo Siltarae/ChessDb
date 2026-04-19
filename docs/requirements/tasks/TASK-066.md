@@ -17,3 +17,8 @@
 ## 참고 사항
 
 - 각 패키지/앱의 `tsconfig.json`은 이 베이스 설정을 `extends`하여 사용하게 된다.
+
+
+## 💬 9. 추천 커밋 메시지
+
+- `chore: update TASK-066.md`

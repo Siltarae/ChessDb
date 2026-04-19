@@ -83,3 +83,8 @@
 - [ ] `turbo` 패키지가 루트 `devDependencies`에 존재한다.
 - [ ] `turbo.json`이 정상적인 포맷으로 작성되었다.
 - [ ] 파이프라인(`build`, `lint`, `dev` 등)이 올바르게 정의되었다.
+
+
+## 💬 9. 추천 커밋 메시지
+
+- `chore: Turborepo 설치 및 turbo.json 설정 (TASK-065)`

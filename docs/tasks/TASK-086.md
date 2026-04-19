@@ -51,3 +51,8 @@
 - [ ] `packages/shared` 워크스페이스가 루트 `pnpm m ls` 결과에 나타난다.
 - [ ] `pnpm --filter @chess-db/shared build` 명령이 성공한다.
 - [ ] `src/index.ts`에서 내보낸 코드를 다른 패키지에서 참조할 준비가 되었다.
+
+
+## 💬 9. 추천 커밋 메시지
+
+- `chore: packages/shared 공통 도메인 패키지 초기화 (TASK-086)`

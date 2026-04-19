@@ -21,3 +21,8 @@
 ## 관련 메모
 
 - 입력 뷰 자체의 책임은 [FEATURE-001](../features/FEATURE-001.md)에서 다룬다.
+
+
+## 💬 9. 추천 커밋 메시지
+
+- `chore: update TASK-035.md`

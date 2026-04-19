@@ -21,3 +21,8 @@
 ## 관련 메모
 
 - Variation은 후순위 범위다.
+
+
+## 💬 9. 추천 커밋 메시지
+
+- `chore: update TASK-052.md`

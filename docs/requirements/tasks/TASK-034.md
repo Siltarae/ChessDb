@@ -21,3 +21,8 @@
 ## 관련 메모
 
 - 분석 보드 상세 책임은 [FEATURE-004](../features/FEATURE-004.md)에서 다룬다.
+
+
+## 💬 9. 추천 커밋 메시지
+
+- `chore: update TASK-034.md`

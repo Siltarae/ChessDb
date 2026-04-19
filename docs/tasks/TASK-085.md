@@ -19,3 +19,8 @@
 
 - [ ] `shared` 패키지의 타입을 `apps/web`에서 import 하여 사용할 수 있다.
 - [ ] `QueryClientProvider`가 `App.tsx` 또는 `main.tsx`에 설정되었다.
+
+
+## 💬 9. 추천 커밋 메시지
+
+- `chore: apps/web 필수 공통 라이브러리 의존성 추가 (TASK-085)`

@@ -37,3 +37,8 @@
 
 - [ ] NestJS 서버가 3000(또는 지정) 포트에서 정상 구동된다.
 - [ ] Swagger UI 페이지가 정상적으로 렌더링된다.
+
+
+## 💬 9. 추천 커밋 메시지
+
+- `feat: apps/api NestJS 프로젝트 초기화 및 Swagger 연동 (TASK-088)`

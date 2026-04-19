@@ -116,3 +116,8 @@
   - `[pnpm workspace documentation](https://pnpm.io/workspaces)`
 - **특히 주의할 점**:
   - `.npmrc`에서 `shamefully-hoist=false`를 유지하여 pnpm의 엄격한 의존성 관리 장점을 살립니다.
+
+
+## 💬 9. 추천 커밋 메시지
+
+- `feat: pnpm 워크스페이스 초기화 및 package.json 작성 (TASK-064)`
