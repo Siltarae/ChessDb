@@ -1,13 +1,12 @@
-import { configs } from '@eslint/js';
-import eslintConfigPrettier from 'eslint-config-prettier';
-import { configs as _configs, config } from 'typescript-eslint';
+const eslint = require('@eslint/js');
+const tseslint = require('typescript-eslint');
+const eslintConfigPrettier = require('eslint-config-prettier');
 
-export default config(
-  configs.recommended,
-  ..._configs.recommended,
+module.exports = tseslint.config(
+  eslint.configs.recommended,
+  ...tseslint.configs.recommended,
   eslintConfigPrettier,
   {
-    // 타입 기반 규칙(네이밍 컨벤션 등)을 위한 설정 추가
     languageOptions: {
       parserOptions: {
         project: true,
@@ -46,7 +45,8 @@ export default config(
       '**/.turbo/**',
       '**/.next/**',
       '**/coverage/**',
-      'eslint.config.js', // 설정 파일 자체는 규칙에서 제외 (CJS require 등 때문)
+      'eslint.config.js',
+      'commitlint.config.js',
     ],
   },
 );
