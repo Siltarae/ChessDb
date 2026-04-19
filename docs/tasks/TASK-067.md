@@ -1,8 +1,8 @@
 # 📋 개별 작업 지침서: 전역 ESLint 및 Prettier 설정 구축 (TASK-067)
 
-**작업 상태**: 대기 중  
-**선행 작업**: `[TASK-064]`, `[TASK-066]`  
-**후속 작업**: `[TASK-068]`  
+**작업 상태**: 진행 중
+**선행 작업**: `[TASK-064]`, `[TASK-066]`
+**후속 작업**: `[TASK-068]`
 **연관 설계**: `[../architecture/tech-stack.md]`, `[../architecture/project-rules.md]`
 
 ---
@@ -18,7 +18,7 @@
 - **최종 상태**: 루트 명령어(`pnpm lint`, `pnpm format`)를 통해 모든 하위 패키지의 코드 컨벤션과 잠재적 버그를 검사할 수 있습니다.
 - **이번 작업의 최소 결과물**:
   - `.prettierrc`, `.prettierignore`
-  - `.eslintrc.js` (또는 JSON), `.eslintignore`
+  - `eslint.config.js` (또는 `.mjs`), `.eslintignore` (또는 ignores 설정)
 - **성공 기준 (AC)**:
   - TypeScript 코드에 대해 ESLint 검사가 작동해야 한다.
   - Prettier와 ESLint 규칙 간 충돌이 없어야 한다 (`eslint-config-prettier` 연동).
@@ -27,22 +27,23 @@
 
 - **신규 생성**:
   - `.prettierrc`, `.prettierignore`
-  - `.eslintrc.js`, `.eslintignore`
+  - `eslint.config.js`
 - **수정 대상**:
   - `package.json` (루트): 린트 관련 의존성 추가 및 스크립트 연결
+  - `turbo.json`: lint 및 format 태스크 추가
 
 ## 🛠️ 3. 상세 기술 사양
 
 - **외부 의존성 (devDependencies)**:
-  - `eslint`, `prettier`, `eslint-config-prettier`, `@typescript-eslint/parser`, `@typescript-eslint/eslint-plugin`
+  - `eslint`, `prettier`, `eslint-config-prettier`, `typescript-eslint`, `@eslint/js`
 - **Prettier 필수 규칙**:
   - `singleQuote: true`, `semi: true`, `tabWidth: 2`, `trailingComma: "all"`, `printWidth: 100`
 - **ESLint 핵심 규칙**:
-  - `root: true` 명시
-  - `extends: ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"]`
-  - `parser: "@typescript-eslint/parser"`
+  - ESLint v10 Flat Config 사용
+  - `eslint.configs.recommended` 및 `tseslint.configs.recommended` 확장
+  - `eslint-config-prettier` 연동
 - **Ignore 규칙**:
-  - `node_modules`, `dist`, `build`, `.turbo` 등 빌드 및 캐시 폴더 제외.
+  - `node_modules`, `dist`, `build`, `.turbo`, `.next`, `coverage` 등 제외.
 
 ## ⚖️ 4. 기술 제약 및 규칙
 
@@ -59,15 +60,21 @@
 
 1. `pnpm add -wD` 명령어로 관련 패키지 설치.
 2. 루트에 `.prettierrc`, `.prettierignore` 설정.
-3. 루트에 `.eslintrc.js`, `.eslintignore` 설정.
-4. 검증용 임시 파일로 린트 동작 확인.
+3. 루트에 `eslint.config.js` 설정.
+4. `package.json` 및 `turbo.json`에 스크립트 추가.
+5. 검증용 임시 파일로 린트 동작 확인.
 
 ## ✅ 7. 완료 판정 체크리스트
 
-- [ ] ESLint 및 Prettier 패키지가 설치되었다.
-- [ ] 설정 파일과 ignore 파일이 생성되었다.
-- [ ] ESLint에서 Prettier 연동 플러그인이 설정되어 충돌을 방지한다.
+- [x] ESLint 및 Prettier 패키지가 설치되었다.
+- [x] 설정 파일과 ignore 파일이 생성되었다.
+- [x] ESLint에서 Prettier 연동 플러그인이 설정되어 충돌을 방지한다.
+- [x] 루트 명령어 (`pnpm lint`, `pnpm format`)가 정상 작동한다.
 
+## 🚧 8. 실행 중 발생한 문제 및 해결
+
+- ESLint v10 사용에 따라 레거시 `.eslintrc.js` 대신 Flat Config (`eslint.config.js`)를 적용함.
+- `write_file` 도구에서 ES 모듈 문법(`.mjs`) 사용 시 내부 파싱 오류가 발생하여, CommonJS 스타일의 `eslint.config.js`를 우선 사용함.
 
 ## 💬 9. 추천 커밋 메시지
 
