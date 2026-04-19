@@ -165,6 +165,26 @@ describe('PawnEngine', () => {
         expect(whiteMoves).not.toContain(whitePawn + 9);
         expect(blackMoves).not.toContain(blackPawn - 7);
       });
+
+      it('보드 하단 끝(A1)에서 폰의 이동을 판정할 때 안전해야 한다', () => {
+        // 1. A1에 있는 백 폰 (정상 전진 가능해야 함)
+        const whitePawn = SQUARE.A1;
+        const boardW = [...Array(64).fill(null)];
+        boardW[whitePawn] = { type: PIECE_TYPE.PAWN, color: COLOR.WHITE };
+        const stateW = { ...createEmptyState(), board: boardW };
+        const whiteMoves = getPawnMoves(whitePawn, stateW);
+
+        expect(whiteMoves).toContain(SQUARE.A2);
+
+        // 2. A1에 있는 흑 폰 (더 이상 내려갈 곳이 없어야 함)
+        const blackPawn = SQUARE.A1;
+        const boardB = [...Array(64).fill(null)];
+        boardB[blackPawn] = { type: PIECE_TYPE.PAWN, color: COLOR.BLACK };
+        const stateB = { ...createEmptyState(), turn: COLOR.BLACK, board: boardB };
+        const blackMoves = getPawnMoves(blackPawn, stateB);
+
+        expect(blackMoves).toEqual([]);
+      });
     });
 
     describe('유틸리티 함수의 동작을 확인할 때', () => {
@@ -183,7 +203,6 @@ describe('PawnEngine', () => {
         const state2 = { ...createEmptyState(), turn: COLOR.WHITE, board: board2 };
         getPawnMoves(whitePawn, state2);
 
-        // 두 경우 모두 내부적으로 toSquare가 null을 반환하는 브랜치를 통과함
         expect(true).toBe(true);
       });
     });

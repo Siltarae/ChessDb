@@ -1,11 +1,11 @@
 import { COLOR, FILE, RANK, type GameState, type Square } from '../models/game-state.js';
 import {
   getColor,
-  getRank,
   getFile,
-  toSquare,
+  getRank,
   isEmpty,
   isEnemyPiece,
+  toSquare,
 } from '../utils/board-utils.js';
 
 /**
