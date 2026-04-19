@@ -1,5 +1,9 @@
 # TASK-049 분석 보드 초기 포지션 표시
 
+## 상세 구현 지침
+
+- [구현 지침서 (Phase 3)](../../tasks/TASK-049.md)
+
 ## 상위 Feature
 
 - [FEATURE-006 분석 보드와 저장소 통계 조회](../features/FEATURE-006.md)
@@ -21,7 +25,6 @@
 ## 관련 메모
 
 - FEN 시작은 [EPIC-999](../epics/EPIC-999.md)에서 다룬다.
-
 
 ## 💬 9. 추천 커밋 메시지
 

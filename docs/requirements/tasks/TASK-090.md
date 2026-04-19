@@ -1,5 +1,9 @@
 # TASK-090 apps/api & packages/shared API 통신용 공통 DTO(Zod) 공유 구조 연결
 
+## 상세 구현 지침
+
+- [구현 지침서 (Phase 3)](../../tasks/TASK-090.md)
+
 ## 상위 Feature
 
 - [FEATURE-003 기보 메타데이터 입력 및 초안 저장 관리](../features/FEATURE-003.md)
@@ -17,7 +21,6 @@
 ## 참고 사항
 
 - 이 구조는 프론트엔드(`apps/web`)에서도 동일하게 활용된다.
-
 
 ## 💬 9. 추천 커밋 메시지
 

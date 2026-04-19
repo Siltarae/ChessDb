@@ -1,5 +1,9 @@
 # TASK-086 packages/shared 공통 도메인 패키지 초기화 및 TypeScript 설정
 
+## 상세 구현 지침
+
+- [구현 지침서 (Phase 3)](../../tasks/TASK-086.md)
+
 ## 상위 Feature
 
 - [FEATURE-001 체스 규칙 및 합법 수 판정 엔진](../features/FEATURE-001.md)
@@ -17,7 +21,6 @@
 ## 참고 사항
 
 - 실제 체스 도메인 코드는 이후 태스크에서 작성한다.
-
 
 ## 💬 9. 추천 커밋 메시지
 

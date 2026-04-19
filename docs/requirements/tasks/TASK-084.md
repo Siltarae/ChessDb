@@ -1,5 +1,9 @@
 # TASK-084 apps/web Tailwind CSS 및 shadcn/ui 설치 및 연동
 
+## 상세 구현 지침
+
+- [구현 지침서 (Phase 3)](../../tasks/TASK-084.md)
+
 ## 상위 Feature
 
 - [FEATURE-002 기보 입력 보드 상호작용 및 수순 관리](../features/FEATURE-002.md)
@@ -17,7 +21,6 @@
 ## 참고 사항
 
 - 필요한 컴포넌트(Button, Card 등)는 이후 실제 구현 단계에서 하나씩 추가한다.
-
 
 ## 💬 9. 추천 커밋 메시지
 

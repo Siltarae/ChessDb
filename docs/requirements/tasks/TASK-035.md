@@ -1,5 +1,9 @@
 # TASK-035 새 기보 작성 버튼과 입력 뷰 전환
 
+## 상세 구현 지침
+
+- [구현 지침서 (Phase 3)](../../tasks/TASK-035.md)
+
 ## 상위 Feature
 
 - [FEATURE-004 저장소 관리와 진입 흐름](../features/FEATURE-004.md)
@@ -21,7 +25,6 @@
 ## 관련 메모
 
 - 입력 뷰 자체의 책임은 [FEATURE-001](../features/FEATURE-001.md)에서 다룬다.
-
 
 ## 💬 9. 추천 커밋 메시지
 
