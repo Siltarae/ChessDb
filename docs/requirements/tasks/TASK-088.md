@@ -1,5 +1,9 @@
 # TASK-088 apps/api NestJS 프로젝트 초기화 및 Swagger 연동
 
+## 상세 구현 지침
+
+- [구현 지침서 (Phase 3)](../../tasks/TASK-088.md)
+
 ## 상위 Feature
 
 - [FEATURE-003 기보 메타데이터 입력 및 초안 저장 관리](../features/FEATURE-003.md)
@@ -17,7 +21,6 @@
 ## 참고 사항
 
 - 아직 세부 컨트롤러나 서비스 로직은 작성하지 않는다.
-
 
 ## 💬 9. 추천 커밋 메시지
 

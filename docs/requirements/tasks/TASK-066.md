@@ -1,5 +1,9 @@
 # TASK-066 전역 TypeScript 베이스 설정 작성
 
+## 상세 구현 지침
+
+- [구현 지침서 (Phase 3)](../../tasks/TASK-066.md)
+
 ## 상위 Feature
 
 - [FEATURE-007 모노레포 전역 인프라 구축](../features/FEATURE-007.md)
@@ -17,7 +21,6 @@
 ## 참고 사항
 
 - 각 패키지/앱의 `tsconfig.json`은 이 베이스 설정을 `extends`하여 사용하게 된다.
-
 
 ## 💬 9. 추천 커밋 메시지
 

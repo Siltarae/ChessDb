@@ -1,5 +1,9 @@
 # TASK-087 packages/shared 테스트 환경(Vitest) 및 검증(Zod) 라이브러리 설치
 
+## 상세 구현 지침
+
+- [구현 지침서 (Phase 3)](../../tasks/TASK-087.md)
+
 ## 상위 Feature
 
 - [FEATURE-001 체스 규칙 및 합법 수 판정 엔진](../features/FEATURE-001.md)
@@ -17,7 +21,6 @@
 ## 참고 사항
 
 - 합법 수 판정 등의 로직 검증에 `vitest`를 적극 활용한다.
-
 
 ## 💬 9. 추천 커밋 메시지
 

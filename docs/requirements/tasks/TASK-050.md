@@ -1,5 +1,9 @@
 # TASK-050 분석 보드 직접 수 입력
 
+## 상세 구현 지침
+
+- [구현 지침서 (Phase 3)](../../tasks/TASK-050.md)
+
 ## 상위 Feature
 
 - [FEATURE-006 분석 보드와 저장소 통계 조회](../features/FEATURE-006.md)
@@ -21,7 +25,6 @@
 ## 관련 메모
 
 - PGN 직접 입력은 [EPIC-996](../epics/EPIC-996.md)에서 다룬다.
-
 
 ## 💬 9. 추천 커밋 메시지
 

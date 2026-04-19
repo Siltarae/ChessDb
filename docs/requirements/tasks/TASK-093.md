@@ -1,5 +1,9 @@
 # TASK-093 apps/api Jest 및 Supertest 기반 테스트 환경 구성
 
+## 상세 구현 지침
+
+- [구현 지침서 (Phase 3)](../../tasks/TASK-093.md)
+
 ## 상위 Feature
 
 - [FEATURE-003 기보 메타데이터 입력 및 초안 저장 관리](../features/FEATURE-003.md)
@@ -17,7 +21,6 @@
 ## 참고 사항
 
 - NestJS의 기본 생태계와 가장 잘 어울리는 `Jest`를 사용한다.
-
 
 ## 💬 9. 추천 커밋 메시지
 

@@ -1,5 +1,9 @@
 # TASK-017 수순 목록 기록
 
+## 상세 구현 지침
+
+- [구현 지침서 (Phase 3)](../../tasks/TASK-017.md)
+
 ## 상위 Feature
 
 - [FEATURE-002 기보 입력 보드 상호작용 및 수순 관리](../features/FEATURE-002.md)
@@ -21,7 +25,6 @@
 ## 관련 메모
 
 - PGN 포맷 연동은 [EPIC-996](../epics/EPIC-996.md)에서 다룬다.
-
 
 ## 💬 9. 추천 커밋 메시지
 

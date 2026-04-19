@@ -1,5 +1,9 @@
 # TASK-092 apps/web Vitest 및 React Testing Library 환경 구성
 
+## 상세 구현 지침
+
+- [구현 지침서 (Phase 3)](../../tasks/TASK-092.md)
+
 ## 상위 Feature
 
 - [FEATURE-002 기보 입력 보드 상호작용 및 수순 관리](../features/FEATURE-002.md)
@@ -17,7 +21,6 @@
 ## 참고 사항
 
 - Vite 환경과의 호환성을 위해 `Vitest`를 우선적으로 사용한다.
-
 
 ## 💬 9. 추천 커밋 메시지
 

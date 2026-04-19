@@ -1,5 +1,9 @@
 # TASK-091 GitHub Actions CI 워크플로우 및 커버리지 게이트 구축
 
+## 상세 구현 지침
+
+- [구현 지침서 (Phase 3)](../../tasks/TASK-091.md)
+
 ## 상위 Feature
 
 - [FEATURE-007 모노레포 전역 인프라 구축](../features/FEATURE-007.md)

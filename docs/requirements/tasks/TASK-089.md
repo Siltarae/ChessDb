@@ -1,5 +1,9 @@
 # TASK-089 apps/api PostgreSQL + Prisma 초기 설정 및 로컬 DB(docker-compose) 구성
 
+## 상세 구현 지침
+
+- [구현 지침서 (Phase 3)](../../tasks/TASK-089.md)
+
 ## 상위 Feature
 
 - [FEATURE-003 기보 메타데이터 입력 및 초안 저장 관리](../features/FEATURE-003.md)
@@ -17,7 +21,6 @@
 ## 참고 사항
 
 - 기보와 관련된 실제 테이블 스키마 설계는 이후 태스크 진행 과정에서 추가한다.
-
 
 ## 💬 9. 추천 커밋 메시지
 

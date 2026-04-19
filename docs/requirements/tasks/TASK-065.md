@@ -1,5 +1,9 @@
 # TASK-065 Turborepo 설치 및 turbo.json 설정
 
+## 상세 구현 지침
+
+- [구현 지침서 (Phase 3)](../../tasks/TASK-065.md)
+
 ## 상위 Feature
 
 - [FEATURE-007 모노레포 전역 인프라 구축](../features/FEATURE-007.md)
@@ -17,7 +21,6 @@
 ## 참고 사항
 
 - 아직 하위 패키지가 없으므로 실제 실행 결과는 비어있을 수 있다.
-
 
 ## 💬 9. 추천 커밋 메시지
 

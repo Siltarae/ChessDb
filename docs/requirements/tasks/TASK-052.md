@@ -1,5 +1,9 @@
 # TASK-052 분석 보드 다시하기
 
+## 상세 구현 지침
+
+- [구현 지침서 (Phase 3)](../../tasks/TASK-052.md)
+
 ## 상위 Feature
 
 - [FEATURE-006 분석 보드와 저장소 통계 조회](../features/FEATURE-006.md)
@@ -21,7 +25,6 @@
 ## 관련 메모
 
 - Variation은 후순위 범위다.
-
 
 ## 💬 9. 추천 커밋 메시지
 
