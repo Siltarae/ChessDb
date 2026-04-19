@@ -18,10 +18,18 @@
   ],
   "scripts": {
     "build": "tsdown src/index.ts --format cjs,esm --dts",
-    "dev": "tsdown src/index.ts --format cjs,esm --watch --dts"
+    "dev": "tsdown src/index.ts --format cjs,esm --watch --dts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "^4.1.4",
     "tsdown": "^0.21.9",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.4"
+  },
+  "dependencies": {
+    "zod": "^4.3.6"
   }
 }
