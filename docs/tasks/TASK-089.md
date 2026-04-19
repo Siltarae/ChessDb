@@ -30,3 +30,8 @@
 - [ ] `docker-compose up` 실행 시 PostgreSQL 컨테이너가 정상 구동된다.
 - [ ] `npx prisma db push` 또는 `migrate` 명령어가 성공적으로 실행된다.
 - [ ] `PrismaClient`가 `apps/api`에서 정상적으로 생성 및 사용 가능하다.
+
+
+## 💬 9. 추천 커밋 메시지
+
+- `chore: apps/api PostgreSQL + Prisma 초기 설정 (TASK-089)`

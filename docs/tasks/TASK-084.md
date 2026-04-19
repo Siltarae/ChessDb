@@ -21,3 +21,8 @@
 - [ ] Tailwind CSS 지시어(`@tailwind base;` 등)가 `globals.css`에 포함되었다.
 - [ ] `shadcn/ui` 초기화 결과로 `src/components/ui` 폴더와 `lib/utils.ts`가 생성되었다.
 - [ ] 간단한 버튼 컴포넌트를 추가하여 스타일이 정상 적용되는지 확인했다.
+
+
+## 💬 9. 추천 커밋 메시지
+
+- `feat: apps/web Tailwind CSS 및 shadcn/ui 설치 및 연동 (TASK-084)`

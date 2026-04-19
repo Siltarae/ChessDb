@@ -16,3 +16,8 @@
 
 - [ ] `pnpm test` 실행 시 `apps/web` 내의 `*.test.tsx` 파일들이 정상 실행된다.
 - [ ] 컴포넌트 렌더링 테스트가 성공한다.
+
+
+## 💬 9. 추천 커밋 메시지
+
+- `chore: apps/web Vitest 및 React Testing Library 환경 구성 (TASK-092)`

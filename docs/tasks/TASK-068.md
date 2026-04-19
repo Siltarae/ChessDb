@@ -73,3 +73,8 @@
 - [ ] `husky` 및 `lint-staged`가 `devDependencies`에 존재한다.
 - [ ] `.husky/pre-commit` 훅이 `lint-staged`를 호출하도록 구성되었다.
 - [ ] `package.json`에 파일별로 포맷터와 린터 규칙이 올바르게 명시되었다.
+
+
+## 💬 9. 추천 커밋 메시지
+
+- `feat: Husky 및 lint-staged 커밋 훅 연결 (TASK-068)`

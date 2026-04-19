@@ -21,3 +21,8 @@
 ## 관련 메모
 
 - FEN 시작은 [EPIC-999](../epics/EPIC-999.md)에서 다룬다.
+
+
+## 💬 9. 추천 커밋 메시지
+
+- `chore: update TASK-049.md`

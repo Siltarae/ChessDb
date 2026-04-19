@@ -66,3 +66,8 @@
 - [ ] 브랜치 트리거 조건(`push`, `pull_request`)이 명시되었다.
 - [ ] 캐시와 `--frozen-lockfile` 등 최적화 및 안정성 옵션이 지정되었다.
 - [ ] 터보 명령어(`lint`, `build`, `test`)가 CI에서 실행되도록 연결되었다.
+
+
+## 💬 9. 추천 커밋 메시지
+
+- `chore: GitHub Actions CI 워크플로우 기본 설정 (TASK-091)`

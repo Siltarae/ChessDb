@@ -63,3 +63,8 @@
 - [ ] `tsconfig.base.json`이 올바른 JSON 포맷으로 작성되었다.
 - [ ] `strict: true`가 명시되었다.
 - [ ] 모듈 해결 방식이 `bundler` 등 모던 환경에 맞춰 설정되었다.
+
+
+## 💬 9. 추천 커밋 메시지
+
+- `chore: 전역 TypeScript 베이스 설정 작성 (TASK-066)`

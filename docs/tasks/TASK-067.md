@@ -67,3 +67,8 @@
 - [ ] ESLint 및 Prettier 패키지가 설치되었다.
 - [ ] 설정 파일과 ignore 파일이 생성되었다.
 - [ ] ESLint에서 Prettier 연동 플러그인이 설정되어 충돌을 방지한다.
+
+
+## 💬 9. 추천 커밋 메시지
+
+- `chore: 전역 ESLint 및 Prettier 설정 구축 (TASK-067)`
