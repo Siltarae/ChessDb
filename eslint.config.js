@@ -32,6 +32,14 @@ module.exports = tseslint.config(
         },
         {
           selector: 'objectLiteralProperty',
+          filter: {
+            regex: '^[0-9]+$',
+            match: true,
+          },
+          format: null,
+        },
+        {
+          selector: 'objectLiteralProperty',
           format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
         },
         {
