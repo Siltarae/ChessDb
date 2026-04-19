@@ -26,9 +26,13 @@ module.exports = tseslint.config(
         },
         {
           selector: 'variable',
-          format: ['camelCase', 'UPPER_CASE'],
+          format: ['camelCase', 'UPPER_CASE', 'PascalCase'],
           leadingUnderscore: 'allow',
           trailingUnderscore: 'allow',
+        },
+        {
+          selector: 'objectLiteralProperty',
+          format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
         },
         {
           selector: 'typeLike',
