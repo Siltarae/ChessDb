@@ -94,6 +94,30 @@ export const SQUARE = {
 } as const;
 export type Square = (typeof SQUARE)[keyof typeof SQUARE];
 
+export const FILE = {
+  A: 0,
+  B: 1,
+  C: 2,
+  D: 3,
+  E: 4,
+  F: 5,
+  G: 6,
+  H: 7,
+} as const;
+export type File = (typeof FILE)[keyof typeof FILE];
+
+export const RANK = {
+  '1': 0,
+  '2': 1,
+  '3': 2,
+  '4': 3,
+  '5': 4,
+  '6': 5,
+  '7': 6,
+  '8': 7,
+} as const;
+export type Rank = (typeof RANK)[keyof typeof RANK];
+
 export const CASTLE = {
   WHITE_KING_SIDE: 1,
   WHITE_QUEEN_SIDE: 2,
