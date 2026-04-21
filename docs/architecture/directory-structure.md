@@ -1,10 +1,8 @@
-# 디렉토리 구조
-
 # 디렉토리 구조 (Directory Structure)
 
 ## 목적
 
-본 프로젝트는 프론트엔드와 백엔드를 하나의 저장소에서 관리하는 **모노레포(Monorepo)** 구조를 사용합니다.
+본 프로젝트는 프론트엔드와 백엔드를 하나의 저장소에서 관리하는 **모노레포(Monorepo)** 구조를 사용한다.
 
 - 프로젝트 디렉토리 구조와 파일 배치 원칙을 기록한다.
 
@@ -21,7 +19,7 @@
 ```text
 ChessDb/
   apps/
-    frontend/   # React + Vite (Feature-Sliced Design 적용)
+    web/        # React + Vite 기반 프론트엔드 애플리케이션
       src/
         app/       # 전역 설정, 프로바이더, 라우터 진입점
         pages/     # 라우팅되는 각 페이지 단위 컴포넌트
@@ -29,7 +27,7 @@ ChessDb/
         features/  # 사용자 행동 중심의 특정 기능 (예: 수 무르기, 기보 저장)
         entities/  # 비즈니스 도메인 데이터/상태 (예: Game, Notation)
         shared/    # 도메인에 종속되지 않은 공통 UI(shadcn), 유틸리티, API 클라이언트
-    backend/    # NestJS 기반 백엔드 애플리케이션 (Pragmatic 모듈 구조)
+    api/        # NestJS 기반 백엔드 애플리케이션
       src/
         modules/  # 도메인/기능별 모듈 (예: games, stats)
           [feature]/
@@ -46,4 +44,6 @@ ChessDb/
 
 ## 파일 배치 원칙
 
-> **참고**: 각 애플리케이션(`frontend`, `backend`) 내부의 상세 디렉토리 구조 및 패턴은 요구사항과 기술 스택에 맞추어 점진적으로 구체화합니다.
+- 앱 명칭은 `apps/web`, `apps/api`를 기준으로 고정한다.
+- 각 애플리케이션 내부의 상세 구조는 요구사항과 기술 스택에 맞추어 점진적으로 구체화한다.
+- 현재 이 문서는 목표 구조를 설명하며, 아직 생성되지 않은 디렉토리는 이후 Task 진행 시 실제로 추가한다.

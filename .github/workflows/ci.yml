@@ -30,16 +30,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Lint, Build, and Test (with Coverage)
-        run: pnpm turbo run lint build test -- --coverage
+      - name: Lint, Build, and Test
+        run: pnpm turbo run lint build test
 
-      # 향후 TASK-087, 092, 093 완료 후 실제 리포트 기반 검증 로직이 활성화됩니다.
-      # 현재는 리포트가 생성되지 않아도 CI가 멈추지 않도록 구성하되,
-      # 실제 코드가 추가되기 시작하면 엄격한 게이트(Gate)를 적용합니다.
-      - name: Check Coverage Thresholds
-        run: |
-          echo "📊 테스트 커버리지 검증을 시작합니다..."
-          # 실제 구현 단계(Phase 4-5)에서 이 부분에 커버리지 체크 스크립트가 연결됩니다.
-          # 예: packages/shared -> 100% 강제
-          # 예: 전체 평균 -> 80% 강제
-          echo "✅ (알림) 현재는 초기 단계이므로 검증을 통과시킵니다."
+      - name: Enforce Shared Coverage Thresholds
+        run: pnpm --filter @chess-db/shared test:coverage
