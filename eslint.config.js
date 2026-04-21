@@ -59,6 +59,8 @@ module.exports = tseslint.config(
       '**/coverage/**',
       'eslint.config.js',
       'commitlint.config.js',
+      '**/lint-staged.config.mjs',
+      'tools/**/*.mjs',
     ],
   },
 );
