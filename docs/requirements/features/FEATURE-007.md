@@ -6,7 +6,7 @@
 
 ## 브랜치명
 
-- `feat/007-monorepo-foundation`
+- `feature/FEATURE-007-모노레포-인프라`
 
 ## 목적
 
