@@ -19,9 +19,14 @@
   "scripts": {
     "build": "tsdown src/index.ts --format cjs,esm --dts",
     "dev": "tsdown src/index.ts --format cjs,esm --watch --dts",
+    "lint": "eslint src/**/*.ts vitest.config.ts",
+    "lint:fix": "eslint src/**/*.ts vitest.config.ts --fix",
+    "format": "prettier --ignore-path ../../.prettierignore --write .",
+    "format:check": "prettier --ignore-path ../../.prettierignore --check .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "type-check": "tsc --noEmit"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^4.1.4",
