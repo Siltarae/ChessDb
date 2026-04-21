@@ -12,9 +12,42 @@
 - **현재 상태 요약**: 백엔드 서버 프로젝트는 생성되었으나 데이터베이스 환경과 이를 연결할 ORM이 없습니다.
 - **이 작업의 책임**: Docker Compose를 이용한 PostgreSQL 환경 구축과 Prisma ORM의 초기 설정을 완료합니다.
 
+- **이번 작업에서 하지 않는 것**: `[TASK-094]` (환경 변수 검증)에 연결된 후속 책임은 이번 태스크에서 함께 닫지 않는다.
+
+- **경계 메모**:
+  - 이번 태스크는 apps/api PostgreSQL + Prisma 초기 설정 범위만 닫고, 후속 태스크 또는 인접 Feature의 세부 구현은 여기서 함께 처리하지 않는다.
+
 ## 🎯 1. 작업 목표
 
 - **최종 상태**: 로컬 DB 컨테이너가 실행 중이며, Prisma를 통해 DB 스키마를 정의하고 마이그레이션할 수 있는 상태가 됩니다.
+
+- **이번 작업의 최소 결과물**:
+  - `apps/api/prisma/schema.prisma`
+  - `apps/api/docker-compose.yml`
+  - `apps/api/src/prisma/prisma.service.ts`
+- **성공 기준 (AC)**:
+  - `docker-compose up` 명령으로 DB 서버가 정상 구동된다.
+  - `schema.prisma` 파일에 초기 데이터 모델 골격이 작성되었다.
+  - `PrismaService`가 NestJS 모듈 내에 등록되어 주입 가능하다.
+
+## 📂 2. 대상 아티팩트
+
+- **신규 생성**:
+  - `apps/api/prisma/schema.prisma`
+  - `apps/api/docker-compose.yml`
+  - `apps/api/src/prisma/prisma.service.ts`
+- **수정 대상**:
+  - `apps/api/package.json`
+  - `apps/api/src/app.module.ts`
+- **조건부 정리 대상**: 필요할 때만 작성
+  - placeholder, 임시 스켈레톤, 중복 export, 오래된 경로 표기
+
+- **이번 작업에서 수정하지 않음**:
+  - `[TASK-094]` (환경 변수 검증)에 연결된 후속 책임 파일
+
+- **아티팩트 작성 규칙**:
+  - 가능한 한 실제 파일 경로를 기준으로 작성하고, 범위 밖 파일은 이유 없이 함께 수정하지 않는다.
+  - 수정 금지 범위나 후속 태스크 책임 파일은 이 섹션에서 명시적으로 분리한다.
 
 ## 🛠️ 3. 상세 기술 사양
 
@@ -27,6 +60,93 @@
   - describe: `Database Connection`
     - it: `PostgreSQL 컨테이너와 연결이 성공해야 한다`
     - it: `Prisma 마이그레이션 명령어가 에러 없이 실행되어야 한다`
+
+- **핵심 조립/흐름 규칙**:
+  - `docker-compose up` 명령으로 DB 서버가 정상 구동된다.
+  - `schema.prisma` 파일에 초기 데이터 모델 골격이 작성되었다.
+  - `PrismaService`가 NestJS 모듈 내에 등록되어 주입 가능하다.
+
+- **데이터 모델 해석**:
+  - 핵심 데이터는 Prisma schema, DB 연결 문자열, PrismaService 주입 계약입니다.
+  - 입력은 PostgreSQL 연결 정보와 모델 정의 파일이며, 출력은 앱이 사용할 ORM 계층입니다.
+
+- **외부 의존성**:
+  - `@prisma/client`
+  - `prisma`
+  - `postgresql`
+
+- **import/export 규칙**:
+  - `../architecture/project-rules.md`의 named export, 상대 경로 최소화, `.js` 확장자 규칙을 따른다.
+
+- **권장 네이밍**:
+  - 공개 함수/타입 이름: apps/api PostgreSQL + Prisma 초기 설정 책임이 드러나는 이름
+  - 내부 helper 이름: 역할이 바로 드러나는 동사형 또는 조합형 이름
+  - 핵심 변수명: 상태와 대상이 분명한 이름
+  - 피해야 할 이름: data, item, obj, temp
+
+- **이름별 사용 의도와 적용 시점**:
+  - `PrismaService`는 Nest DI에서 재사용할 DB 진입점 이름으로 유지합니다.
+  - `DATABASE_URL`은 DB 연결 계약의 환경 변수 이름입니다.
+
+- **인수 이름 가이드**:
+  - `databaseUrl`, `schema`, `prismaClient`
+
+- **짧은 예시 골격**:
+
+```ts
+datasource db { provider = "postgresql"; url = env("DATABASE_URL") }
+```
+
+- **최소 테스트 개수**:
+  - 최소 3개
+
+- **반드시 포함할 실패 시나리오**:
+  - schema.prisma와 앱 설정이 다른 DB URL을 가정하는 경우
+  - PrismaService를 모듈에서 export하지 않아 후속 모듈이 주입받지 못하는 경우
+
+## ⚖️ 4. 기술 제약 및 규칙
+
+- **작성 원칙**:
+  - 전역 규칙을 반복 나열하지 말고, 이번 태스크에서 특히 강조해야 하는 제약만 짧게 적는다.
+
+- **구조 규칙**:
+  - 현재 디렉토리 구조와 연관 설계 문서의 책임 경계를 유지한다.
+
+- **불변성/상태 규칙**:
+  - 기존 상태를 직접 오염시키지 않고, 이번 태스크의 책임 범위 안에서 상태를 갱신한다.
+
+- **범위 규칙**:
+  - `[TASK-094]` (환경 변수 검증)에 연결된 범위는 여기서 닫지 않는다.
+
+- **헌법 정렬 규칙**:
+  - `../architecture/project-rules.md`의 네이밍, import/export, 상태 규칙을 그대로 따른다.
+
+- **문서화 규칙**:
+  - 이 문서에서 고정한 파일 경로, 검증 기준, 후속 태스크 경계를 구현 단계와 동일하게 유지한다.
+
+## 🧪 5. 검증 시나리오 및 단언
+
+1. **정상 시나리오: 핵심 동작 확인**
+   - `docker-compose up` 명령으로 DB 서버가 정상 구동된다.
+   - 요구사항 문서의 완료 기준이 코드 또는 테스트에서 직접 확인되어야 한다.
+
+2. **실패 시나리오: 범위 침범 차단**
+   - 로컬 PostgreSQL과 Prisma가 같은 연결 계약을 공유해야 한다.
+   - Nest 모듈에서 PrismaService를 주입받을 수 있어야 한다.
+
+- **검증 시나리오 작성 규칙**:
+  - 정상 흐름과 반려 흐름을 함께 적고, 가능하면 현재 테스트 파일 또는 후속 테스트 포인트와 연결한다.
+
+## 🚀 6. 권장 작업 순서
+
+1. **문맥 확인**: `[../architecture/tech-stack.md]`
+2. **입력 자산 확인**: 이번 태스크가 기대하는 타입, 상수, helper, 화면 구조, API 진입점이 이미 준비됐는지 확인한다.
+3. **핵심 구현**: apps/api PostgreSQL + Prisma 초기 설정 범위의 핵심 로직, 화면, 타입, 문서 또는 테스트를 작성한다.
+4. **연동**: 공개 export, 소비 코드, 테스트 연결, 후속 태스크가 기대하는 연결점을 맞춘다.
+5. **검증 실행**:
+   - `pnpm --filter @chess-db/api build`
+   - `pnpm --filter @chess-db/api test`
+6. **자가 점검**: 범위 침범, 수정 금지 파일 변경, 링크 경로, 후속 태스크와의 책임 충돌 여부를 점검한다.
 
 ## ✅ 7. 완료 판정 체크리스트
 
