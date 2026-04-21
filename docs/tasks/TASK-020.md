@@ -1,60 +1,129 @@
-# 📋 개별 작업 지침서: 반수별 코멘트 및 착수 평가 기호 입력 (TASK-020)
+# 📋 개별 작업 지침서: 반수별 코멘트 입력 (TASK-020)
 
 **작업 상태**: 대기 중  
-**선행 작업**: `[TASK-001]`, `[TASK-063]` (GameRecord 스키마)  
-**후속 작업**: `[TASK-022]`  
-**연관 설계**: `[../architecture/project-rules.md]`, `[../architecture/patterns.md]`
+**선행 작업**: `[TASK-017]` (수순 기록), `[TASK-063]` (GameRecord 스키마)  
+**후속 작업**: `[TASK-021]` (착수 평가 기호 입력)  
+**연관 설계**: `[../architecture/project-rules.md]`, `[../architecture/patterns.md]`, `[../architecture/directory-structure.md]`
 
 ---
 
 ## 0. 현재 코드 상태와 이 작업의 위치
 
-- **현재 상태 요약**: 수순 목록과 보드 레이아웃은 준비되었으나, 특정 수(Move)에 대한 사용자의 의견이나 평가를 기록할 UI와 상태가 없습니다.
-- **이 작업의 책임**: 수순 목록에서 현재 선택된 수에 대해 텍스트 코멘트와 표준 착수 평가 기호(!!, ?, !? 등)를 입력할 수 있는 UI와 상태 업데이트 로직을 구현합니다.
-- **경계 메모**: 코멘트는 개별 `MoveHistoryItem` 내에 저장되며, 전역 `GameRecord` 상태의 일부로 관리됩니다.
+- **현재 상태 요약**: 수순 목록은 존재하지만 특정 반수에 대한 텍스트 코멘트를 입력하고 저장할 UI와 store 액션이 없습니다.
+- **이 작업의 책임**: 선택된 반수에 연결되는 텍스트 코멘트 입력창과 draft 상태 업데이트 로직을 구현합니다.
+- **이번 작업에서 하지 않는 것**: 착수 평가 기호 선택 UI와 별도 어노테이션 저장은 `[TASK-021]`로 남깁니다.
+- **경계 메모**:
+  - 코멘트는 반수 단위 문자열 데이터만 다룹니다. 결과 메타데이터나 정식 저장 API는 건드리지 않습니다.
 
 ## 🎯 1. 작업 목표
 
-- **최종 상태**: 사용자가 특정 수를 클릭하고 코멘트 창에 글을 쓰거나 버튼을 눌러 평가 기호를 붙이면, 해당 데이터가 현재 기보 상태에 즉시 반영됩니다.
+- **최종 상태**: 사용자가 특정 반수를 선택하고 코멘트를 입력하면 해당 반수의 코멘트가 draft 상태에 즉시 반영됩니다.
+- **이번 작업의 최소 결과물**:
+  - `apps/web/src/features/move-comment-edit/ui/move-comment-editor.tsx`
+  - `apps/web/src/features/move-comment-edit/model/use-move-comment-edit.ts`
+  - `apps/web/src/entities/draft/model/draft-store.ts`
 - **성공 기준 (AC)**:
-  - 각 반수(Ply)는 독립적인 코멘트와 평가 기호를 가질 수 있어야 한다.
-  - 입력된 데이터는 Zustand 스토어의 `history` 배열 내 해당 아이템의 `comment` 필드에 정확히 매핑되어야 한다.
+  - 각 반수는 독립적인 코멘트 문자열을 가진다.
+  - 선택된 반수가 바뀌면 에디터 값도 그 반수의 코멘트로 즉시 전환된다.
+  - 공백만 입력한 경우는 정규화 규칙에 따라 빈 코멘트로 저장된다.
 
 ## 📂 2. 대상 아티팩트
 
 - **신규 생성**:
-  - `apps/web/src/components/notation/CommentEditor.tsx`
-  - `apps/web/src/components/notation/AnnotationPicker.tsx`
+  - `apps/web/src/features/move-comment-edit/ui/move-comment-editor.tsx`
+  - `apps/web/src/features/move-comment-edit/model/use-move-comment-edit.ts`
 - **수정 대상**:
-  - `apps/web/src/store/useChessStore.ts`: 코멘트 업데이트 액션 추가.
+  - `apps/web/src/entities/draft/model/draft-store.ts`
+  - `apps/web/src/pages/notation-input-page.tsx`
+- **이번 작업에서 수정하지 않음**:
+  - `apps/web/src/features/move-annotation-edit/**` 전체
+  - `apps/web/src/features/save-game/**` 전체
+- **아티팩트 작성 규칙**:
+  - 파일 경로는 `apps/web`, `apps/api`, `packages/shared` 기준의 실제 예상 위치로 고정합니다.
+  - 후속 태스크 책임 파일은 같은 폴더에 있더라도 이번 문서 범위에서 같이 닫지 않습니다.
 
 ## 🛠️ 3. 상세 기술 사양
 
+- **핵심 구현 대상**:
+  - `draft-store`에 `updateMoveComment(plyIndex, comment)` 액션을 추가합니다.
+  - `use-move-comment-edit`는 `selectedPlyIndex`, 현재 코멘트, 저장 액션을 묶어 반환합니다.
+  - `move-comment-editor.tsx`는 `Textarea` 기반 입력기와 disabled/placeholder 상태를 담당합니다.
 - **데이터 모델 해석**:
-  - `MoveHistoryItem`: `{ move: Move, san: string, comment?: string }`
-  - 코멘트 입력 시 해당 인덱스의 `comment` 필드를 업데이트합니다.
-- **UI 컴포넌트**:
-  - `CommentEditor`: `shadcn/ui`의 `Textarea`를 활용한 멀티라인 입력기.
-  - `AnnotationPicker`: `ToggleGroup`을 사용하여 !!, !, !?, ?!, ?, ?? 기호 중 하나를 선택.
+  - `draft.moves[plyIndex].comment`를 반수별 코멘트 저장 위치로 해석합니다.
+  - `selectedPlyIndex`가 없으면 코멘트 입력 UI는 비활성화 상태여야 합니다.
+- **외부 의존성**:
+  - `react`
+  - `zustand`
+  - `@/shared/ui/textarea` 또는 shadcn `Textarea`
+  - `@chess-db/shared`의 `GameRecord` 관련 타입
+- **import/export 규칙**:
+  - `move-comment-editor.tsx`는 draft-store를 직접 읽지 않고 `useMoveCommentEdit` 훅을 통해 접근합니다.
+  - `draft-store.ts`는 저장 포맷 정규화만 담당하고 UI import를 받지 않습니다.
 - **권장 네이밍**:
-  - `updateMoveComment`: 특정 수의 코멘트를 수정하는 액션.
-  - `selectedMoveIndex`: 현재 에디터가 가리키고 있는 수의 인덱스.
+  - `useMoveCommentEdit`, `updateMoveComment`, `selectedPlyIndex`, `currentComment`
+  - `normalizeCommentInput`: 공백 정리 helper가 필요할 때만 사용합니다.
+- **이름별 사용 의도와 적용 시점**:
+  - `updateMoveComment`는 자동 저장 훅이 붙더라도 같은 액션을 재사용하도록 유지합니다.
+  - `currentComment`는 선택된 반수에 연결된 현재 입력값을 뜻할 때만 사용합니다.
+- **인수 이름 가이드**:
+  - `plyIndex`: 반수 인덱스를 의미하는 인수 이름으로 고정합니다.
+  - `nextComment`: 정규화 전 사용자 입력 문자열을 받을 때 사용합니다.
+- **짧은 예시 골격**:
+
+```tsx
+const { currentComment, updateComment } = useMoveCommentEdit();
+
+<Textarea value={currentComment} onChange={(event) => updateComment(event.target.value)} />;
+```
+
 - **필수 describe/it 목록**:
-  - describe: `CommentEditor`
-    - it: `텍스트 입력 시 해당 수의 코멘트 상태가 실시간으로 변경되어야 한다`
-    - it: `수순 목록에서 선택된 수가 바뀌면 에디터의 내용도 해당 수의 코멘트로 전환되어야 한다`
+  - `describe('useMoveCommentEdit')`
+  - `it('선택된 반수가 바뀌면 currentComment가 해당 반수 코멘트로 바뀐다')`
+  - `it('updateMoveComment 호출 시 draft moves 배열의 해당 반수만 갱신된다')`
+  - `it('공백만 입력하면 빈 코멘트 규칙으로 정규화된다')`
+- **최소 테스트 개수**:
+  - 최소 3개
+- **반드시 포함할 실패 시나리오**:
+  - 선택된 반수와 다른 인덱스의 코멘트를 덮어쓰는 경우
+  - 기존 `moves` 배열을 직접 mutate해서 이전 참조가 깨지는 경우
 
 ## ⚖️ 4. 기술 제약 및 규칙
 
-- **불변성**: `history` 배열의 특정 요소를 수정할 때 반드시 전개 연산자를 사용하여 새로운 배열을 생성합니다.
-- **Fail-Fast**: 빈 코멘트는 `undefined` 또는 공백 제거 후 빈 문자열로 처리하여 저장 용량을 최적화합니다.
+- 코멘트 입력만 다루고 어노테이션 버튼은 추가하지 않습니다.
+- 초안 저장을 염두에 두고 문자열 정규화 규칙을 store 한 곳에서 처리합니다.
+- 입력창은 반수가 선택되지 않았을 때 빈 값과 disabled 상태를 동시에 보여줘야 합니다.
+
+## 🧪 5. 검증 시나리오 및 단언
+
+1. **정상 시나리오: 코멘트 입력**
+   - 반수 하나를 선택한 뒤 텍스트를 입력한다.
+   - 선택된 반수의 `comment` 필드만 즉시 갱신된다.
+
+2. **경계 시나리오: 반수 미선택**
+   - 반수를 선택하지 않은 상태에서 페이지를 연다.
+   - 코멘트 입력창은 disabled 상태이고 저장 액션이 호출되지 않는다.
+
+3. **실패 시나리오: 잘못된 인덱스 갱신**
+   - 선택된 반수와 다른 인덱스가 수정된다.
+   - store 테스트가 다른 반수의 코멘트 불변성을 검증해야 한다.
+
+## 🚀 6. 권장 작업 순서
+
+1. `draft-store.ts`에 `updateMoveComment` 액션과 문자열 정규화 로직을 추가합니다.
+2. `use-move-comment-edit.ts`에서 선택된 반수와 현재 코멘트를 읽는 훅을 만듭니다.
+3. `move-comment-editor.tsx`를 작성하고 페이지에 연결합니다.
+4. 반수 전환, 입력, 공백 정규화 테스트를 추가합니다.
+
+- **검증 실행**:
+  - `pnpm --filter @chess-db/web test`
+  - `pnpm --filter @chess-db/web build`
 
 ## ✅ 7. 완료 판정 체크리스트
 
-- [ ] 수순 목록의 특정 수를 선택했을 때 해당 수에 저장된 코멘트가 정상 노출된다.
-- [ ] 텍스트 입력 및 버튼 클릭 시 Zustand 상태가 즉시 업데이트된다.
-- [ ] `GameRecordSchema`를 통한 유효성 검증을 통과하는 형식으로 저장된다.
+- [ ] 코멘트가 반수 단위로 저장된다.
+- [ ] 선택 반수 전환 시 입력값이 해당 반수 코멘트로 동기화된다.
+- [ ] 공백 입력 정규화 규칙이 한 곳에서만 적용된다.
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 반수별 코멘트 및 착수 평가 기호 입력 기능 구현 (TASK-020)`
+- `feat: 반수별 코멘트 입력 규칙과 편집 UI를 추가 (TASK-020)`
