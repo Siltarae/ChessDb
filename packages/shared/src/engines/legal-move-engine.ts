@@ -1,6 +1,7 @@
 import { PIECE_TYPE, type GameState, type Square } from '../models/game-state.js';
 import { getBishopMoves } from './bishop-engine.js';
 import { isCheck } from './check-engine.js';
+import { executeEnPassant } from './en-passant-engine.js';
 import { getKingMoves } from './king-engine.js';
 import { getKnightMoves } from './knight-engine.js';
 import { getPawnMoves } from './pawn-engine.js';
@@ -62,6 +63,16 @@ const getPseudoLegalMoves = (square: Square, state: GameState): Square[] => {
 const simulateMove = (square: Square, targetSquare: Square, state: GameState): GameState => {
   const newBoard = [...state.board];
   const piece = newBoard[square]!;
+
+  const isEnPassantMove =
+    piece.type === PIECE_TYPE.PAWN &&
+    state.enPassantSquare !== null &&
+    targetSquare === state.enPassantSquare &&
+    state.board[targetSquare] === null;
+
+  if (isEnPassantMove) {
+    return executeEnPassant(square, targetSquare, state);
+  }
 
   newBoard[targetSquare] = piece;
   newBoard[square] = null;

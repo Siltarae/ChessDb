@@ -7,6 +7,7 @@ import {
   isEnemyPiece,
   toSquare,
 } from '../utils/board-utils.js';
+import { getEnPassantMoves } from './en-passant-engine.js';
 
 /**
  * 특정 칸의 폰이 이동할 수 있는 의사 합법 수를 반환합니다.
@@ -68,6 +69,8 @@ export const getPawnMoves = (square: Square, state: GameState): Square[] => {
   if (file !== FILE.H && eastCapture !== null && isEnemyPiece(state, eastCapture, color)) {
     moves.push(eastCapture);
   }
+
+  moves.push(...getEnPassantMoves(square, state));
 
   return moves;
 };
