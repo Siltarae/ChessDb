@@ -16,8 +16,8 @@ const createKingMove = (square: Square): KingMove => {
       const targetFile = file + dx;
       const targetRank = rank + dy;
       if (targetFile >= 0 && targetFile <= 7 && targetRank >= 0 && targetRank <= 7) {
-        const square = targetFile + targetRank * 8;
-        kingMove.push(square as Square);
+        const targetSquare = targetFile + targetRank * 8;
+        kingMove.push(targetSquare as Square);
       }
     }
   }
