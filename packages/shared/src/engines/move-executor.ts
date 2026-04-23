@@ -31,15 +31,40 @@ export const executeMove = (state: GameState, move: Move): GameState => {
   }
 
   if (move.kind === MOVE_KIND.EN_PASSANT) {
-    return executeEnPassant(move.from, move.to, state);
+    const nextState = executeEnPassant(move.from, move.to, state);
+    if (nextState === state) {
+      return state;
+    }
+
+    return applySpecialMoveState(state, nextState, {
+      enPassantSquare: null,
+      halfmoveClock: 0,
+    });
   }
 
   if (move.kind === MOVE_KIND.CASTLE_KING_SIDE || move.kind === MOVE_KIND.CASTLE_QUEEN_SIDE) {
-    return executeCastling(move.from, move.to, state);
+    const nextState = executeCastling(move.from, move.to, state);
+    if (nextState === state) {
+      return state;
+    }
+
+    return applySpecialMoveState(state, nextState, {
+      enPassantSquare: null,
+      halfmoveClock: state.halfmoveClock + 1,
+    });
   }
 
   if (move.promotion) {
-    return { ...executePromotion(move.from, move.to, state, move.promotion), halfmoveClock: 0 };
+    const nextState = executePromotion(move.from, move.to, state, move.promotion);
+    if (nextState === state) {
+      return state;
+    }
+
+    return applySpecialMoveState(state, nextState, {
+      castlingRights: computeCastleRights(state, move, piece),
+      enPassantSquare: null,
+      halfmoveClock: 0,
+    });
   }
 
   const nextState = executeNormalMove(state, move, piece);
@@ -53,6 +78,18 @@ export const executeMove = (state: GameState, move: Move): GameState => {
     castlingRights: computeCastleRights(state, move, piece),
   };
 };
+
+const applySpecialMoveState = (
+  state: GameState,
+  nextState: GameState,
+  overrides: Pick<GameState, 'enPassantSquare' | 'halfmoveClock'> &
+    Partial<Pick<GameState, 'castlingRights'>>,
+): GameState => ({
+  ...nextState,
+  ...overrides,
+  turn: getOpponentColor(state.turn),
+  fullmoveNumber: computeFullmoveNumber(state),
+});
 
 const executeNormalMove = (state: GameState, move: Move, piece: Piece): GameState => {
   const board = [...state.board];
