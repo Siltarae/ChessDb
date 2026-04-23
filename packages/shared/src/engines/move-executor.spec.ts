@@ -425,6 +425,21 @@ describe('MoveExecutor', () => {
       expect(nextState.board[SQUARE.F1]).toEqual({ type: PIECE_TYPE.ROOK, color: COLOR.WHITE });
     });
 
+    it('백 캐슬링 후 턴이 흑으로 넘어가야 한다', () => {
+      const board = [...Array(64).fill(null)];
+      board[SQUARE.E1] = { type: PIECE_TYPE.KING, color: COLOR.WHITE };
+      board[SQUARE.H1] = { type: PIECE_TYPE.ROOK, color: COLOR.WHITE };
+      const state = {
+        ...createEmptyState(),
+        castlingRights: CASTLE.WHITE_KING_SIDE,
+        board,
+      };
+
+      const nextState = executeMove(state, castleKingsideMove(SQUARE.E1, SQUARE.G1));
+
+      expect(nextState.turn).toBe(COLOR.BLACK);
+    });
+
     it('백 퀸사이드 캐슬링 시 킹과 룩 위치를 함께 갱신해야 한다', () => {
       const board = [...Array(64).fill(null)];
       board[SQUARE.E1] = { type: PIECE_TYPE.KING, color: COLOR.WHITE };
@@ -481,6 +496,69 @@ describe('MoveExecutor', () => {
       expect(nextState.board[SQUARE.D8]).toEqual({ type: PIECE_TYPE.ROOK, color: COLOR.BLACK });
     });
 
+    it('흑 캐슬링 후 fullmoveNumber를 1 증가시켜야 한다', () => {
+      const board = [...Array(64).fill(null)];
+      board[SQUARE.E8] = { type: PIECE_TYPE.KING, color: COLOR.BLACK };
+      board[SQUARE.H8] = { type: PIECE_TYPE.ROOK, color: COLOR.BLACK };
+      const state = {
+        ...createEmptyState(),
+        turn: COLOR.BLACK,
+        castlingRights: CASTLE.BLACK_KING_SIDE,
+        fullmoveNumber: 12,
+        board,
+      };
+
+      const nextState = executeMove(state, castleKingsideMove(SQUARE.E8, SQUARE.G8));
+
+      expect(nextState.fullmoveNumber).toBe(13);
+    });
+
+    it('캐슬링 후 enPassantSquare를 null로 초기화해야 한다', () => {
+      const board = [...Array(64).fill(null)];
+      board[SQUARE.E1] = { type: PIECE_TYPE.KING, color: COLOR.WHITE };
+      board[SQUARE.H1] = { type: PIECE_TYPE.ROOK, color: COLOR.WHITE };
+      const state = {
+        ...createEmptyState(),
+        castlingRights: CASTLE.WHITE_KING_SIDE,
+        enPassantSquare: SQUARE.E3,
+        board,
+      };
+
+      const nextState = executeMove(state, castleKingsideMove(SQUARE.E1, SQUARE.G1));
+
+      expect(nextState.enPassantSquare).toBeNull();
+    });
+
+    it('캐슬링 후 halfmoveClock은 킹 이동이므로 1 증가해야 한다', () => {
+      const board = [...Array(64).fill(null)];
+      board[SQUARE.E1] = { type: PIECE_TYPE.KING, color: COLOR.WHITE };
+      board[SQUARE.H1] = { type: PIECE_TYPE.ROOK, color: COLOR.WHITE };
+      const state = {
+        ...createEmptyState(),
+        castlingRights: CASTLE.WHITE_KING_SIDE,
+        halfmoveClock: 7,
+        board,
+      };
+
+      const nextState = executeMove(state, castleKingsideMove(SQUARE.E1, SQUARE.G1));
+
+      expect(nextState.halfmoveClock).toBe(8);
+    });
+
+    it('불가능한 캐슬링 입력이면 원본 state를 그대로 반환해야 한다', () => {
+      const board = [...Array(64).fill(null)];
+      board[SQUARE.E1] = { type: PIECE_TYPE.KING, color: COLOR.WHITE };
+      const state = {
+        ...createEmptyState(),
+        castlingRights: CASTLE.WHITE_KING_SIDE,
+        board,
+      };
+
+      const nextState = executeMove(state, castleKingsideMove(SQUARE.E1, SQUARE.G1));
+
+      expect(nextState).toBe(state);
+    });
+
     it('백이 앙파상하면 도착 칸으로 이동하고 지나친 흑 폰을 제거해야 한다', () => {
       const board = [...Array(64).fill(null)];
       board[SQUARE.E5] = { type: PIECE_TYPE.PAWN, color: COLOR.WHITE };
@@ -496,6 +574,36 @@ describe('MoveExecutor', () => {
       expect(nextState.board[SQUARE.E5]).toBeNull();
       expect(nextState.board[SQUARE.D5]).toBeNull();
       expect(nextState.board[SQUARE.D6]).toEqual({ type: PIECE_TYPE.PAWN, color: COLOR.WHITE });
+    });
+
+    it('백이 앙파상하면 턴이 흑으로 넘어가야 한다', () => {
+      const board = [...Array(64).fill(null)];
+      board[SQUARE.E5] = { type: PIECE_TYPE.PAWN, color: COLOR.WHITE };
+      board[SQUARE.D5] = { type: PIECE_TYPE.PAWN, color: COLOR.BLACK };
+      const state = {
+        ...createEmptyState(),
+        enPassantSquare: SQUARE.D6,
+        board,
+      };
+
+      const nextState = executeMove(state, enPassantMove(SQUARE.E5, SQUARE.D6, SQUARE.D5));
+
+      expect(nextState.turn).toBe(COLOR.BLACK);
+    });
+
+    it('불가능한 앙파상 입력이면 원본 state를 그대로 반환해야 한다', () => {
+      const board = [...Array(64).fill(null)];
+      board[SQUARE.E5] = { type: PIECE_TYPE.PAWN, color: COLOR.WHITE };
+      board[SQUARE.D5] = { type: PIECE_TYPE.PAWN, color: COLOR.BLACK };
+      const state = {
+        ...createEmptyState(),
+        enPassantSquare: SQUARE.C6,
+        board,
+      };
+
+      const nextState = executeMove(state, enPassantMove(SQUARE.E5, SQUARE.D6, SQUARE.D5));
+
+      expect(nextState).toBe(state);
     });
 
     it('흑이 앙파상하면 도착 칸으로 이동하고 지나친 백 폰을 제거해야 한다', () => {
@@ -514,6 +622,23 @@ describe('MoveExecutor', () => {
       expect(nextState.board[SQUARE.D4]).toBeNull();
       expect(nextState.board[SQUARE.E4]).toBeNull();
       expect(nextState.board[SQUARE.E3]).toEqual({ type: PIECE_TYPE.PAWN, color: COLOR.BLACK });
+    });
+
+    it('흑이 앙파상하면 fullmoveNumber를 1 증가시켜야 한다', () => {
+      const board = [...Array(64).fill(null)];
+      board[SQUARE.D4] = { type: PIECE_TYPE.PAWN, color: COLOR.BLACK };
+      board[SQUARE.E4] = { type: PIECE_TYPE.PAWN, color: COLOR.WHITE };
+      const state = {
+        ...createEmptyState(),
+        turn: COLOR.BLACK,
+        enPassantSquare: SQUARE.E3,
+        fullmoveNumber: 12,
+        board,
+      };
+
+      const nextState = executeMove(state, enPassantMove(SQUARE.D4, SQUARE.E3, SQUARE.E4));
+
+      expect(nextState.fullmoveNumber).toBe(13);
     });
 
     it('앙파상 실행 시 halfmoveClock을 0으로 초기화해야 한다', () => {
@@ -565,6 +690,16 @@ describe('MoveExecutor', () => {
       expect(nextState.board[SQUARE.E7]).toBeNull();
       expect(nextState.board[SQUARE.F8]).toEqual({ type: PIECE_TYPE.QUEEN, color: COLOR.WHITE });
       expect(nextState.halfmoveClock).toBe(0);
+    });
+
+    it('불가능한 프로모션 입력이면 원본 state를 그대로 반환해야 한다', () => {
+      const board = [...Array(64).fill(null)];
+      board[SQUARE.E7] = { type: PIECE_TYPE.PAWN, color: COLOR.WHITE };
+      const state = { ...createEmptyState(), board };
+
+      const nextState = executeMove(state, normalMove(SQUARE.E7, SQUARE.E6, PIECE_TYPE.QUEEN));
+
+      expect(nextState).toBe(state);
     });
 
     it('킹과 룩이 아닌 기물 이동은 캐슬링 권리를 유지해야 한다', () => {
