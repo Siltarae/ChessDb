@@ -160,9 +160,13 @@ const toPieceKey = (piece: Piece | null): string => {
 };
 
 const hasInsufficientMaterial = (state: GameState): boolean => {
-  let count = 0;
+  let knightCount = 0;
+  let bishopCount = 0;
+  const bishopSquareColors = new Set<number>();
+
   for (let i = 0; i < 64; i++) {
-    const piece = state.board[i as Square];
+    const square = i as Square;
+    const piece = state.board[square];
     if (!piece) {
       continue;
     }
@@ -175,15 +179,34 @@ const hasInsufficientMaterial = (state: GameState): boolean => {
       return false;
     }
 
-    if ((piece.type === PIECE_TYPE.BISHOP || piece.type === PIECE_TYPE.KNIGHT) && count === 0) {
-      count += 1;
-    } else if (
-      (piece.type === PIECE_TYPE.BISHOP || piece.type === PIECE_TYPE.KNIGHT) &&
-      count === 1
-    ) {
-      return false;
+    if (piece.type === PIECE_TYPE.KNIGHT) {
+      knightCount += 1;
+
+      if (knightCount >= 2) {
+        return false;
+      }
+
+      if (bishopCount > 0) {
+        return false;
+      }
+    }
+
+    if (piece.type === PIECE_TYPE.BISHOP) {
+      bishopCount += 1;
+      bishopSquareColors.add(getSquareColor(square));
+
+      if (knightCount > 0) {
+        return false;
+      }
     }
   }
 
-  return true;
+  return bishopSquareColors.size <= 1;
+};
+
+const getSquareColor = (square: Square): number => {
+  const rank = Math.floor(square / 8);
+  const file = square % 8;
+
+  return (rank + file) % 2;
 };

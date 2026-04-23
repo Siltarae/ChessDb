@@ -207,11 +207,64 @@ describe('getGameResult', () => {
     });
   });
 
+  it('같은 색 칸의 비숍 2개 대 킹은 기물 부족 무승부를 반환해야 한다', () => {
+    const board = createBoard();
+    board[SQUARE.E1] = { type: PIECE_TYPE.KING, color: COLOR.WHITE };
+    board[SQUARE.C1] = { type: PIECE_TYPE.BISHOP, color: COLOR.WHITE };
+    board[SQUARE.A3] = { type: PIECE_TYPE.BISHOP, color: COLOR.WHITE };
+    board[SQUARE.E8] = { type: PIECE_TYPE.KING, color: COLOR.BLACK };
+    const state = createEmptyState({ board });
+
+    expect(getGameResult(state, {})).toEqual({
+      status: GAME_RESULT_STATUS.FINISHED,
+      reason: REASON.INSUFFICIENT_MATERIAL,
+    });
+  });
+
   it('비숍 또는 나이트가 2개 이상 남아 있으면 기물 부족 무승부가 아니어야 한다', () => {
     const board = createBoard();
     board[SQUARE.E1] = { type: PIECE_TYPE.KING, color: COLOR.WHITE };
     board[SQUARE.C1] = { type: PIECE_TYPE.BISHOP, color: COLOR.WHITE };
     board[SQUARE.F1] = { type: PIECE_TYPE.BISHOP, color: COLOR.WHITE };
+    board[SQUARE.E8] = { type: PIECE_TYPE.KING, color: COLOR.BLACK };
+    const state = createEmptyState({ board });
+
+    expect(getGameResult(state, {})).toEqual({
+      status: GAME_RESULT_STATUS.ONGOING,
+    });
+  });
+
+  it('나이트가 2개 남아 있으면 기물 부족 무승부가 아니어야 한다', () => {
+    const board = createBoard();
+    board[SQUARE.E1] = { type: PIECE_TYPE.KING, color: COLOR.WHITE };
+    board[SQUARE.B1] = { type: PIECE_TYPE.KNIGHT, color: COLOR.WHITE };
+    board[SQUARE.G1] = { type: PIECE_TYPE.KNIGHT, color: COLOR.WHITE };
+    board[SQUARE.E8] = { type: PIECE_TYPE.KING, color: COLOR.BLACK };
+    const state = createEmptyState({ board });
+
+    expect(getGameResult(state, {})).toEqual({
+      status: GAME_RESULT_STATUS.ONGOING,
+    });
+  });
+
+  it('비숍과 나이트가 함께 남아 있으면 기물 부족 무승부가 아니어야 한다', () => {
+    const board = createBoard();
+    board[SQUARE.E1] = { type: PIECE_TYPE.KING, color: COLOR.WHITE };
+    board[SQUARE.C1] = { type: PIECE_TYPE.BISHOP, color: COLOR.WHITE };
+    board[SQUARE.G1] = { type: PIECE_TYPE.KNIGHT, color: COLOR.WHITE };
+    board[SQUARE.E8] = { type: PIECE_TYPE.KING, color: COLOR.BLACK };
+    const state = createEmptyState({ board });
+
+    expect(getGameResult(state, {})).toEqual({
+      status: GAME_RESULT_STATUS.ONGOING,
+    });
+  });
+
+  it('나이트를 먼저 만나고 비숍을 나중에 만나도 기물 부족 무승부가 아니어야 한다', () => {
+    const board = createBoard();
+    board[SQUARE.E1] = { type: PIECE_TYPE.KING, color: COLOR.WHITE };
+    board[SQUARE.B1] = { type: PIECE_TYPE.KNIGHT, color: COLOR.WHITE };
+    board[SQUARE.C8] = { type: PIECE_TYPE.BISHOP, color: COLOR.WHITE };
     board[SQUARE.E8] = { type: PIECE_TYPE.KING, color: COLOR.BLACK };
     const state = createEmptyState({ board });
 
