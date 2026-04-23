@@ -1,6 +1,6 @@
 # 📋 개별 작업 지침서: 승패 및 무승부 판정 (TASK-061)
 
-**작업 상태**: 대기 중  
+**작업 상태**: 완료  
 **선행 작업**: `[TASK-060]` (수 실행), `[TASK-010]` (체크 판정)  
 **후속 작업**: `[TASK-062]` (SAN 기보 변환)  
 **연관 설계**: `[../architecture/patterns.md]`, `[../architecture/project-rules.md]`
@@ -9,8 +9,8 @@
 
 ## 0. 현재 코드 상태와 이 작업의 위치
 
-- **현재 상태 요약**: 상태 전이는 가능하지만 현재 게임이 계속 진행 중인지, 메이트인지, 무승부인지 판정하는 종합 엔진은 없습니다.
-- **이 작업의 책임**: 현재 상태와 과거 상태 이력을 바탕으로 메이트, 스테일메이트, 50수, 3회 반복, 기물 부족 여부를 판정합니다.
+- **현재 상태 요약**: 상태 전이와 게임 결과 판정 엔진이 구현되어 있으며, `packages/shared` 기준 검증과 커버리지가 모두 통과합니다.
+- **이 작업의 책임**: 현재 상태와 반복 카운트 맵(`history`)을 바탕으로 메이트, 스테일메이트, 50수, 3회 반복, 기물 부족 여부를 판정합니다.
 - **이번 작업에서 하지 않는 것**: SAN 생성과 저장 스키마 구성은 후속 태스크로 남깁니다.
 - **경계 메모**:
   - 결과 판정만 다룹니다.
@@ -47,7 +47,8 @@
   - 동형 반복 판정용 position fingerprint helper를 둡니다.
   - 기물 부족 판정 helper를 분리합니다.
 - **데이터 모델 해석**:
-  - 입력은 현재 `GameState`와 과거 상태 배열입니다.
+  - 입력은 현재 `GameState`와 반복 횟수 조회용 `Record<string, number>` `history`입니다.
+  - `history`는 `positionFingerprint(state)`를 키로 갖는 누적 카운트 맵입니다.
 - **외부 의존성**:
   - shared 내부 `isCheck`, `isLegalMove` 계열 엔진
   - `vitest`
@@ -65,6 +66,10 @@
 const result = getGameResult(state, history);
 ```
 
+- **history 해석 규칙**:
+  - `history`는 이전 상태 배열이 아니라 fingerprint별 누적 count 맵입니다.
+  - 현재 구현 기준으로 `history[positionFingerprint(state)] >= 2`이면 3회 반복으로 판정합니다.
+
 - **필수 describe/it 목록**:
   - `describe('getGameResult')`
   - `it('체크메이트를 판정한다')`
@@ -79,6 +84,7 @@ const result = getGameResult(state, history);
 ## ⚖️ 4. 기술 제약 및 규칙
 
 - `history`를 mutate하지 않습니다.
+- `history`에는 현재 `state`를 넣지 않습니다.
 - 동형 반복 비교에는 턴/캐슬링/앙파상 상태를 모두 포함합니다.
 
 ## 🧪 5. 검증 시나리오 및 단언
@@ -88,8 +94,8 @@ const result = getGameResult(state, history);
    - `CHECKMATE` 반환
 
 2. **정상 시나리오: 3회 반복**
-   - 같은 position fingerprint 3회
-   - `DRAW`와 반복 사유 반환
+   - 현재 상태 fingerprint의 count가 `2` 이상
+   - `THREEFOLD_REPETITION` 반환
 
 3. **실패 시나리오: 오판 반복**
    - 기물 배치는 같지만 턴이 다름
@@ -101,6 +107,7 @@ const result = getGameResult(state, history);
 2. 메이트/스테일메이트 판정을 구현합니다.
 3. 무승부 helper를 구현합니다.
 4. index export를 연결하고 테스트를 통과시킵니다.
+5. 최종적으로 `type-check`, 전체 `test`, `test:coverage`를 모두 통과시킵니다.
 
 - **검증 실행**:
   - `pnpm --filter @chess-db/shared test`
@@ -108,9 +115,9 @@ const result = getGameResult(state, history);
 
 ## ✅ 7. 완료 판정 체크리스트
 
-- [ ] 메이트/스테일메이트/무승부를 판정한다.
-- [ ] 동형 반복과 기물 부족 규칙이 포함된다.
-- [ ] 비교 키가 정확하다.
+- [x] 메이트/스테일메이트/무승부를 판정한다.
+- [x] 동형 반복과 기물 부족 규칙이 포함된다.
+- [x] 비교 키가 정확하다.
 
 ## 💬 9. 추천 커밋 메시지
 
