@@ -57,12 +57,15 @@
 
 ```typescript
 // [1] Mock 데이터 및 Fixture 분리 (파일 상단)
-const MOCK_INITIAL_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+const MOCK_INITIAL_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 
-describe('PawnMovementEngine', () => { // Given (어떤 대상을)
-  describe('초기 보드 상태에서 백 폰(e2)을 움직일 때', () => { // When (어떤 상황에)
-    
-    it('한 칸(e3) 또는 두 칸(e4)을 이동할 수 있어야 한다', () => { // Then (어떤 결과가 나와야 한다)
+describe('PawnMovementEngine', () => {
+  // Given (어떤 대상을)
+  describe('초기 보드 상태에서 백 폰(e2)을 움직일 때', () => {
+    // When (어떤 상황에)
+
+    it('한 칸(e3) 또는 두 칸(e4)을 이동할 수 있어야 한다', () => {
+      // Then (어떤 결과가 나와야 한다)
       const engine = new ChessEngine(MOCK_INITIAL_FEN);
       const pawnPosition = { file: 'e', rank: 2 };
 
@@ -72,7 +75,6 @@ describe('PawnMovementEngine', () => { // Given (어떤 대상을)
       expect(legalMoves).toContainEqual({ file: 'e', rank: 4 });
       expect(legalMoves.length).toBe(2);
     });
-
   });
 });
 ```
@@ -80,6 +82,25 @@ describe('PawnMovementEngine', () => { // Given (어떤 대상을)
 ## 문서화 규칙
 
 - **API 자동 문서화**: 모든 백엔드 REST API는 `@nestjs/swagger`를 통해 코드 레벨에서 명세를 작성하고, 항상 최신 상태의 Swagger UI를 프론트엔드 개발자에게 제공해야 한다.
+- **공개 함수 TSDoc 형식 통일**: `packages/shared`의 공개 함수에는 아래 순서를 따르는 짧은 TSDoc을 작성한다.
+  - 첫 줄에는 함수가 무엇을 반환하거나 판정하는지 한 문장으로 적는다.
+  - 그다음 `@param`을 인수 순서대로 모두 적는다.
+  - 마지막에 `@returns`를 적는다.
+  - 필요하면 맨 아래에 1줄 또는 짧은 코드 예시를 넣는다.
+  - 구현 이력, Task 번호, “스켈레톤”, “최소 뼈대” 같은 임시 문구는 남기지 않는다.
+  - 내부 helper에는 꼭 필요할 때만 주석을 달고, 기본적으로는 공개 함수 중심으로 작성한다.
+
+```ts
+/**
+ * 특정 칸의 킹이 이동할 수 있는 의사 합법 수를 반환합니다.
+ *
+ * @param square 이동할 킹이 있는 시작 칸
+ * @param state 현재 게임 상태
+ * @returns 킹의 의사 합법 이동 칸 목록
+ *
+ * const moves = getKingMoves(SQUARE.E1, state);
+ */
+```
 
 ## 작업 운영 규칙
 

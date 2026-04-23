@@ -9,10 +9,13 @@ import {
 } from '../utils/board-utils.js';
 
 /**
- * [TASK-004] 폰(Pawn)의 합법 수 판정 로직
- * @param square 현재 폰의 위치 (0-63)
+ * 특정 칸의 폰이 이동할 수 있는 의사 합법 수를 반환합니다.
+ *
+ * @param square 이동할 폰이 있는 시작 칸
  * @param state 현재 게임 상태
- * @returns 이동 가능한 좌표 배열
+ * @returns 폰의 의사 합법 이동 칸 목록
+ *
+ * const moves = getPawnMoves(SQUARE.E2, state);
  */
 export const getPawnMoves = (square: Square, state: GameState): Square[] => {
   const piece = state.board[square];

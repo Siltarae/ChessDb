@@ -4,10 +4,13 @@ import { DIRECTION } from '../utils/ray-table.js';
 import { getSlidingMoves } from './sliding-engine.js';
 
 /**
- * [TASK-007] 룩(Rook) 합법 수 판정 로직
- * @param square 현재 룩의 위치 (0-63)
+ * 특정 칸의 룩이 이동할 수 있는 의사 합법 수를 반환합니다.
+ *
+ * @param square 이동할 룩이 있는 시작 칸
  * @param state 현재 게임 상태
- * @returns 이동 가능한 좌표 배열
+ * @returns 룩의 의사 합법 이동 칸 목록
+ *
+ * const moves = getRookMoves(SQUARE.A1, state);
  */
 export const getRookMoves = (square: Square, state: GameState): Square[] => {
   const ROOK_DIRECTIONS = [DIRECTION.NORTH, DIRECTION.SOUTH, DIRECTION.EAST, DIRECTION.WEST];

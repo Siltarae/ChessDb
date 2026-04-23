@@ -11,6 +11,16 @@ import { getKnightTargets } from '../utils/knight-move-table.js';
 import { DIRECTION } from '../utils/ray-table.js';
 import { getSlidingMoves } from './sliding-engine.js';
 
+/**
+ * 특정 칸이 지정한 색의 기물에게 공격받고 있는지 판정합니다.
+ *
+ * @param square 공격 여부를 확인할 대상 칸
+ * @param attackerColor 공격하는 쪽의 색상
+ * @param state 현재 게임 상태
+ * @returns 해당 칸이 공격받고 있으면 `true`
+ *
+ * const attacked = isSquareAttacked(SQUARE.E4, COLOR.BLACK, state);
+ */
 export const isSquareAttacked = (square: Square, attackerColor: Color, state: GameState) => {
   if (isAttackedByPawn(square, attackerColor, state)) return true;
   if (isAttackedByKnight(square, attackerColor, state)) return true;

@@ -36,11 +36,20 @@ const createKnightMoveTable = (): KnightMoveTable =>
   Array.from({ length: 64 }, (_, square) => createKnightMove(square as Square));
 
 /**
- * 시작 칸별 나이트 이동 테이블
+ * 시작 칸별 나이트 이동 테이블을 반환합니다.
  *
- * @example
- * KNIGHT_MOVE_TABLE[SQUARE]
+ * @returns 각 시작 칸에 대응하는 나이트 이동 후보 테이블
+ *
+ * const table = KNIGHT_MOVE_TABLE;
  */
 export const KNIGHT_MOVE_TABLE = createKnightMoveTable();
 
+/**
+ * 특정 칸의 나이트 기본 이동 후보를 조회합니다.
+ *
+ * @param square 이동 후보를 조회할 시작 칸
+ * @returns 해당 칸에서 도달 가능한 나이트 이동 칸 목록
+ *
+ * const targets = getKnightTargets(SQUARE.B1);
+ */
 export const getKnightTargets = (square: Square): KnightMoves => KNIGHT_MOVE_TABLE[square]!;

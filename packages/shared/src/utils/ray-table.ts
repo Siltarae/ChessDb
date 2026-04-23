@@ -75,11 +75,24 @@ const createRayTable = (): RayTable =>
   Array.from({ length: 64 }, (_, square) => createRaysByDirection(square as Square));
 
 /**
- * 방향별 ray 테이블 생성
+ * 각 시작 칸에서 8방향으로 끝까지 뻗어나가는 칸 목록을 미리 계산한 테이블입니다.
  *
- * @example
- * RAY_TABLE[SQUARE][DIRECTION]
+ * `RAY_TABLE[square][direction]` 형태로 접근하면,
+ * 해당 칸에서 지정한 방향으로 한 칸씩 진행했을 때 보드 끝까지 만나는 칸들을 순서대로 얻을 수 있습니다.
+ *
+ * @returns 모든 보드 칸의 방향별 직선 경로 테이블
+ *
+ * const table = RAY_TABLE;
  */
 export const RAY_TABLE = createRayTable();
 
+/**
+ * 특정 칸에서 지정한 방향으로 끝까지 이어지는 칸 목록을 조회합니다.
+ *
+ * @param square 경로 계산을 시작할 보드 칸
+ * @param direction 조회할 진행 방향
+ * @returns 시작 칸 다음 칸부터 보드 끝까지 이어지는 칸 목록
+ *
+ * const ray = getRay(SQUARE.A1, DIRECTION.NORTH);
+ */
 export const getRay = (square: Square, direction: Direction): Ray => RAY_TABLE[square]![direction];
