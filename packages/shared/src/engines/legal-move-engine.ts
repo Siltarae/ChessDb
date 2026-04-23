@@ -7,10 +7,6 @@ import { getPawnMoves } from './pawn-engine.js';
 import { getQueenMoves } from './queen-engine.js';
 import { getRookMoves } from './rook-engine.js';
 
-/**
- * [TASK-011] 체크 상태 기준 합법 수 필터링 로직 스켈레톤
- * 현재는 테스트/구현 진입점을 고정하기 위한 최소 뼈대만 제공합니다.
- */
 export const getLegalMoves = (square: Square, state: GameState): Square[] => {
   const piece = state.board[square];
 
