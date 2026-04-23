@@ -1,4 +1,10 @@
-import { type Color, type GameState, type Piece, type Square } from '../models/game-state.js';
+import {
+  COLOR,
+  type Color,
+  type GameState,
+  type Piece,
+  type Square,
+} from '../models/game-state.js';
 
 /**
  * 숫자가 유효한 보드 인덱스(0-63)인지 확인하는 타입 가드
@@ -53,4 +59,13 @@ export const isEnemyPiece = (state: GameState, square: Square, myColor: Color): 
   }
 
   return piece.color !== myColor;
+};
+
+/**
+ * 상대방 색상을 반환
+ * @param color 현재 색상
+ * @returns 상대방 색상
+ */
+export const getOpponentColor = (color: Color): Color => {
+  return color === COLOR.WHITE ? COLOR.BLACK : COLOR.WHITE;
 };

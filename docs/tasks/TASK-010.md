@@ -20,6 +20,8 @@
 - **최종 상태**: 특정 색상의 킹이 상대 기물에 의해 하나라도 공격받고 있다면 `true`, 아니면 `false`를 반환하는 엔진을 구축합니다.
 
 - **이번 작업의 최소 결과물**:
+  - `packages/shared/src/engines/square-attack-engine.ts`
+  - `packages/shared/src/engines/square-attack-engine.spec.ts`
   - `packages/shared/src/engines/check-engine.ts`
   - `packages/shared/src/engines/check-engine.spec.ts`
 - **성공 기준 (AC)**:
@@ -30,9 +32,13 @@
 ## 📂 2. 대상 아티팩트
 
 - **신규 생성**:
+  - `packages/shared/src/engines/square-attack-engine.ts`
+  - `packages/shared/src/engines/square-attack-engine.spec.ts`
   - `packages/shared/src/engines/check-engine.ts`
   - `packages/shared/src/engines/check-engine.spec.ts`
 - **수정 대상**:
+  - `packages/shared/src/engines/square-attack-engine.ts`
+  - `packages/shared/src/engines/square-attack-engine.spec.ts`
   - `packages/shared/src/engines/check-engine.ts`
   - `packages/shared/src/engines/check-engine.spec.ts`
 - **조건부 정리 대상**: 필요할 때만 작성
@@ -56,6 +62,10 @@
   export function isCheck(state: GameState, color: Color): boolean;
   ```
 - **필수 describe/it 목록**:
+  - describe: `isSquareAttacked`
+    - it: `상대 룩이 같은 파일에서 막히지 않으면 공격 중으로 판정해야 한다`
+    - it: `슬라이딩 공격 경로에 장애물이 있으면 공격이 아닌 것으로 판정해야 한다`
+    - it: `나이트, 폰, 킹의 비슬라이딩 공격도 정확히 감지해야 한다`
   - describe: `isCheck`
     - it: `킹이 상대 룩의 공격 경로에 있을 때 체크 상태임을 감지해야 한다`
     - it: `중간에 장애물(아군/상대 기물)이 공격 경로를 막고 있으면 체크가 아님을 반환해야 한다`
@@ -146,6 +156,7 @@ const inCheck = isCheck(state, color);
 5. **검증 실행**:
    - `pnpm --filter @chess-db/shared test`
    - `pnpm --filter @chess-db/shared type-check`
+   - `pnpm --filter @chess-db/shared test:coverage`
 6. **자가 점검**: 범위 침범, 수정 금지 파일 변경, 링크 경로, 후속 태스크와의 책임 충돌 여부를 점검한다.
 
 ## ✅ 7. 완료 판정 체크리스트
