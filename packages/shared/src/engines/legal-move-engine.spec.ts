@@ -170,5 +170,36 @@ describe('LegalMoveEngine', () => {
         expect.arrayContaining([SQUARE.G8, SQUARE.C8]),
       );
     });
+
+    it('앙파상이 합법이면 폰의 합법 수 결과에 앙파상 목적지가 포함되어야 한다', () => {
+      const board = [...Array(64).fill(null)];
+      board[SQUARE.E1] = { type: PIECE_TYPE.KING, color: COLOR.WHITE };
+      board[SQUARE.E8] = { type: PIECE_TYPE.KING, color: COLOR.BLACK };
+      board[SQUARE.E5] = { type: PIECE_TYPE.PAWN, color: COLOR.WHITE };
+      board[SQUARE.D5] = { type: PIECE_TYPE.PAWN, color: COLOR.BLACK };
+      const state = {
+        ...createEmptyState(),
+        enPassantSquare: SQUARE.D6,
+        board,
+      };
+
+      expect(getLegalMoves(SQUARE.E5, state)).toContain(SQUARE.D6);
+    });
+
+    it('앙파상 후 제거 대상 폰이 사라져 자기 킹이 체크에 노출되면 그 수를 제외해야 한다', () => {
+      const board = [...Array(64).fill(null)];
+      board[SQUARE.A5] = { type: PIECE_TYPE.KING, color: COLOR.WHITE };
+      board[SQUARE.C5] = { type: PIECE_TYPE.PAWN, color: COLOR.WHITE };
+      board[SQUARE.D5] = { type: PIECE_TYPE.PAWN, color: COLOR.BLACK };
+      board[SQUARE.H5] = { type: PIECE_TYPE.ROOK, color: COLOR.BLACK };
+      board[SQUARE.A8] = { type: PIECE_TYPE.KING, color: COLOR.BLACK };
+      const state = {
+        ...createEmptyState(),
+        enPassantSquare: SQUARE.D6,
+        board,
+      };
+
+      expect(getLegalMoves(SQUARE.C5, state)).not.toContain(SQUARE.D6);
+    });
   });
 });

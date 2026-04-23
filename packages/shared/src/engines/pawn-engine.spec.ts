@@ -123,6 +123,47 @@ describe('PawnEngine', () => {
         // Then
         expect(moves).toContain(SQUARE.F6);
       });
+
+      it('앙파상 조건을 만족하면 흑 폰도 앙파상 목적지를 결과에 포함해야 한다', () => {
+        const board = [...Array(64).fill(null)];
+        board[SQUARE.D4] = { type: PIECE_TYPE.PAWN, color: COLOR.BLACK };
+        board[SQUARE.E4] = { type: PIECE_TYPE.PAWN, color: COLOR.WHITE };
+        const state = {
+          ...createEmptyState(),
+          turn: COLOR.BLACK,
+          enPassantSquare: SQUARE.E3,
+          board,
+        };
+
+        expect(getPawnMoves(SQUARE.D4, state)).toContain(SQUARE.E3);
+      });
+    });
+
+    describe('앙파상(En Passant) 이동을 판정할 때', () => {
+      it('앙파상 조건을 만족하면 백 폰의 대각선 빈 칸 이동을 결과에 포함해야 한다', () => {
+        const board = [...Array(64).fill(null)];
+        board[SQUARE.E5] = { type: PIECE_TYPE.PAWN, color: COLOR.WHITE };
+        board[SQUARE.D5] = { type: PIECE_TYPE.PAWN, color: COLOR.BLACK };
+        const state = {
+          ...createEmptyState(),
+          enPassantSquare: SQUARE.D6,
+          board,
+        };
+
+        expect(getPawnMoves(SQUARE.E5, state)).toContain(SQUARE.D6);
+      });
+
+      it('앙파상 타겟이 없으면 대각선 빈 칸을 결과에 포함하면 안 된다', () => {
+        const board = [...Array(64).fill(null)];
+        board[SQUARE.E5] = { type: PIECE_TYPE.PAWN, color: COLOR.WHITE };
+        board[SQUARE.D5] = { type: PIECE_TYPE.PAWN, color: COLOR.BLACK };
+        const state = {
+          ...createEmptyState(),
+          board,
+        };
+
+        expect(getPawnMoves(SQUARE.E5, state)).not.toContain(SQUARE.D6);
+      });
     });
 
     describe('보드 경계에서의 예외 상황을 확인할 때', () => {
