@@ -114,6 +114,14 @@ export const getOpponentColor = (color: Color): Color => {
   return color === COLOR.WHITE ? COLOR.BLACK : COLOR.WHITE;
 };
 
+/**
+ * 기물 타입이 프로모션 가능한 타입인지 확인합니다.
+ *
+ * @param pieceType 확인할 기물 타입
+ * @returns 프로모션 가능한 타입이면 `true`
+ *
+ * const canPromote = isPromotablePieceType(PIECE_TYPE.QUEEN);
+ */
 export const isPromotablePieceType = (pieceType: PieceType): pieceType is PromotionPieceType =>
   pieceType === PIECE_TYPE.QUEEN ||
   pieceType === PIECE_TYPE.ROOK ||
