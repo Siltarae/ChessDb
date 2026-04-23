@@ -172,6 +172,23 @@ export type EnPassantMove = BaseMove & {
 };
 export type Move = StandardMove | EnPassantMove;
 
+export const SIDE = {
+  KINGSIDE: 0,
+  QUEENSIDE: 1,
+} as const;
+export type Side = (typeof SIDE)[keyof typeof SIDE];
+
+export const CASTLE_RIGHTS = {
+  [COLOR.WHITE]: {
+    [SIDE.KINGSIDE]: CASTLE.WHITE_KING_SIDE,
+    [SIDE.QUEENSIDE]: CASTLE.WHITE_QUEEN_SIDE,
+  },
+  [COLOR.BLACK]: {
+    [SIDE.KINGSIDE]: CASTLE.BLACK_KING_SIDE,
+    [SIDE.QUEENSIDE]: CASTLE.BLACK_QUEEN_SIDE,
+  },
+};
+
 export const GameStateSchema: z.ZodType<GameState> = z.object({
   board: z
     .array(

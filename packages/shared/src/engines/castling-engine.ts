@@ -1,35 +1,19 @@
 import {
-  CASTLE,
+  CASTLE_RIGHTS,
   COLOR,
   MOVE_KIND,
   PIECE_TYPE,
+  SIDE,
   SQUARE,
   type Color,
   type GameState,
   type Move,
+  type Side,
   type Square,
 } from '../models/game-state.js';
 import { getOpponentColor, isEmpty } from '../utils/board-utils.js';
 import { isCheck } from './check-engine.js';
 import { isSquareAttacked } from './square-attack-engine.js';
-
-const SIDE = {
-  KINGSIDE: 0,
-  QUEENSIDE: 1,
-} as const;
-
-type Side = (typeof SIDE)[keyof typeof SIDE];
-
-const CASTLE_RIGHTS = {
-  [COLOR.WHITE]: {
-    [SIDE.KINGSIDE]: CASTLE.WHITE_KING_SIDE,
-    [SIDE.QUEENSIDE]: CASTLE.WHITE_QUEEN_SIDE,
-  },
-  [COLOR.BLACK]: {
-    [SIDE.KINGSIDE]: CASTLE.BLACK_KING_SIDE,
-    [SIDE.QUEENSIDE]: CASTLE.BLACK_QUEEN_SIDE,
-  },
-};
 
 const KING_SQUARE = {
   [COLOR.WHITE]: SQUARE.E1,

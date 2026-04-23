@@ -34,7 +34,7 @@ export const isPromotionSquare = (square: Square, color: Color): boolean => {
  *
  * const nextState = applyPromotion(SQUARE.E7, SQUARE.E8, state);
  */
-export const applyPromotion = (
+export const executePromotion = (
   square: Square,
   targetSquare: Square,
   state: GameState,
