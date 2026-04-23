@@ -1,4 +1,5 @@
 import { PIECE_TYPE, type GameState, type Square } from '../models/game-state.js';
+import { getColor } from '../utils/board-utils.js';
 import { DIRECTION } from '../utils/ray-table.js';
 import { getSlidingMoves } from './sliding-engine.js';
 
@@ -16,5 +17,6 @@ export const getBishopMoves = (square: Square, state: GameState) => {
     return [];
   }
 
-  return getSlidingMoves(square, BISHOP_DIRECTIONS, state);
+  const color = getColor(piece);
+  return getSlidingMoves(square, BISHOP_DIRECTIONS, state, color);
 };

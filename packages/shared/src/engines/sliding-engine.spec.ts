@@ -15,12 +15,12 @@ const createEmptyState = (): GameState => ({
 
 describe('SlidingEngine', () => {
   describe('getSlidingMoves', () => {
-    it('선택한 칸에 기물이 없으면 빈 배열을 반환해야 한다', () => {
+    it('시작 칸의 기물 존재와 무관하게 주어진 색 기준으로 ray를 수집해야 한다', () => {
       const state = createEmptyState();
 
-      const moves = getSlidingMoves(SQUARE.D4, [DIRECTION.NORTH_EAST], state);
+      const moves = getSlidingMoves(SQUARE.D4, [DIRECTION.NORTH_EAST], state, COLOR.WHITE);
 
-      expect(moves).toEqual([]);
+      expect(moves).toEqual([SQUARE.E5, SQUARE.F6, SQUARE.G7, SQUARE.H8]);
     });
 
     it('한 방향으로 빈 칸을 끝까지 수집해야 한다', () => {
@@ -28,7 +28,7 @@ describe('SlidingEngine', () => {
       board[SQUARE.D4] = { type: PIECE_TYPE.BISHOP, color: COLOR.WHITE };
       const state = { ...createEmptyState(), board };
 
-      const moves = getSlidingMoves(SQUARE.D4, [DIRECTION.NORTH_EAST], state);
+      const moves = getSlidingMoves(SQUARE.D4, [DIRECTION.NORTH_EAST], state, COLOR.WHITE);
 
       expect(moves).toEqual([SQUARE.E5, SQUARE.F6, SQUARE.G7, SQUARE.H8]);
     });
@@ -41,7 +41,12 @@ describe('SlidingEngine', () => {
       board[SQUARE.A1] = { type: PIECE_TYPE.ROOK, color: COLOR.BLACK };
       const state = { ...createEmptyState(), board };
 
-      const moves = getSlidingMoves(SQUARE.D4, [DIRECTION.NORTH_EAST, DIRECTION.SOUTH_WEST], state);
+      const moves = getSlidingMoves(
+        SQUARE.D4,
+        [DIRECTION.NORTH_EAST, DIRECTION.SOUTH_WEST],
+        state,
+        COLOR.WHITE,
+      );
 
       expect(moves).toEqual([SQUARE.E5, SQUARE.C3, SQUARE.B2]);
       expect(moves).not.toContain(SQUARE.F6);
@@ -54,7 +59,7 @@ describe('SlidingEngine', () => {
       board[SQUARE.E5] = { type: PIECE_TYPE.PAWN, color: COLOR.WHITE };
       const state = { ...createEmptyState(), board };
 
-      const moves = getSlidingMoves(SQUARE.D4, [DIRECTION.NORTH_EAST], state);
+      const moves = getSlidingMoves(SQUARE.D4, [DIRECTION.NORTH_EAST], state, COLOR.WHITE);
 
       expect(moves).toEqual([]);
       expect(moves).not.toContain(SQUARE.E5);
@@ -67,7 +72,7 @@ describe('SlidingEngine', () => {
       board[SQUARE.F6] = { type: PIECE_TYPE.ROOK, color: COLOR.BLACK };
       const state = { ...createEmptyState(), board };
 
-      const moves = getSlidingMoves(SQUARE.D4, [DIRECTION.NORTH_EAST], state);
+      const moves = getSlidingMoves(SQUARE.D4, [DIRECTION.NORTH_EAST], state, COLOR.WHITE);
 
       expect(moves).toEqual([SQUARE.E5]);
       expect(moves).not.toContain(SQUARE.F6);
@@ -82,6 +87,7 @@ describe('SlidingEngine', () => {
         SQUARE.A1,
         [DIRECTION.WEST, DIRECTION.SOUTH, DIRECTION.SOUTH_WEST],
         state,
+        COLOR.WHITE,
       );
 
       expect(moves).toEqual([]);
@@ -92,7 +98,12 @@ describe('SlidingEngine', () => {
       board[SQUARE.D4] = { type: PIECE_TYPE.BISHOP, color: COLOR.WHITE };
       const state = { ...createEmptyState(), board };
 
-      const moves = getSlidingMoves(SQUARE.D4, [DIRECTION.SOUTH_WEST, DIRECTION.NORTH_EAST], state);
+      const moves = getSlidingMoves(
+        SQUARE.D4,
+        [DIRECTION.SOUTH_WEST, DIRECTION.NORTH_EAST],
+        state,
+        COLOR.WHITE,
+      );
 
       expect(moves).toEqual([
         SQUARE.C3,
