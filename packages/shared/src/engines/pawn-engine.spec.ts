@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import type { GameState } from '../models/game-state.js';
+import type { GameState, Move } from '../models/game-state.js';
 import { COLOR, PIECE_TYPE, SQUARE } from '../models/game-state.js';
+import {
+  doublePawnPushMove,
+  enPassantMove,
+  moveTargets,
+  normalMove,
+} from '../test-utils/move-test-helpers.js';
 import { getPawnMoves } from './pawn-engine.js';
 
 // [1] Mock 데이터 및 Fixture 분리
@@ -39,7 +45,7 @@ describe('PawnEngine', () => {
         const moves = getPawnMoves(pawnSquare, state);
 
         // Then
-        expect(moves).toContain(SQUARE.E4);
+        expect(moves).toContainEqual(normalMove(SQUARE.E3, SQUARE.E4));
         expect(moves.length).toBe(1);
       });
 
@@ -54,8 +60,8 @@ describe('PawnEngine', () => {
         const moves = getPawnMoves(pawnSquare, state);
 
         // Then
-        expect(moves).toContain(SQUARE.E3);
-        expect(moves).toContain(SQUARE.E4);
+        expect(moves).toContainEqual(normalMove(SQUARE.E2, SQUARE.E3));
+        expect(moves).toContainEqual(doublePawnPushMove(SQUARE.E2, SQUARE.E4));
         expect(moves.length).toBe(2);
       });
 
@@ -71,9 +77,9 @@ describe('PawnEngine', () => {
         const moves = getPawnMoves(pawnSquare, state);
 
         // Then
-        expect(moves).toContain(SQUARE.D3);
-        expect(moves).toContain(SQUARE.E3);
-        expect(moves).toContain(SQUARE.E4);
+        expect(moves).toContainEqual(normalMove(SQUARE.E2, SQUARE.D3));
+        expect(moves).toContainEqual(normalMove(SQUARE.E2, SQUARE.E3));
+        expect(moves).toContainEqual(doublePawnPushMove(SQUARE.E2, SQUARE.E4));
       });
 
       it('전진 경로가 기물에 의해 막혀있으면 이동할 수 없어야 한다', () => {
@@ -88,8 +94,44 @@ describe('PawnEngine', () => {
         const moves = getPawnMoves(pawnSquare, state);
 
         // Then
-        expect(moves).not.toContain(SQUARE.E3);
-        expect(moves).not.toContain(SQUARE.E4);
+        const targets = moveTargets(moves as Move[]);
+        expect(targets).not.toContain(SQUARE.E3);
+        expect(targets).not.toContain(SQUARE.E4);
+      });
+
+      it('마지막 랭크로 전진하면 프로모션 선택지 4개를 모두 반환해야 한다', () => {
+        const pawnSquare = SQUARE.E7;
+        const board = [...Array(64).fill(null)];
+        board[pawnSquare] = { type: PIECE_TYPE.PAWN, color: COLOR.WHITE };
+        const state = { ...createEmptyState(), board };
+
+        const moves = getPawnMoves(pawnSquare, state);
+
+        expect(moves).toEqual([
+          normalMove(SQUARE.E7, SQUARE.E8, PIECE_TYPE.QUEEN),
+          normalMove(SQUARE.E7, SQUARE.E8, PIECE_TYPE.ROOK),
+          normalMove(SQUARE.E7, SQUARE.E8, PIECE_TYPE.BISHOP),
+          normalMove(SQUARE.E7, SQUARE.E8, PIECE_TYPE.KNIGHT),
+        ]);
+      });
+
+      it('마지막 랭크의 상대 기물을 캡처하면 프로모션 선택지 4개를 모두 반환해야 한다', () => {
+        const pawnSquare = SQUARE.E7;
+        const board = [...Array(64).fill(null)];
+        board[pawnSquare] = { type: PIECE_TYPE.PAWN, color: COLOR.WHITE };
+        board[SQUARE.F8] = { type: PIECE_TYPE.ROOK, color: COLOR.BLACK };
+        const state = { ...createEmptyState(), board };
+
+        const moves = getPawnMoves(pawnSquare, state);
+
+        expect(moves).toEqual(
+          expect.arrayContaining([
+            normalMove(SQUARE.E7, SQUARE.F8, PIECE_TYPE.QUEEN),
+            normalMove(SQUARE.E7, SQUARE.F8, PIECE_TYPE.ROOK),
+            normalMove(SQUARE.E7, SQUARE.F8, PIECE_TYPE.BISHOP),
+            normalMove(SQUARE.E7, SQUARE.F8, PIECE_TYPE.KNIGHT),
+          ]),
+        );
       });
     });
 
@@ -105,8 +147,8 @@ describe('PawnEngine', () => {
         const moves = getPawnMoves(pawnSquare, state);
 
         // Then
-        expect(moves).toContain(SQUARE.E6);
-        expect(moves).toContain(SQUARE.E5); // 7행은 시작 위치이므로 2칸도 가능
+        expect(moves).toContainEqual(normalMove(SQUARE.E7, SQUARE.E6));
+        expect(moves).toContainEqual(doublePawnPushMove(SQUARE.E7, SQUARE.E5));
       });
 
       it('대각선에 흰색 기물이 있으면 캡처할 수 있어야 한다', () => {
@@ -121,7 +163,7 @@ describe('PawnEngine', () => {
         const moves = getPawnMoves(pawnSquare, state);
 
         // Then
-        expect(moves).toContain(SQUARE.F6);
+        expect(moves).toContainEqual(normalMove(SQUARE.E7, SQUARE.F6));
       });
 
       it('앙파상 조건을 만족하면 흑 폰도 앙파상 목적지를 결과에 포함해야 한다', () => {
@@ -135,7 +177,9 @@ describe('PawnEngine', () => {
           board,
         };
 
-        expect(getPawnMoves(SQUARE.D4, state)).toContain(SQUARE.E3);
+        expect(getPawnMoves(SQUARE.D4, state)).toContainEqual(
+          enPassantMove(SQUARE.D4, SQUARE.E3, SQUARE.E4),
+        );
       });
     });
 
@@ -150,7 +194,9 @@ describe('PawnEngine', () => {
           board,
         };
 
-        expect(getPawnMoves(SQUARE.E5, state)).toContain(SQUARE.D6);
+        expect(getPawnMoves(SQUARE.E5, state)).toContainEqual(
+          enPassantMove(SQUARE.E5, SQUARE.D6, SQUARE.D5),
+        );
       });
 
       it('앙파상 타겟이 없으면 대각선 빈 칸을 결과에 포함하면 안 된다', () => {
@@ -162,7 +208,7 @@ describe('PawnEngine', () => {
           board,
         };
 
-        expect(getPawnMoves(SQUARE.E5, state)).not.toContain(SQUARE.D6);
+        expect(moveTargets(getPawnMoves(SQUARE.E5, state) as Move[])).not.toContain(SQUARE.D6);
       });
     });
 
@@ -183,8 +229,8 @@ describe('PawnEngine', () => {
         const blackMoves = getPawnMoves(blackPawn, blackState);
 
         // Then
-        expect(whiteMoves).not.toContain(whitePawn + 7);
-        expect(blackMoves).not.toContain(blackPawn - 9);
+        expect(moveTargets(whiteMoves as Move[])).not.toContain(whitePawn + 7);
+        expect(moveTargets(blackMoves as Move[])).not.toContain(blackPawn - 9);
       });
 
       it('보드 오른쪽 끝(H열)에서 오른쪽 대각선 캡처를 시도하면 안 된다 (워프 방지)', () => {
@@ -203,8 +249,8 @@ describe('PawnEngine', () => {
         const blackMoves = getPawnMoves(blackPawn, blackState);
 
         // Then
-        expect(whiteMoves).not.toContain(whitePawn + 9);
-        expect(blackMoves).not.toContain(blackPawn - 7);
+        expect(moveTargets(whiteMoves as Move[])).not.toContain(whitePawn + 9);
+        expect(moveTargets(blackMoves as Move[])).not.toContain(blackPawn - 7);
       });
 
       it('보드 하단 끝(A1)에서 폰의 이동을 판정할 때 안전해야 한다', () => {
@@ -215,7 +261,7 @@ describe('PawnEngine', () => {
         const stateW = { ...createEmptyState(), board: boardW };
         const whiteMoves = getPawnMoves(whitePawn, stateW);
 
-        expect(whiteMoves).toContain(SQUARE.A2);
+        expect(whiteMoves).toContainEqual(normalMove(SQUARE.A1, SQUARE.A2));
 
         // 2. A1에 있는 흑 폰 (더 이상 내려갈 곳이 없어야 함)
         const blackPawn = SQUARE.A1;

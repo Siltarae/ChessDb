@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { GameState } from '../models/game-state.js';
 import { CASTLE, COLOR, PIECE_TYPE, SQUARE } from '../models/game-state.js';
+import { castleKingsideMove, castleQueensideMove } from '../test-utils/move-test-helpers.js';
 import { executeCastling, getCastlingMoves } from './castling-engine.js';
 
 const createEmptyState = (): GameState => ({
@@ -25,7 +26,10 @@ describe('CastlingEngine', () => {
         board,
       };
 
-      expect(getCastlingMoves(state, COLOR.WHITE)).toEqual([SQUARE.G1, SQUARE.C1]);
+      expect(getCastlingMoves(state, COLOR.WHITE)).toEqual([
+        castleKingsideMove(SQUARE.E1, SQUARE.G1),
+        castleQueensideMove(SQUARE.E1, SQUARE.C1),
+      ]);
     });
 
     it('모든 조건 만족 시 흑 킹사이드와 퀸사이드 캐슬링 좌표를 반환해야 한다', () => {
@@ -40,7 +44,10 @@ describe('CastlingEngine', () => {
         board,
       };
 
-      expect(getCastlingMoves(state, COLOR.BLACK)).toEqual([SQUARE.G8, SQUARE.C8]);
+      expect(getCastlingMoves(state, COLOR.BLACK)).toEqual([
+        castleKingsideMove(SQUARE.E8, SQUARE.G8),
+        castleQueensideMove(SQUARE.E8, SQUARE.C8),
+      ]);
     });
 
     it('킹이 체크 상태일 때는 어떤 캐슬링도 허용하지 않아야 한다', () => {
@@ -70,7 +77,9 @@ describe('CastlingEngine', () => {
         board,
       };
 
-      expect(getCastlingMoves(state, COLOR.WHITE)).toEqual([SQUARE.C1]);
+      expect(getCastlingMoves(state, COLOR.WHITE)).toEqual([
+        castleQueensideMove(SQUARE.E1, SQUARE.C1),
+      ]);
     });
 
     it('퀸사이드 경로가 공격받고 있으면 퀸사이드 캐슬링이 불가능해야 한다', () => {
@@ -85,7 +94,9 @@ describe('CastlingEngine', () => {
         board,
       };
 
-      expect(getCastlingMoves(state, COLOR.WHITE)).toEqual([SQUARE.G1]);
+      expect(getCastlingMoves(state, COLOR.WHITE)).toEqual([
+        castleKingsideMove(SQUARE.E1, SQUARE.G1),
+      ]);
     });
 
     it('사이에 다른 기물이 있으면 해당 방향 캐슬링이 불가능해야 한다', () => {
@@ -126,7 +137,9 @@ describe('CastlingEngine', () => {
         board,
       };
 
-      expect(getCastlingMoves(state, COLOR.BLACK)).toEqual([SQUARE.C8]);
+      expect(getCastlingMoves(state, COLOR.BLACK)).toEqual([
+        castleQueensideMove(SQUARE.E8, SQUARE.C8),
+      ]);
     });
 
     it('시작 위치에 킹이 없으면 빈 배열을 반환해야 한다', () => {

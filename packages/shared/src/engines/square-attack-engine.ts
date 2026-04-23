@@ -93,11 +93,11 @@ const isAttackedByBishop = (square: Square, attackerColor: Color, state: GameSta
 
   const color = getOpponentColor(attackerColor);
 
-  const attackedSquare = getSlidingMoves(square, directions, state, color);
-  for (const targetSquare of attackedSquare) {
+  const attackedMoves = getSlidingMoves(square, directions, state, color);
+  for (const move of attackedMoves) {
     if (
-      state.board[targetSquare]?.type === PIECE_TYPE.BISHOP ||
-      state.board[targetSquare]?.type === PIECE_TYPE.QUEEN
+      state.board[move.to]?.type === PIECE_TYPE.BISHOP ||
+      state.board[move.to]?.type === PIECE_TYPE.QUEEN
     ) {
       return true;
     }
@@ -110,11 +110,11 @@ const isAttackedByRook = (square: Square, attackerColor: Color, state: GameState
 
   const color = getOpponentColor(attackerColor);
 
-  const attackedSquare = getSlidingMoves(square, directions, state, color);
-  for (const targetSquare of attackedSquare) {
+  const attackedMoves = getSlidingMoves(square, directions, state, color);
+  for (const move of attackedMoves) {
     if (
-      state.board[targetSquare]?.type === PIECE_TYPE.ROOK ||
-      state.board[targetSquare]?.type === PIECE_TYPE.QUEEN
+      state.board[move.to]?.type === PIECE_TYPE.ROOK ||
+      state.board[move.to]?.type === PIECE_TYPE.QUEEN
     ) {
       return true;
     }

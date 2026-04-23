@@ -1,4 +1,4 @@
-import { PIECE_TYPE, type GameState, type Square } from '../models/game-state.js';
+import { PIECE_TYPE, type GameState, type Move, type Square } from '../models/game-state.js';
 import { getColor } from '../utils/board-utils.js';
 import { DIRECTION } from '../utils/ray-table.js';
 import { getSlidingMoves } from './sliding-engine.js';
@@ -12,7 +12,7 @@ import { getSlidingMoves } from './sliding-engine.js';
  *
  * const moves = getQueenMoves(SQUARE.D1, state);
  */
-export const getQueenMoves = (square: Square, state: GameState): Square[] => {
+export const getQueenMoves = (square: Square, state: GameState): Move[] => {
   const QUEEN_DIRECTIONS = [
     DIRECTION.NORTH_EAST,
     DIRECTION.SOUTH_EAST,

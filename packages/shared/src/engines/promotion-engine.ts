@@ -7,19 +7,7 @@ import {
   type PieceType,
   type Square,
 } from '../models/game-state.js';
-import { getRank } from '../utils/board-utils.js';
-
-type PromotionPieceType =
-  | typeof PIECE_TYPE.QUEEN
-  | typeof PIECE_TYPE.ROOK
-  | typeof PIECE_TYPE.BISHOP
-  | typeof PIECE_TYPE.KNIGHT;
-
-const isPromotablePieceType = (pieceType: PieceType): pieceType is PromotionPieceType =>
-  pieceType === PIECE_TYPE.QUEEN ||
-  pieceType === PIECE_TYPE.ROOK ||
-  pieceType === PIECE_TYPE.BISHOP ||
-  pieceType === PIECE_TYPE.KNIGHT;
+import { getRank, isPromotablePieceType } from '../utils/board-utils.js';
 
 /**
  * 특정 칸이 현재 색상의 폰에게 프로모션 도착 칸인지 판정합니다.

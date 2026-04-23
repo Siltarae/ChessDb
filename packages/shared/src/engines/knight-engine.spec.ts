@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import type { GameState, Square } from '../models/game-state.js';
+import type { GameState, Move, Square } from '../models/game-state.js';
 import { COLOR, PIECE_TYPE, SQUARE } from '../models/game-state.js';
+import { moveTargets, normalMove } from '../test-utils/move-test-helpers.js';
 import { getKnightMoves } from './knight-engine.js';
 
 // [1] Mock 데이터 및 Fixture 분리
@@ -50,7 +51,9 @@ describe('KnightEngine', () => {
           SQUARE.E6,
         ];
         expect(moves).toHaveLength(8);
-        expectedMoves.forEach((move) => expect(moves).toContain(move));
+        expectedMoves.forEach((move) =>
+          expect(moves).toContainEqual(normalMove(knightSquare, move)),
+        );
       });
     });
 
@@ -67,8 +70,8 @@ describe('KnightEngine', () => {
 
         // Then
         expect(moves).toHaveLength(2);
-        expect(moves).toContain(SQUARE.B3);
-        expect(moves).toContain(SQUARE.C2);
+        expect(moves).toContainEqual(normalMove(knightSquare, SQUARE.B3));
+        expect(moves).toContainEqual(normalMove(knightSquare, SQUARE.C2));
       });
     });
 
@@ -85,7 +88,7 @@ describe('KnightEngine', () => {
         const moves = getKnightMoves(knightSquare, state);
 
         // Then
-        expect(moves).not.toContain(SQUARE.C2);
+        expect(moveTargets(moves as Move[])).not.toContain(SQUARE.C2);
         expect(moves).toHaveLength(7);
       });
 
@@ -101,7 +104,7 @@ describe('KnightEngine', () => {
         const moves = getKnightMoves(knightSquare, state);
 
         // Then
-        expect(moves).toContain(SQUARE.C2);
+        expect(moves).toContainEqual(normalMove(knightSquare, SQUARE.C2));
       });
     });
 
@@ -118,8 +121,9 @@ describe('KnightEngine', () => {
 
         // Then
         // B1(1)에서 오프셋 -10 적용 시 -9가 되어 H열 쪽으로 워프될 수 있음
-        expect(moves.some((m) => m > 63 || m < 0)).toBe(false);
-        expect(moves).not.toContain(SQUARE.H8); // 잘못된 워프 지점 예시
+        const targets = moveTargets(moves as Move[]);
+        expect(targets.some((m) => m > 63 || m < 0)).toBe(false);
+        expect(targets).not.toContain(SQUARE.H8);
       });
     });
 
@@ -137,7 +141,8 @@ describe('KnightEngine', () => {
           const f1 = square % 8;
           const r1 = Math.floor(square / 8);
 
-          moves.forEach((target) => {
+          (moves as Move[]).forEach((move) => {
+            const target = move.to;
             const f2 = target % 8;
             const r2 = Math.floor(target / 8);
             const df = Math.abs(f1 - f2);

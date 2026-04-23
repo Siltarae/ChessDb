@@ -1,8 +1,10 @@
 import {
   COLOR,
+  MOVE_KIND,
   PIECE_TYPE,
   type Color,
   type GameState,
+  type Move,
   type Square,
 } from '../models/game-state.js';
 import { getColor, getFile, toSquare } from '../utils/board-utils.js';
@@ -21,7 +23,7 @@ const PAWN_MOVE = {
  *
  * const moves = getEnPassantMoves(SQUARE.E5, state);
  */
-export const getEnPassantMoves = (square: Square, state: GameState): Square[] => {
+export const getEnPassantMoves = (square: Square, state: GameState): Move[] => {
   const pawn = state.board[square];
   if (pawn == null || pawn.type !== PIECE_TYPE.PAWN) {
     return [];
@@ -61,7 +63,14 @@ export const getEnPassantMoves = (square: Square, state: GameState): Square[] =>
     return [];
   }
 
-  return [targetSquare];
+  return [
+    {
+      from: square,
+      to: targetSquare,
+      kind: MOVE_KIND.EN_PASSANT,
+      capturedSquare: capturedPawnSquare,
+    },
+  ];
 };
 
 /**

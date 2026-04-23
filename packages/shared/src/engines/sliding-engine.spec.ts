@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import type { GameState } from '../models/game-state.js';
+import type { GameState, Move } from '../models/game-state.js';
 import { COLOR, PIECE_TYPE, SQUARE } from '../models/game-state.js';
+import { moveTargets } from '../test-utils/move-test-helpers.js';
 import { DIRECTION } from '../utils/ray-table.js';
 import { getSlidingMoves } from './sliding-engine.js';
 
@@ -20,7 +21,7 @@ describe('SlidingEngine', () => {
 
       const moves = getSlidingMoves(SQUARE.D4, [DIRECTION.NORTH_EAST], state, COLOR.WHITE);
 
-      expect(moves).toEqual([SQUARE.E5, SQUARE.F6, SQUARE.G7, SQUARE.H8]);
+      expect(moveTargets(moves as Move[])).toEqual([SQUARE.E5, SQUARE.F6, SQUARE.G7, SQUARE.H8]);
     });
 
     it('한 방향으로 빈 칸을 끝까지 수집해야 한다', () => {
@@ -30,7 +31,7 @@ describe('SlidingEngine', () => {
 
       const moves = getSlidingMoves(SQUARE.D4, [DIRECTION.NORTH_EAST], state, COLOR.WHITE);
 
-      expect(moves).toEqual([SQUARE.E5, SQUARE.F6, SQUARE.G7, SQUARE.H8]);
+      expect(moveTargets(moves as Move[])).toEqual([SQUARE.E5, SQUARE.F6, SQUARE.G7, SQUARE.H8]);
     });
 
     it('아군 기물에서 멈추고 상대 기물은 포함한 뒤 같은 방향 탐색을 종료해야 한다', () => {
@@ -48,9 +49,10 @@ describe('SlidingEngine', () => {
         COLOR.WHITE,
       );
 
-      expect(moves).toEqual([SQUARE.E5, SQUARE.C3, SQUARE.B2]);
-      expect(moves).not.toContain(SQUARE.F6);
-      expect(moves).not.toContain(SQUARE.A1);
+      const targets = moveTargets(moves as Move[]);
+      expect(targets).toEqual([SQUARE.E5, SQUARE.C3, SQUARE.B2]);
+      expect(targets).not.toContain(SQUARE.F6);
+      expect(targets).not.toContain(SQUARE.A1);
     });
 
     it('바로 옆 칸이 아군이면 해당 방향 결과는 즉시 비어 있어야 한다', () => {
@@ -61,8 +63,9 @@ describe('SlidingEngine', () => {
 
       const moves = getSlidingMoves(SQUARE.D4, [DIRECTION.NORTH_EAST], state, COLOR.WHITE);
 
-      expect(moves).toEqual([]);
-      expect(moves).not.toContain(SQUARE.E5);
+      const targets = moveTargets(moves as Move[]);
+      expect(targets).toEqual([]);
+      expect(targets).not.toContain(SQUARE.E5);
     });
 
     it('바로 옆 칸이 적군이면 그 칸 하나만 포함하고 즉시 종료해야 한다', () => {
@@ -74,8 +77,9 @@ describe('SlidingEngine', () => {
 
       const moves = getSlidingMoves(SQUARE.D4, [DIRECTION.NORTH_EAST], state, COLOR.WHITE);
 
-      expect(moves).toEqual([SQUARE.E5]);
-      expect(moves).not.toContain(SQUARE.F6);
+      const targets = moveTargets(moves as Move[]);
+      expect(targets).toEqual([SQUARE.E5]);
+      expect(targets).not.toContain(SQUARE.F6);
     });
 
     it('가장자리 시작 칸에서 진행할 수 없는 방향의 ray는 빈 배열로 처리해야 한다', () => {
@@ -90,7 +94,7 @@ describe('SlidingEngine', () => {
         COLOR.WHITE,
       );
 
-      expect(moves).toEqual([]);
+      expect(moveTargets(moves as Move[])).toEqual([]);
     });
 
     it('여러 방향을 합칠 때 결과는 입력한 방향 순서대로 이어붙여야 한다', () => {
@@ -105,7 +109,7 @@ describe('SlidingEngine', () => {
         COLOR.WHITE,
       );
 
-      expect(moves).toEqual([
+      expect(moveTargets(moves as Move[])).toEqual([
         SQUARE.C3,
         SQUARE.B2,
         SQUARE.A1,

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { GameState } from '../models/game-state.js';
 import { COLOR, PIECE_TYPE, SQUARE } from '../models/game-state.js';
+import { enPassantMove } from '../test-utils/move-test-helpers.js';
 import { executeEnPassant, getEnPassantMoves } from './en-passant-engine.js';
 
 const createEmptyState = (): GameState => ({
@@ -43,7 +44,9 @@ describe('EnPassantEngine', () => {
         board,
       };
 
-      expect(getEnPassantMoves(SQUARE.E5, state)).toEqual([SQUARE.D6]);
+      expect(getEnPassantMoves(SQUARE.E5, state)).toEqual([
+        enPassantMove(SQUARE.E5, SQUARE.D6, SQUARE.D5),
+      ]);
     });
 
     it('앙파상 타겟이 없어도 일반 대각선 후보만으로 허용하면 안 된다', () => {
@@ -107,7 +110,9 @@ describe('EnPassantEngine', () => {
         board,
       };
 
-      expect(getEnPassantMoves(SQUARE.A5, state)).toEqual([SQUARE.B6]);
+      expect(getEnPassantMoves(SQUARE.A5, state)).toEqual([
+        enPassantMove(SQUARE.A5, SQUARE.B6, SQUARE.B5),
+      ]);
     });
 
     it('H파일의 폰은 보드 밖 동쪽 대각선을 제외하고 앙파상 후보를 계산해야 한다', () => {
@@ -120,7 +125,9 @@ describe('EnPassantEngine', () => {
         board,
       };
 
-      expect(getEnPassantMoves(SQUARE.H5, state)).toEqual([SQUARE.G6]);
+      expect(getEnPassantMoves(SQUARE.H5, state)).toEqual([
+        enPassantMove(SQUARE.H5, SQUARE.G6, SQUARE.G5),
+      ]);
     });
   });
 

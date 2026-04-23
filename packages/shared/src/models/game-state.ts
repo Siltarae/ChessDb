@@ -135,6 +135,43 @@ export interface GameState {
   readonly fullmoveNumber: number;
 }
 
+export type PromotionPieceType =
+  | typeof PIECE_TYPE.QUEEN
+  | typeof PIECE_TYPE.ROOK
+  | typeof PIECE_TYPE.BISHOP
+  | typeof PIECE_TYPE.KNIGHT;
+
+export const MOVE_KIND = {
+  NORMAL: 0,
+  DOUBLE_PAWN_PUSH: 1,
+  EN_PASSANT: 2,
+  CASTLE_KING_SIDE: 3,
+  CASTLE_QUEEN_SIDE: 4,
+} as const;
+export type MoveKind = (typeof MOVE_KIND)[keyof typeof MOVE_KIND];
+
+type BaseMove = {
+  readonly from: Square;
+  readonly to: Square;
+};
+
+export type StandardMove = BaseMove & {
+  kind:
+    | typeof MOVE_KIND.NORMAL
+    | typeof MOVE_KIND.DOUBLE_PAWN_PUSH
+    | typeof MOVE_KIND.CASTLE_KING_SIDE
+    | typeof MOVE_KIND.CASTLE_QUEEN_SIDE;
+  promotion?: PromotionPieceType;
+  capturedSquare?: never;
+};
+
+export type EnPassantMove = BaseMove & {
+  kind: typeof MOVE_KIND.EN_PASSANT;
+  promotion?: never;
+  capturedSquare: Square;
+};
+export type Move = StandardMove | EnPassantMove;
+
 export const GameStateSchema: z.ZodType<GameState> = z.object({
   board: z
     .array(

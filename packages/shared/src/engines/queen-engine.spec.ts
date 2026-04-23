@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import type { GameState } from '../models/game-state.js';
+import type { GameState, Move } from '../models/game-state.js';
 import { COLOR, PIECE_TYPE, SQUARE } from '../models/game-state.js';
+import { moveTargets } from '../test-utils/move-test-helpers.js';
 import { getQueenMoves } from './queen-engine.js';
 
 const createEmptyState = (): GameState => ({
@@ -21,7 +22,7 @@ describe('QueenEngine', () => {
 
       const moves = getQueenMoves(SQUARE.D4, state);
 
-      expect(moves).toEqual([
+      expect(moveTargets(moves as Move[])).toEqual([
         SQUARE.E5,
         SQUARE.F6,
         SQUARE.G7,
@@ -64,7 +65,8 @@ describe('QueenEngine', () => {
 
       const moves = getQueenMoves(SQUARE.D4, state);
 
-      expect(moves).toEqual([
+      const targets = moveTargets(moves as Move[]);
+      expect(targets).toEqual([
         SQUARE.E5,
         SQUARE.E3,
         SQUARE.F2,
@@ -82,9 +84,9 @@ describe('QueenEngine', () => {
         SQUARE.F4,
         SQUARE.C4,
       ]);
-      expect(moves).not.toContain(SQUARE.F6);
-      expect(moves).not.toContain(SQUARE.D2);
-      expect(moves).not.toContain(SQUARE.B4);
+      expect(targets).not.toContain(SQUARE.F6);
+      expect(targets).not.toContain(SQUARE.D2);
+      expect(targets).not.toContain(SQUARE.B4);
     });
 
     it('반환 결과에는 중복 square가 없어야 한다', () => {
@@ -94,7 +96,8 @@ describe('QueenEngine', () => {
 
       const moves = getQueenMoves(SQUARE.D4, state);
 
-      expect(new Set(moves).size).toBe(moves.length);
+      const targets = moveTargets(moves as Move[]);
+      expect(new Set(targets).size).toBe(targets.length);
     });
 
     it('선택한 칸에 퀸이 아닌 기물이 있으면 빈 배열을 반환해야 한다', () => {
@@ -114,7 +117,7 @@ describe('QueenEngine', () => {
 
       const moves = getQueenMoves(SQUARE.A1, state);
 
-      expect(moves).toEqual([
+      expect(moveTargets(moves as Move[])).toEqual([
         SQUARE.B2,
         SQUARE.C3,
         SQUARE.D4,
@@ -151,7 +154,8 @@ describe('QueenEngine', () => {
 
       const moves = getQueenMoves(SQUARE.E5, state);
 
-      expect(moves).toEqual([
+      const targets = moveTargets(moves as Move[]);
+      expect(targets).toEqual([
         SQUARE.F4,
         SQUARE.G3,
         SQUARE.H2,
@@ -168,10 +172,10 @@ describe('QueenEngine', () => {
         SQUARE.B5,
         SQUARE.A5,
       ]);
-      expect(moves).not.toContain(SQUARE.F6);
-      expect(moves).not.toContain(SQUARE.C3);
-      expect(moves).not.toContain(SQUARE.E6);
-      expect(moves).not.toContain(SQUARE.E3);
+      expect(targets).not.toContain(SQUARE.F6);
+      expect(targets).not.toContain(SQUARE.C3);
+      expect(targets).not.toContain(SQUARE.E6);
+      expect(targets).not.toContain(SQUARE.E3);
     });
   });
 });
