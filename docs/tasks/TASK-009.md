@@ -10,7 +10,7 @@
 ## 0. 현재 코드 상태와 이 작업의 위치
 
 - **현재 상태 요약**: 폰, 나이트, 슬라이딩 기물의 이동 로직이 완성되었습니다. 이제 마지막 기물인 킹의 기본 이동 로직을 구현합니다.
-- **이 작업의 책임**: 킹이 주변 8칸 중 한 칸으로 이동할 수 있는 기초적인 합법 수(Pseudo-legal moves)를 계산합니다.
+- **이 작업의 책임**: 킹이 주변 8칸 중 한 칸으로 이동할 수 있는 기초적인 합법 수(Pseudo-legal moves)를 계산하며, 이를 위해 **공통 킹 이동 테이블**을 먼저 구축합니다.
 - **경계 메모**: 킹이 스스로를 위험에 빠뜨리는 이동(체크되는 칸으로 이동)을 막는 로직은 `TASK-011`에서 다루며, 본 태스크에서는 '물리적으로 가능한 8칸'만 판정합니다. 캐슬링 또한 별도 태스크에서 처리합니다.
 
 - **이번 작업에서 하지 않는 것**: `[TASK-010]` (체크 판정)에 연결된 후속 책임은 이번 태스크에서 함께 닫지 않는다.
@@ -20,19 +20,27 @@
 - **최종 상태**: 주어진 위치의 킹이 주변 8칸 중 보드 내부이면서 아군 기물이 없는 모든 유효 좌표 배열을 반환합니다.
 
 - **이번 작업의 최소 결과물**:
+  - `packages/shared/src/utils/king-move-table.ts`
+  - `packages/shared/src/utils/king-move-table.spec.ts`
   - `packages/shared/src/engines/king-engine.ts`
   - `packages/shared/src/engines/king-engine.spec.ts`
 - **성공 기준 (AC)**:
+  - `king move table`이 시작 칸별 기본 이동 후보를 안정적으로 제공한다.
   - 킹의 주변 8방향 이동이 정확히 계산된다.
   - 보드 경계에서의 워프 현상이 좌표 검증을 통해 차단되었다.
   - 아군 점유 칸에 대한 처리가 정확히 이루어졌다.
+  - 선택한 칸에 킹이 없으면 빈 배열을 반환한다.
 
 ## 📂 2. 대상 아티팩트
 
 - **신규 생성**:
+  - `packages/shared/src/utils/king-move-table.ts`
+  - `packages/shared/src/utils/king-move-table.spec.ts`
   - `packages/shared/src/engines/king-engine.ts`
   - `packages/shared/src/engines/king-engine.spec.ts`
 - **수정 대상**:
+  - `packages/shared/src/utils/king-move-table.ts`
+  - `packages/shared/src/utils/king-move-table.spec.ts`
   - `packages/shared/src/engines/king-engine.ts`
   - `packages/shared/src/engines/king-engine.spec.ts`
 - **조건부 정리 대상**: 필요할 때만 작성
@@ -47,18 +55,23 @@
 
 ## 🛠️ 3. 상세 기술 사양
 
+- **이동 테이블**:
+  - `king move table`은 각 시작 칸에서 도달 가능한 기본 이동 후보를 미리 계산해 재사용한다.
+  - 엔진은 이 테이블을 읽고, 점유 상태만 반영해 최종 결과를 만든다.
 - **오프셋**: `[-9, -8, -7, -1, 1, 7, 8, 9]`
 - **핵심 규칙**:
   - 나이트와 마찬가지로 슬라이딩하지 않으므로 한 단계의 이동만 검사한다.
-  - 보드 경계 워프 방지를 위해 `Math.abs(currentFile - targetFile) <= 1` 조건을 반드시 확인한다.
+  - `king move table` 생성 단계에서 보드 경계 워프 방지를 위해 `Math.abs(currentFile - targetFile) <= 1` 조건을 반드시 확인한다.
   - 목적지에 아군 기물이 있으면 제외한다.
 - **필수 describe/it 목록**:
   - describe: `getKingMoves`
     - it: `보드 중앙(E4)에서 주변 8칸을 모두 반환해야 한다`
     - it: `보드 구석(A1)에서는 유효한 3칸만 반환해야 한다`
     - it: `아군 기물이 있는 칸은 결과에서 제외해야 한다`
+    - it: `선택한 칸에 킹이 없으면 빈 배열을 반환해야 한다`
 
 - **핵심 조립/흐름 규칙**:
+  - `king move table`이 시작 칸별 기본 이동 후보를 안정적으로 제공한다.
   - 킹의 주변 8방향 이동이 정확히 계산된다.
   - 보드 경계에서의 워프 현상이 좌표 검증을 통해 차단되었다.
   - 아군 점유 칸에 대한 처리가 정확히 이루어졌다.
@@ -81,7 +94,8 @@
   - 피해야 할 이름: data, item, obj, temp
 
 - **이름별 사용 의도와 적용 시점**:
-  - `kingOffsets`는 8방향 한 칸 오프셋 상수 이름으로 사용합니다.
+  - `kingOffsets`는 `king move table` 생성 시 8방향 한 칸 오프셋 상수 이름으로 사용합니다.
+  - `getKingTargets` 또는 유사 이름은 시작 칸 기준 기본 이동 후보 조회 함수 이름으로 사용합니다.
   - `getKingMoves`는 기본 이동만 계산하는 함수 이름으로 유지합니다.
 
 - **인수 이름 가이드**:
@@ -99,6 +113,7 @@ const moves = getKingMoves(square, state);
 - **반드시 포함할 실패 시나리오**:
   - 보드 밖 좌표를 결과에 포함하는 경우
   - 아군 기물이 있는 칸을 이동 가능 칸으로 반환하는 경우
+  - 선택한 칸이 킹이 아닌데 이동 후보를 반환하는 경우
 
 ## ⚖️ 4. 기술 제약 및 규칙
 
@@ -137,19 +152,23 @@ const moves = getKingMoves(square, state);
 
 1. **문맥 확인**: `[../architecture/patterns.md]`, `[../architecture/project-rules.md]`
 2. **입력 자산 확인**: 이번 태스크가 기대하는 타입, 상수, helper, 화면 구조, API 진입점이 이미 준비됐는지 확인한다.
-3. **핵심 구현**: 킹(King) 기본 이동 합법 수 판정 범위의 핵심 로직, 화면, 타입, 문서 또는 테스트를 작성한다.
+3. **핵심 구현**: `king move table`과 킹(King) 기본 이동 합법 수 판정 범위의 핵심 로직, 타입, 테스트를 작성한다.
 4. **연동**: 공개 export, 소비 코드, 테스트 연결, 후속 태스크가 기대하는 연결점을 맞춘다.
 5. **검증 실행**:
    - `pnpm --filter @chess-db/shared test`
    - `pnpm --filter @chess-db/shared type-check`
+   - `pnpm --filter @chess-db/shared test:coverage`
 6. **자가 점검**: 범위 침범, 수정 금지 파일 변경, 링크 경로, 후속 태스크와의 책임 충돌 여부를 점검한다.
 
 ## ✅ 7. 완료 판정 체크리스트
 
 - [ ] 킹의 주변 8방향 이동이 정확히 계산된다.
+- [ ] `king move table`이 시작 칸별 기본 이동 후보를 안정적으로 제공한다.
 - [ ] 보드 경계에서의 워프 현상이 좌표 검증을 통해 차단되었다.
 - [ ] 아군 점유 칸에 대한 처리가 정확히 이루어졌다.
+- [ ] 선택한 칸에 킹이 없으면 빈 배열을 반환한다.
+- [ ] `pnpm --filter @chess-db/shared test:coverage`가 통과한다.
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 킹(King) 기본 이동 합법 수 판정 로직 구현 (TASK-009)`
+- `feat: 킹 이동 테이블과 기본 이동 판정 로직 구현 (TASK-009)`
