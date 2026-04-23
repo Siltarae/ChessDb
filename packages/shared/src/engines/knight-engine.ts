@@ -3,10 +3,13 @@ import { getColor, isEmpty, isEnemyPiece } from '../utils/board-utils.js';
 import { getKnightTargets } from '../utils/knight-move-table.js';
 
 /**
- * [TASK-005] 나이트(Knight)의 합법 수 판정 로직
- * @param square 현재 나이트의 위치 (0-63)
+ * 특정 칸의 나이트가 이동할 수 있는 의사 합법 수를 반환합니다.
+ *
+ * @param square 이동할 나이트가 있는 시작 칸
  * @param state 현재 게임 상태
- * @returns 이동 가능한 좌표 배열
+ * @returns 나이트의 의사 합법 이동 칸 목록
+ *
+ * const moves = getKnightMoves(SQUARE.B1, state);
  */
 export const getKnightMoves = (square: Square, state: GameState): Square[] => {
   const piece = state.board[square];

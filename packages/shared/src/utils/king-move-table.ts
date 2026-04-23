@@ -36,6 +36,21 @@ const createKingMoveTable = (): KingMoveTable => {
   return kingMoveTable;
 };
 
+/**
+ * 시작 칸별 킹 이동 테이블을 반환합니다.
+ *
+ * @returns 각 시작 칸에 대응하는 킹 이동 후보 테이블
+ *
+ * const table = KING_MOVE_TABLE;
+ */
 export const KING_MOVE_TABLE = createKingMoveTable();
 
+/**
+ * 특정 칸의 킹 기본 이동 후보를 조회합니다.
+ *
+ * @param square 이동 후보를 조회할 시작 칸
+ * @returns 해당 칸에서 도달 가능한 킹 이동 칸 목록
+ *
+ * const targets = getKingTargets(SQUARE.E4);
+ */
 export const getKingTargets = (square: Square): KingMove => KING_MOVE_TABLE[square]!;

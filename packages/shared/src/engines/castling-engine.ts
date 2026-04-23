@@ -78,6 +78,15 @@ const CASTLE_ROOK_SQUARE = {
   },
 };
 
+/**
+ * 현재 상태에서 지정한 색이 둘 수 있는 캐슬링 목적지 칸만 반환합니다.
+ *
+ * @param state 현재 게임 상태
+ * @param color 캐슬링 가능 여부를 확인할 색상
+ * @returns 가능한 캐슬링 도착 칸 목록
+ *
+ * const moves = getCastlingMoves(state, COLOR.WHITE);
+ */
 export const getCastlingMoves = (state: GameState, color: Color): Square[] => {
   const moves: Square[] = [];
 
@@ -94,6 +103,16 @@ export const getCastlingMoves = (state: GameState, color: Color): Square[] => {
   return moves;
 };
 
+/**
+ * 캐슬링 착수를 보드 상태에 반영합니다.
+ *
+ * @param square 캐슬링을 시도하는 킹의 시작 칸
+ * @param targetSquare 캐슬링 목적지 칸
+ * @param state 현재 게임 상태
+ * @returns 캐슬링 결과가 반영된 다음 게임 상태
+ *
+ * const nextState = executeCastling(SQUARE.E1, SQUARE.G1, state);
+ */
 export const executeCastling = (
   square: Square,
   targetSquare: Square,

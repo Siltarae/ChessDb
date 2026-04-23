@@ -7,6 +7,15 @@ import { getPawnMoves } from './pawn-engine.js';
 import { getQueenMoves } from './queen-engine.js';
 import { getRookMoves } from './rook-engine.js';
 
+/**
+ * 특정 칸의 기물이 실제로 둘 수 있는 합법 수만 반환합니다.
+ *
+ * @param square 이동 후보를 구할 시작 칸
+ * @param state 현재 게임 상태
+ * @returns 체크 상태를 통과한 합법 이동 칸 목록
+ *
+ * const moves = getLegalMoves(SQUARE.E2, state);
+ */
 export const getLegalMoves = (square: Square, state: GameState): Square[] => {
   const piece = state.board[square];
 
