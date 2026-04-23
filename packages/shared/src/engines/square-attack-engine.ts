@@ -48,7 +48,7 @@ const isAttackedByPawn = (square: Square, attackerColor: Color, state: GameState
     const targetFile = file + dx;
     const targetRank = rank + dy;
     if (targetFile >= 0 && targetFile <= 7 && targetRank >= 0 && targetRank <= 7) {
-      const targetSquare = targetFile + targetRank * 8;
+      const targetSquare = (targetFile + targetRank * 8) as Square;
       if (
         state.board[targetSquare]?.type === PIECE_TYPE.PAWN &&
         state.board[targetSquare]?.color === attackerColor
