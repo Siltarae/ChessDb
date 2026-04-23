@@ -125,6 +125,7 @@ export const executeEnPassant = (
     ...state,
     board: nextBoard,
     enPassantSquare: null,
+    halfmoveClock: 0,
   };
 };
 
