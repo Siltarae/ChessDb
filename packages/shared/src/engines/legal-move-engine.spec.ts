@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { GameState } from '../models/game-state.js';
-import { COLOR, PIECE_TYPE, SQUARE } from '../models/game-state.js';
+import { CASTLE, COLOR, PIECE_TYPE, SQUARE } from '../models/game-state.js';
 import { getLegalMoves } from './legal-move-engine.js';
 
 const createEmptyState = (): GameState => ({
@@ -136,6 +136,39 @@ describe('LegalMoveEngine', () => {
       const state = { ...createEmptyState(), board };
 
       expect(getLegalMoves(SQUARE.E4, state)).toEqual([]);
+    });
+
+    it('캐슬링이 합법이면 킹의 합법 수 결과에 캐슬링 목적지가 포함되어야 한다', () => {
+      const board = [...Array(64).fill(null)];
+      board[SQUARE.E1] = { type: PIECE_TYPE.KING, color: COLOR.WHITE };
+      board[SQUARE.H1] = { type: PIECE_TYPE.ROOK, color: COLOR.WHITE };
+      board[SQUARE.A1] = { type: PIECE_TYPE.ROOK, color: COLOR.WHITE };
+      const state = {
+        ...createEmptyState(),
+        castlingRights: CASTLE.WHITE_KING_SIDE | CASTLE.WHITE_QUEEN_SIDE,
+        board,
+      };
+
+      expect(getLegalMoves(SQUARE.E1, state)).toEqual(
+        expect.arrayContaining([SQUARE.G1, SQUARE.C1]),
+      );
+    });
+
+    it('흑 캐슬링이 합법이면 킹의 합법 수 결과에 캐슬링 목적지가 포함되어야 한다', () => {
+      const board = [...Array(64).fill(null)];
+      board[SQUARE.E8] = { type: PIECE_TYPE.KING, color: COLOR.BLACK };
+      board[SQUARE.H8] = { type: PIECE_TYPE.ROOK, color: COLOR.BLACK };
+      board[SQUARE.A8] = { type: PIECE_TYPE.ROOK, color: COLOR.BLACK };
+      const state = {
+        ...createEmptyState(),
+        turn: COLOR.BLACK,
+        castlingRights: CASTLE.BLACK_KING_SIDE | CASTLE.BLACK_QUEEN_SIDE,
+        board,
+      };
+
+      expect(getLegalMoves(SQUARE.E8, state)).toEqual(
+        expect.arrayContaining([SQUARE.G8, SQUARE.C8]),
+      );
     });
   });
 });

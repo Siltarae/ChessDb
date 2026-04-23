@@ -1,6 +1,7 @@
 import { PIECE_TYPE, type GameState, type Square } from '../models/game-state.js';
 import { getColor, isEmpty, isEnemyPiece } from '../utils/board-utils.js';
 import { getKingTargets } from '../utils/king-move-table.js';
+import { getCastlingMoves } from './castling-engine.js';
 
 export const getKingMoves = (square: Square, state: GameState): Square[] => {
   const piece = state.board[square];
@@ -17,6 +18,8 @@ export const getKingMoves = (square: Square, state: GameState): Square[] => {
       moves.push(target);
     }
   }
+
+  moves.push(...getCastlingMoves(state, color));
 
   return moves;
 };

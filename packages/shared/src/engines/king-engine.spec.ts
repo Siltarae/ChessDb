@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { GameState, Square } from '../models/game-state.js';
-import { COLOR, PIECE_TYPE, SQUARE } from '../models/game-state.js';
+import { CASTLE, COLOR, PIECE_TYPE, SQUARE } from '../models/game-state.js';
 import { getKingMoves } from './king-engine.js';
 
 const createEmptyState = (): GameState => ({
@@ -82,6 +82,39 @@ describe('KingEngine', () => {
       const state = { ...createEmptyState(), board };
 
       expect(getKingMoves(SQUARE.E4, state)).toContain(SQUARE.D3);
+    });
+
+    it('캐슬링 조건을 만족하면 캐슬링 목적지도 결과에 포함해야 한다', () => {
+      const board = [...Array(64).fill(null)];
+      board[SQUARE.E1] = { type: PIECE_TYPE.KING, color: COLOR.WHITE };
+      board[SQUARE.H1] = { type: PIECE_TYPE.ROOK, color: COLOR.WHITE };
+      board[SQUARE.A1] = { type: PIECE_TYPE.ROOK, color: COLOR.WHITE };
+      const state = {
+        ...createEmptyState(),
+        castlingRights: CASTLE.WHITE_KING_SIDE | CASTLE.WHITE_QUEEN_SIDE,
+        board,
+      };
+
+      const moves = getKingMoves(SQUARE.E1, state);
+
+      expect(moves).toEqual(expect.arrayContaining([SQUARE.G1, SQUARE.C1]));
+    });
+
+    it('흑 킹도 캐슬링 조건을 만족하면 캐슬링 목적지가 결과에 포함되어야 한다', () => {
+      const board = [...Array(64).fill(null)];
+      board[SQUARE.E8] = { type: PIECE_TYPE.KING, color: COLOR.BLACK };
+      board[SQUARE.H8] = { type: PIECE_TYPE.ROOK, color: COLOR.BLACK };
+      board[SQUARE.A8] = { type: PIECE_TYPE.ROOK, color: COLOR.BLACK };
+      const state = {
+        ...createEmptyState(),
+        turn: COLOR.BLACK,
+        castlingRights: CASTLE.BLACK_KING_SIDE | CASTLE.BLACK_QUEEN_SIDE,
+        board,
+      };
+
+      const moves = getKingMoves(SQUARE.E8, state);
+
+      expect(moves).toEqual(expect.arrayContaining([SQUARE.G8, SQUARE.C8]));
     });
 
     it('모든 보드 칸(0-63)에 대해 반환된 좌표는 반드시 인접 칸이어야 한다', () => {
