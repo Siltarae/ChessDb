@@ -1,4 +1,10 @@
-import type { Color, GameState, Square } from '../models/game-state.js';
+import {
+  MOVE_KIND,
+  type Color,
+  type GameState,
+  type Move,
+  type Square,
+} from '../models/game-state.js';
 import { isEmpty, isEnemyPiece } from '../utils/board-utils.js';
 import { getRay, type Direction } from '../utils/ray-table.js';
 
@@ -18,20 +24,20 @@ export const getSlidingMoves = (
   directions: Direction[],
   state: GameState,
   color: Color,
-): Square[] => {
-  const moves: Square[] = [];
+): Move[] => {
+  const moves: Move[] = [];
 
   for (const direction of directions) {
     const ray = getRay(square, direction);
 
     for (const target of ray) {
       if (isEmpty(target, state)) {
-        moves.push(target);
+        moves.push({ from: square, to: target, kind: MOVE_KIND.NORMAL });
         continue;
       }
 
       if (isEnemyPiece(state, target, color)) {
-        moves.push(target);
+        moves.push({ from: square, to: target, kind: MOVE_KIND.NORMAL });
         break;
       }
 

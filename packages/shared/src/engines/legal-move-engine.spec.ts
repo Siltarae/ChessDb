@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import type { GameState } from '../models/game-state.js';
+import type { GameState, Move } from '../models/game-state.js';
 import { CASTLE, COLOR, PIECE_TYPE, SQUARE } from '../models/game-state.js';
+import {
+  castleKingsideMove,
+  castleQueensideMove,
+  enPassantMove,
+  moveTargets,
+  normalMove,
+} from '../test-utils/move-test-helpers.js';
 import { getLegalMoves } from './legal-move-engine.js';
 
 const createEmptyState = (): GameState => ({
@@ -31,10 +38,18 @@ describe('LegalMoveEngine', () => {
 
       const moves = getLegalMoves(SQUARE.E2, state);
 
-      expect(moves).not.toContain(SQUARE.D2);
-      expect(moves).not.toContain(SQUARE.F2);
+      const targets = moveTargets(moves as Move[]);
+      expect(targets).not.toContain(SQUARE.D2);
+      expect(targets).not.toContain(SQUARE.F2);
       expect(moves).toEqual(
-        expect.arrayContaining([SQUARE.E3, SQUARE.E4, SQUARE.E5, SQUARE.E6, SQUARE.E7, SQUARE.E8]),
+        expect.arrayContaining([
+          normalMove(SQUARE.E2, SQUARE.E3),
+          normalMove(SQUARE.E2, SQUARE.E4),
+          normalMove(SQUARE.E2, SQUARE.E5),
+          normalMove(SQUARE.E2, SQUARE.E6),
+          normalMove(SQUARE.E2, SQUARE.E7),
+          normalMove(SQUARE.E2, SQUARE.E8),
+        ]),
       );
     });
 
@@ -45,7 +60,7 @@ describe('LegalMoveEngine', () => {
       board[SQUARE.E8] = { type: PIECE_TYPE.ROOK, color: COLOR.BLACK };
       const state = { ...createEmptyState(), board };
 
-      expect(getLegalMoves(SQUARE.A2, state)).toEqual([SQUARE.E2]);
+      expect(getLegalMoves(SQUARE.A2, state)).toEqual([normalMove(SQUARE.A2, SQUARE.E2)]);
     });
 
     it('킹 스스로가 상대 공격 경로로 이동하는 것을 차단해야 한다', () => {
@@ -56,9 +71,17 @@ describe('LegalMoveEngine', () => {
 
       const moves = getLegalMoves(SQUARE.E4, state);
 
-      expect(moves).not.toContain(SQUARE.E5);
+      const targets = moveTargets(moves as Move[]);
+      expect(targets).not.toContain(SQUARE.E5);
       expect(moves).toEqual(
-        expect.arrayContaining([SQUARE.D3, SQUARE.D4, SQUARE.D5, SQUARE.F3, SQUARE.F4, SQUARE.F5]),
+        expect.arrayContaining([
+          normalMove(SQUARE.E4, SQUARE.D3),
+          normalMove(SQUARE.E4, SQUARE.D4),
+          normalMove(SQUARE.E4, SQUARE.D5),
+          normalMove(SQUARE.E4, SQUARE.F3),
+          normalMove(SQUARE.E4, SQUARE.F4),
+          normalMove(SQUARE.E4, SQUARE.F5),
+        ]),
       );
     });
 
@@ -123,9 +146,16 @@ describe('LegalMoveEngine', () => {
       const state = { ...createEmptyState(), board };
 
       expect(getLegalMoves(SQUARE.E2, state)).toEqual(
-        expect.arrayContaining([SQUARE.E3, SQUARE.E4, SQUARE.E5, SQUARE.E6, SQUARE.E7, SQUARE.E8]),
+        expect.arrayContaining([
+          normalMove(SQUARE.E2, SQUARE.E3),
+          normalMove(SQUARE.E2, SQUARE.E4),
+          normalMove(SQUARE.E2, SQUARE.E5),
+          normalMove(SQUARE.E2, SQUARE.E6),
+          normalMove(SQUARE.E2, SQUARE.E7),
+          normalMove(SQUARE.E2, SQUARE.E8),
+        ]),
       );
-      expect(getLegalMoves(SQUARE.E2, state)).not.toEqual(
+      expect(moveTargets(getLegalMoves(SQUARE.E2, state) as Move[])).not.toEqual(
         expect.arrayContaining([SQUARE.D2, SQUARE.F2]),
       );
     });
@@ -150,7 +180,10 @@ describe('LegalMoveEngine', () => {
       };
 
       expect(getLegalMoves(SQUARE.E1, state)).toEqual(
-        expect.arrayContaining([SQUARE.G1, SQUARE.C1]),
+        expect.arrayContaining([
+          castleKingsideMove(SQUARE.E1, SQUARE.G1),
+          castleQueensideMove(SQUARE.E1, SQUARE.C1),
+        ]),
       );
     });
 
@@ -167,7 +200,10 @@ describe('LegalMoveEngine', () => {
       };
 
       expect(getLegalMoves(SQUARE.E8, state)).toEqual(
-        expect.arrayContaining([SQUARE.G8, SQUARE.C8]),
+        expect.arrayContaining([
+          castleKingsideMove(SQUARE.E8, SQUARE.G8),
+          castleQueensideMove(SQUARE.E8, SQUARE.C8),
+        ]),
       );
     });
 
@@ -183,7 +219,9 @@ describe('LegalMoveEngine', () => {
         board,
       };
 
-      expect(getLegalMoves(SQUARE.E5, state)).toContain(SQUARE.D6);
+      expect(getLegalMoves(SQUARE.E5, state)).toContainEqual(
+        enPassantMove(SQUARE.E5, SQUARE.D6, SQUARE.D5),
+      );
     });
 
     it('앙파상 후 제거 대상 폰이 사라져 자기 킹이 체크에 노출되면 그 수를 제외해야 한다', () => {
@@ -199,7 +237,7 @@ describe('LegalMoveEngine', () => {
         board,
       };
 
-      expect(getLegalMoves(SQUARE.C5, state)).not.toContain(SQUARE.D6);
+      expect(moveTargets(getLegalMoves(SQUARE.C5, state) as Move[])).not.toContain(SQUARE.D6);
     });
   });
 });

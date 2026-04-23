@@ -1,4 +1,15 @@
-import { COLOR, FILE, RANK, type GameState, type Square } from '../models/game-state.js';
+import {
+  COLOR,
+  FILE,
+  MOVE_KIND,
+  PIECE_TYPE,
+  RANK,
+  type Color,
+  type GameState,
+  type Move,
+  type MoveKind,
+  type Square,
+} from '../models/game-state.js';
 import {
   getColor,
   getFile,
@@ -8,6 +19,7 @@ import {
   toSquare,
 } from '../utils/board-utils.js';
 import { getEnPassantMoves } from './en-passant-engine.js';
+import { isPromotionSquare } from './promotion-engine.js';
 
 /**
  * 특정 칸의 폰이 이동할 수 있는 의사 합법 수를 반환합니다.
@@ -18,7 +30,7 @@ import { getEnPassantMoves } from './en-passant-engine.js';
  *
  * const moves = getPawnMoves(SQUARE.E2, state);
  */
-export const getPawnMoves = (square: Square, state: GameState): Square[] => {
+export const getPawnMoves = (square: Square, state: GameState): Move[] => {
   const piece = state.board[square];
   if (!piece) {
     return [];
@@ -34,7 +46,7 @@ export const getPawnMoves = (square: Square, state: GameState): Square[] => {
     endRank: color === COLOR.WHITE ? RANK[8] : RANK[1],
   };
 
-  const moves: Square[] = [];
+  const moves: Move[] = [];
   const rank = getRank(square);
   const file = getFile(square);
 
@@ -46,7 +58,7 @@ export const getPawnMoves = (square: Square, state: GameState): Square[] => {
 
   // 전진 1칸
   if (rank !== pawnMove.endRank && oneStep !== null && isEmpty(oneStep, state)) {
-    moves.push(oneStep);
+    moves.push(...appendPromotionMove(square, oneStep, MOVE_KIND.NORMAL, color));
   }
 
   // 전진 2칸 (시작 위치이고 경로가 비어있을 때)
@@ -57,20 +69,38 @@ export const getPawnMoves = (square: Square, state: GameState): Square[] => {
     isEmpty(oneStep, state) &&
     isEmpty(twoStep, state)
   ) {
-    moves.push(twoStep);
+    moves.push(...appendPromotionMove(square, twoStep, MOVE_KIND.DOUBLE_PAWN_PUSH, color));
   }
 
   // 서쪽 대각선 캡처
   if (file !== FILE.A && westCapture !== null && isEnemyPiece(state, westCapture, color)) {
-    moves.push(westCapture);
+    moves.push(...appendPromotionMove(square, westCapture, MOVE_KIND.NORMAL, color));
   }
 
   // 동쪽 대각선 캡처
   if (file !== FILE.H && eastCapture !== null && isEnemyPiece(state, eastCapture, color)) {
-    moves.push(eastCapture);
+    moves.push(...appendPromotionMove(square, eastCapture, MOVE_KIND.NORMAL, color));
   }
 
+  // 앙파상 이동
   moves.push(...getEnPassantMoves(square, state));
 
   return moves;
+};
+
+const appendPromotionMove = (
+  from: Square,
+  to: Square,
+  kind: Exclude<MoveKind, typeof MOVE_KIND.EN_PASSANT>,
+  color: Color,
+): Move[] => {
+  if (!isPromotionSquare(to, color)) {
+    return [{ from, to, kind }];
+  }
+
+  return [PIECE_TYPE.QUEEN, PIECE_TYPE.ROOK, PIECE_TYPE.BISHOP, PIECE_TYPE.KNIGHT].map(
+    (promotion) => {
+      return { from, to, kind, promotion };
+    },
+  );
 };

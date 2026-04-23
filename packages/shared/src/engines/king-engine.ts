@@ -1,4 +1,10 @@
-import { PIECE_TYPE, type GameState, type Square } from '../models/game-state.js';
+import {
+  MOVE_KIND,
+  PIECE_TYPE,
+  type GameState,
+  type Move,
+  type Square,
+} from '../models/game-state.js';
 import { getColor, isEmpty, isEnemyPiece } from '../utils/board-utils.js';
 import { getKingTargets } from '../utils/king-move-table.js';
 import { getCastlingMoves } from './castling-engine.js';
@@ -12,7 +18,7 @@ import { getCastlingMoves } from './castling-engine.js';
  *
  * const moves = getKingMoves(SQUARE.E1, state);
  */
-export const getKingMoves = (square: Square, state: GameState): Square[] => {
+export const getKingMoves = (square: Square, state: GameState): Move[] => {
   const piece = state.board[square];
   if (!piece || piece.type !== PIECE_TYPE.KING) {
     return [];
@@ -20,11 +26,11 @@ export const getKingMoves = (square: Square, state: GameState): Square[] => {
   const color = getColor(piece);
 
   const targets = getKingTargets(square);
-  const moves: Square[] = [];
+  const moves: Move[] = [];
 
   for (const target of targets) {
     if (isEmpty(target, state) || isEnemyPiece(state, target, color)) {
-      moves.push(target);
+      moves.push({ from: square, to: target, kind: MOVE_KIND.NORMAL });
     }
   }
 

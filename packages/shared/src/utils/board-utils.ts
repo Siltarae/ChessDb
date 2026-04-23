@@ -1,8 +1,11 @@
 import {
   COLOR,
+  PIECE_TYPE,
   type Color,
   type GameState,
   type Piece,
+  type PieceType,
+  type PromotionPieceType,
   type Square,
 } from '../models/game-state.js';
 
@@ -110,3 +113,9 @@ export const isEnemyPiece = (state: GameState, square: Square, myColor: Color): 
 export const getOpponentColor = (color: Color): Color => {
   return color === COLOR.WHITE ? COLOR.BLACK : COLOR.WHITE;
 };
+
+export const isPromotablePieceType = (pieceType: PieceType): pieceType is PromotionPieceType =>
+  pieceType === PIECE_TYPE.QUEEN ||
+  pieceType === PIECE_TYPE.ROOK ||
+  pieceType === PIECE_TYPE.BISHOP ||
+  pieceType === PIECE_TYPE.KNIGHT;

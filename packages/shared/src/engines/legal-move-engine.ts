@@ -1,4 +1,10 @@
-import { PIECE_TYPE, type GameState, type Square } from '../models/game-state.js';
+import {
+  MOVE_KIND,
+  PIECE_TYPE,
+  type GameState,
+  type Move,
+  type Square,
+} from '../models/game-state.js';
 import { getBishopMoves } from './bishop-engine.js';
 import { isCheck } from './check-engine.js';
 import { executeEnPassant } from './en-passant-engine.js';
@@ -17,7 +23,7 @@ import { getRookMoves } from './rook-engine.js';
  *
  * const moves = getLegalMoves(SQUARE.E2, state);
  */
-export const getLegalMoves = (square: Square, state: GameState): Square[] => {
+export const getLegalMoves = (square: Square, state: GameState): Move[] => {
   const piece = state.board[square];
 
   if (piece == null || state.turn !== piece.color) {
@@ -28,19 +34,19 @@ export const getLegalMoves = (square: Square, state: GameState): Square[] => {
 
   const color = state.turn;
 
-  const legalMoves: Square[] = [];
+  const legalMoves: Move[] = [];
 
-  for (const targetSquare of moves) {
-    const newState = simulateMove(square, targetSquare, state);
+  for (const move of moves) {
+    const newState = simulateMove(square, move, state);
     if (!isCheck(newState, color)) {
-      legalMoves.push(targetSquare);
+      legalMoves.push(move);
     }
   }
 
   return legalMoves;
 };
 
-const getPseudoLegalMoves = (square: Square, state: GameState): Square[] => {
+const getPseudoLegalMoves = (square: Square, state: GameState): Move[] => {
   const piece = state.board[square]!;
   switch (piece.type) {
     case PIECE_TYPE.PAWN:
@@ -60,21 +66,17 @@ const getPseudoLegalMoves = (square: Square, state: GameState): Square[] => {
   }
 };
 
-const simulateMove = (square: Square, targetSquare: Square, state: GameState): GameState => {
+const simulateMove = (square: Square, move: Move, state: GameState): GameState => {
   const newBoard = [...state.board];
   const piece = newBoard[square]!;
 
-  const isEnPassantMove =
-    piece.type === PIECE_TYPE.PAWN &&
-    state.enPassantSquare !== null &&
-    targetSquare === state.enPassantSquare &&
-    state.board[targetSquare] === null;
+  const isEnPassantMove = move.kind === MOVE_KIND.EN_PASSANT;
 
   if (isEnPassantMove) {
-    return executeEnPassant(square, targetSquare, state);
+    return executeEnPassant(square, move.to, state);
   }
 
-  newBoard[targetSquare] = piece;
+  newBoard[move.to] = piece;
   newBoard[square] = null;
 
   return {

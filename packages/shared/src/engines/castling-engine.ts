@@ -1,10 +1,12 @@
 import {
   CASTLE,
   COLOR,
+  MOVE_KIND,
   PIECE_TYPE,
   SQUARE,
   type Color,
   type GameState,
+  type Move,
   type Square,
 } from '../models/game-state.js';
 import { getOpponentColor, isEmpty } from '../utils/board-utils.js';
@@ -87,17 +89,25 @@ const CASTLE_ROOK_SQUARE = {
  *
  * const moves = getCastlingMoves(state, COLOR.WHITE);
  */
-export const getCastlingMoves = (state: GameState, color: Color): Square[] => {
-  const moves: Square[] = [];
+export const getCastlingMoves = (state: GameState, color: Color): Move[] => {
+  const moves: Move[] = [];
 
   if (isCheck(state, color)) return moves;
 
   if (canCastleKingside(state, color)) {
-    moves.push(CASTLE_KING_SQUARE[SIDE.KINGSIDE][color]);
+    moves.push({
+      from: KING_SQUARE[color],
+      to: CASTLE_KING_SQUARE[SIDE.KINGSIDE][color],
+      kind: MOVE_KIND.CASTLE_KING_SIDE,
+    });
   }
 
   if (canCastleQueenside(state, color)) {
-    moves.push(CASTLE_KING_SQUARE[SIDE.QUEENSIDE][color]);
+    moves.push({
+      from: KING_SQUARE[color],
+      to: CASTLE_KING_SQUARE[SIDE.QUEENSIDE][color],
+      kind: MOVE_KIND.CASTLE_QUEEN_SIDE,
+    });
   }
 
   return moves;

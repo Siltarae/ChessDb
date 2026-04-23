@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import type { GameState } from '../models/game-state.js';
+import type { GameState, Move } from '../models/game-state.js';
 import { COLOR, PIECE_TYPE, SQUARE } from '../models/game-state.js';
+import { moveTargets } from '../test-utils/move-test-helpers.js';
 import { getBishopMoves } from './bishop-engine.js';
 
 const createEmptyState = (): GameState => ({
@@ -21,7 +22,7 @@ describe('BishopEngine', () => {
 
       const moves = getBishopMoves(SQUARE.D4, state);
 
-      expect(moves).toEqual([
+      expect(moveTargets(moves as Move[])).toEqual([
         SQUARE.E5,
         SQUARE.F6,
         SQUARE.G7,
@@ -47,7 +48,8 @@ describe('BishopEngine', () => {
 
       const moves = getBishopMoves(SQUARE.D4, state);
 
-      expect(moves).toEqual([
+      const targets = moveTargets(moves as Move[]);
+      expect(targets).toEqual([
         SQUARE.E5,
         SQUARE.E3,
         SQUARE.F2,
@@ -57,8 +59,8 @@ describe('BishopEngine', () => {
         SQUARE.B2,
         SQUARE.A1,
       ]);
-      expect(moves).not.toContain(SQUARE.F6);
-      expect(moves).not.toContain(SQUARE.B6);
+      expect(targets).not.toContain(SQUARE.F6);
+      expect(targets).not.toContain(SQUARE.B6);
     });
 
     it('상대 기물을 잡을 수 있는 칸까지는 포함하고 그 뒤는 차단되어야 한다', () => {
@@ -72,7 +74,8 @@ describe('BishopEngine', () => {
 
       const moves = getBishopMoves(SQUARE.D4, state);
 
-      expect(moves).toEqual([
+      const targets = moveTargets(moves as Move[]);
+      expect(targets).toEqual([
         SQUARE.E5,
         SQUARE.F6,
         SQUARE.E3,
@@ -84,8 +87,8 @@ describe('BishopEngine', () => {
         SQUARE.C3,
         SQUARE.B2,
       ]);
-      expect(moves).not.toContain(SQUARE.H8);
-      expect(moves).not.toContain(SQUARE.A1);
+      expect(targets).not.toContain(SQUARE.H8);
+      expect(targets).not.toContain(SQUARE.A1);
     });
 
     it('코너 시작 칸에서는 가능한 대각선 방향만 결과에 포함해야 한다', () => {
@@ -95,7 +98,7 @@ describe('BishopEngine', () => {
 
       const moves = getBishopMoves(SQUARE.A1, state);
 
-      expect(moves).toEqual([
+      expect(moveTargets(moves as Move[])).toEqual([
         SQUARE.B2,
         SQUARE.C3,
         SQUARE.D4,
@@ -114,7 +117,8 @@ describe('BishopEngine', () => {
 
       const moves = getBishopMoves(SQUARE.D4, state);
 
-      expect(moves).toEqual([
+      const targets = moveTargets(moves as Move[]);
+      expect(targets).toEqual([
         SQUARE.E3,
         SQUARE.F2,
         SQUARE.G1,
@@ -125,7 +129,7 @@ describe('BishopEngine', () => {
         SQUARE.B2,
         SQUARE.A1,
       ]);
-      expect(moves).not.toContain(SQUARE.E5);
+      expect(targets).not.toContain(SQUARE.E5);
     });
 
     it('바로 옆 칸이 적군이면 그 칸만 포함하고 즉시 종료해야 한다', () => {
@@ -137,7 +141,8 @@ describe('BishopEngine', () => {
 
       const moves = getBishopMoves(SQUARE.D4, state);
 
-      expect(moves).toEqual([
+      const targets = moveTargets(moves as Move[]);
+      expect(targets).toEqual([
         SQUARE.E5,
         SQUARE.E3,
         SQUARE.F2,
@@ -149,7 +154,7 @@ describe('BishopEngine', () => {
         SQUARE.B2,
         SQUARE.A1,
       ]);
-      expect(moves).not.toContain(SQUARE.F6);
+      expect(targets).not.toContain(SQUARE.F6);
     });
 
     it('선택한 칸에 비숍이 아닌 기물이 있으면 빈 배열을 반환해야 한다', () => {
@@ -172,7 +177,8 @@ describe('BishopEngine', () => {
 
       const moves = getBishopMoves(SQUARE.E5, state);
 
-      expect(moves).toEqual([
+      const targets = moveTargets(moves as Move[]);
+      expect(targets).toEqual([
         SQUARE.F4,
         SQUARE.G3,
         SQUARE.H2,
@@ -181,8 +187,8 @@ describe('BishopEngine', () => {
         SQUARE.B8,
         SQUARE.D4,
       ]);
-      expect(moves).not.toContain(SQUARE.F6);
-      expect(moves).not.toContain(SQUARE.C3);
+      expect(targets).not.toContain(SQUARE.F6);
+      expect(targets).not.toContain(SQUARE.C3);
     });
   });
 });

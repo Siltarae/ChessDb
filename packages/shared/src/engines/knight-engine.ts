@@ -1,4 +1,4 @@
-import { type GameState, type Square } from '../models/game-state.js';
+import { MOVE_KIND, type GameState, type Move, type Square } from '../models/game-state.js';
 import { getColor, isEmpty, isEnemyPiece } from '../utils/board-utils.js';
 import { getKnightTargets } from '../utils/knight-move-table.js';
 
@@ -11,20 +11,20 @@ import { getKnightTargets } from '../utils/knight-move-table.js';
  *
  * const moves = getKnightMoves(SQUARE.B1, state);
  */
-export const getKnightMoves = (square: Square, state: GameState): Square[] => {
+export const getKnightMoves = (square: Square, state: GameState): Move[] => {
   const piece = state.board[square];
   if (!piece) {
     return [];
   }
 
-  const moves: Square[] = [];
+  const moves: Move[] = [];
   const color = getColor(piece);
 
   const targets = getKnightTargets(square);
 
   for (const target of targets) {
     if (isEmpty(target, state) || isEnemyPiece(state, target, color)) {
-      moves.push(target);
+      moves.push({ from: square, to: target, kind: MOVE_KIND.NORMAL });
     }
   }
 

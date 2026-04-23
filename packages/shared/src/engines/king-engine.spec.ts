@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import type { GameState, Square } from '../models/game-state.js';
+import type { GameState, Move, Square } from '../models/game-state.js';
 import { CASTLE, COLOR, PIECE_TYPE, SQUARE } from '../models/game-state.js';
+import {
+  castleKingsideMove,
+  castleQueensideMove,
+  moveTargets,
+  normalMove,
+} from '../test-utils/move-test-helpers.js';
 import { getKingMoves } from './king-engine.js';
 
 const createEmptyState = (): GameState => ({
@@ -38,14 +44,14 @@ describe('KingEngine', () => {
       expect(moves).toHaveLength(8);
       expect(moves).toEqual(
         expect.arrayContaining([
-          SQUARE.D3,
-          SQUARE.E3,
-          SQUARE.F3,
-          SQUARE.D4,
-          SQUARE.F4,
-          SQUARE.D5,
-          SQUARE.E5,
-          SQUARE.F5,
+          normalMove(SQUARE.E4, SQUARE.D3),
+          normalMove(SQUARE.E4, SQUARE.E3),
+          normalMove(SQUARE.E4, SQUARE.F3),
+          normalMove(SQUARE.E4, SQUARE.D4),
+          normalMove(SQUARE.E4, SQUARE.F4),
+          normalMove(SQUARE.E4, SQUARE.D5),
+          normalMove(SQUARE.E4, SQUARE.E5),
+          normalMove(SQUARE.E4, SQUARE.F5),
         ]),
       );
     });
@@ -58,7 +64,13 @@ describe('KingEngine', () => {
       const moves = getKingMoves(SQUARE.A1, state);
 
       expect(moves).toHaveLength(3);
-      expect(moves).toEqual(expect.arrayContaining([SQUARE.B1, SQUARE.A2, SQUARE.B2]));
+      expect(moves).toEqual(
+        expect.arrayContaining([
+          normalMove(SQUARE.A1, SQUARE.B1),
+          normalMove(SQUARE.A1, SQUARE.A2),
+          normalMove(SQUARE.A1, SQUARE.B2),
+        ]),
+      );
     });
 
     it('아군 기물이 있는 칸은 결과에서 제외해야 한다', () => {
@@ -70,8 +82,9 @@ describe('KingEngine', () => {
 
       const moves = getKingMoves(SQUARE.E4, state);
 
-      expect(moves).not.toContain(SQUARE.D3);
-      expect(moves).not.toContain(SQUARE.F4);
+      const targets = moveTargets(moves as Move[]);
+      expect(targets).not.toContain(SQUARE.D3);
+      expect(targets).not.toContain(SQUARE.F4);
       expect(moves).toHaveLength(6);
     });
 
@@ -81,7 +94,7 @@ describe('KingEngine', () => {
       board[SQUARE.D3] = { type: PIECE_TYPE.PAWN, color: COLOR.BLACK };
       const state = { ...createEmptyState(), board };
 
-      expect(getKingMoves(SQUARE.E4, state)).toContain(SQUARE.D3);
+      expect(getKingMoves(SQUARE.E4, state)).toContainEqual(normalMove(SQUARE.E4, SQUARE.D3));
     });
 
     it('캐슬링 조건을 만족하면 캐슬링 목적지도 결과에 포함해야 한다', () => {
@@ -97,7 +110,12 @@ describe('KingEngine', () => {
 
       const moves = getKingMoves(SQUARE.E1, state);
 
-      expect(moves).toEqual(expect.arrayContaining([SQUARE.G1, SQUARE.C1]));
+      expect(moves).toEqual(
+        expect.arrayContaining([
+          castleKingsideMove(SQUARE.E1, SQUARE.G1),
+          castleQueensideMove(SQUARE.E1, SQUARE.C1),
+        ]),
+      );
     });
 
     it('흑 킹도 캐슬링 조건을 만족하면 캐슬링 목적지가 결과에 포함되어야 한다', () => {
@@ -114,7 +132,12 @@ describe('KingEngine', () => {
 
       const moves = getKingMoves(SQUARE.E8, state);
 
-      expect(moves).toEqual(expect.arrayContaining([SQUARE.G8, SQUARE.C8]));
+      expect(moves).toEqual(
+        expect.arrayContaining([
+          castleKingsideMove(SQUARE.E8, SQUARE.G8),
+          castleQueensideMove(SQUARE.E8, SQUARE.C8),
+        ]),
+      );
     });
 
     it('모든 보드 칸(0-63)에 대해 반환된 좌표는 반드시 인접 칸이어야 한다', () => {
@@ -130,7 +153,8 @@ describe('KingEngine', () => {
         const originFile = square % 8;
         const originRank = Math.floor(square / 8);
 
-        moves.forEach((target) => {
+        (moves as Move[]).forEach((move) => {
+          const target = move.to;
           const fileDelta = Math.abs((target % 8) - originFile);
           const rankDelta = Math.abs(Math.floor(target / 8) - originRank);
 

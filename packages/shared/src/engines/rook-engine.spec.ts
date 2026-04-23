@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import type { GameState } from '../models/game-state.js';
+import type { GameState, Move } from '../models/game-state.js';
 import { COLOR, PIECE_TYPE, SQUARE } from '../models/game-state.js';
+import { moveTargets } from '../test-utils/move-test-helpers.js';
 import { getRookMoves } from './rook-engine.js';
 
 const createEmptyState = (): GameState => ({
@@ -21,7 +22,7 @@ describe('RookEngine', () => {
 
       const moves = getRookMoves(SQUARE.D4, state);
 
-      expect(moves).toEqual([
+      expect(moveTargets(moves as Move[])).toEqual([
         SQUARE.D5,
         SQUARE.D6,
         SQUARE.D7,
@@ -48,7 +49,8 @@ describe('RookEngine', () => {
 
       const moves = getRookMoves(SQUARE.D4, state);
 
-      expect(moves).toEqual([
+      const targets = moveTargets(moves as Move[]);
+      expect(targets).toEqual([
         SQUARE.D5,
         SQUARE.D3,
         SQUARE.D2,
@@ -59,8 +61,8 @@ describe('RookEngine', () => {
         SQUARE.H4,
         SQUARE.C4,
       ]);
-      expect(moves).not.toContain(SQUARE.D6);
-      expect(moves).not.toContain(SQUARE.B4);
+      expect(targets).not.toContain(SQUARE.D6);
+      expect(targets).not.toContain(SQUARE.B4);
     });
 
     it('상대 기물을 캡처하는 칸까지 포함하고 그 뒤는 차단되어야 한다', () => {
@@ -74,7 +76,8 @@ describe('RookEngine', () => {
 
       const moves = getRookMoves(SQUARE.D4, state);
 
-      expect(moves).toEqual([
+      const targets = moveTargets(moves as Move[]);
+      expect(targets).toEqual([
         SQUARE.D5,
         SQUARE.D6,
         SQUARE.D3,
@@ -87,8 +90,8 @@ describe('RookEngine', () => {
         SQUARE.C4,
         SQUARE.B4,
       ]);
-      expect(moves).not.toContain(SQUARE.D8);
-      expect(moves).not.toContain(SQUARE.A4);
+      expect(targets).not.toContain(SQUARE.D8);
+      expect(targets).not.toContain(SQUARE.A4);
     });
 
     it('바로 옆 칸이 아군이면 그 방향은 0칸이어야 한다', () => {
@@ -99,7 +102,8 @@ describe('RookEngine', () => {
 
       const moves = getRookMoves(SQUARE.D4, state);
 
-      expect(moves).toEqual([
+      const targets = moveTargets(moves as Move[]);
+      expect(targets).toEqual([
         SQUARE.D3,
         SQUARE.D2,
         SQUARE.D1,
@@ -111,7 +115,7 @@ describe('RookEngine', () => {
         SQUARE.B4,
         SQUARE.A4,
       ]);
-      expect(moves).not.toContain(SQUARE.D5);
+      expect(targets).not.toContain(SQUARE.D5);
     });
 
     it('바로 옆 칸이 적군이면 그 칸만 포함하고 즉시 종료해야 한다', () => {
@@ -123,7 +127,8 @@ describe('RookEngine', () => {
 
       const moves = getRookMoves(SQUARE.D4, state);
 
-      expect(moves).toEqual([
+      const targets = moveTargets(moves as Move[]);
+      expect(targets).toEqual([
         SQUARE.D5,
         SQUARE.D3,
         SQUARE.D2,
@@ -136,7 +141,7 @@ describe('RookEngine', () => {
         SQUARE.B4,
         SQUARE.A4,
       ]);
-      expect(moves).not.toContain(SQUARE.D6);
+      expect(targets).not.toContain(SQUARE.D6);
     });
 
     it('코너 시작 칸에서는 가능한 직선 방향만 결과에 포함해야 한다', () => {
@@ -146,7 +151,7 @@ describe('RookEngine', () => {
 
       const moves = getRookMoves(SQUARE.A1, state);
 
-      expect(moves).toEqual([
+      expect(moveTargets(moves as Move[])).toEqual([
         SQUARE.A2,
         SQUARE.A3,
         SQUARE.A4,
@@ -184,7 +189,8 @@ describe('RookEngine', () => {
 
       const moves = getRookMoves(SQUARE.E5, state);
 
-      expect(moves).toEqual([
+      const targets = moveTargets(moves as Move[]);
+      expect(targets).toEqual([
         SQUARE.E4,
         SQUARE.F5,
         SQUARE.G5,
@@ -194,8 +200,8 @@ describe('RookEngine', () => {
         SQUARE.B5,
         SQUARE.A5,
       ]);
-      expect(moves).not.toContain(SQUARE.E6);
-      expect(moves).not.toContain(SQUARE.E3);
+      expect(targets).not.toContain(SQUARE.E6);
+      expect(targets).not.toContain(SQUARE.E3);
     });
   });
 });
