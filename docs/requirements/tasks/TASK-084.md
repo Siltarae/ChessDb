@@ -14,8 +14,8 @@
 
 ## 완료 조건
 
-- [ ] `apps/web`에 `tailwindcss`, `postcss`, `autoprefixer`가 설치되고 설정 파일이 생성되어야 한다.
-- [ ] `shadcn/ui` CLI를 사용하여 초기화(`npx shadcn-ui@latest init`)가 완료되어야 한다.
+- [ ] `apps/web`에 `tailwindcss`, `@tailwindcss/vite`가 설치되고 Vite 플러그인으로 연결되어야 한다.
+- [ ] 최신 `shadcn` CLI를 사용하여 Vite, Radix, Nova preset, CSS variables 기준 초기화가 완료되어야 한다.
 - [ ] 기본 테마 설정과 전역 CSS 파일이 정상적으로 로드되어야 한다.
 
 ## 참고 사항
