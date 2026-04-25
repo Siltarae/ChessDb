@@ -14,9 +14,9 @@
 
 ## 완료 조건
 
-- [ ] `apps/web`의 `dependencies`에 `zustand`, `@tanstack/react-query`, `lucide-react`가 포함되어야 한다.
+- [x] `apps/web`의 `dependencies`에 `zustand`, `@tanstack/react-query`, `lucide-react`가 포함되어야 한다.
 - [ ] `main.tsx` 또는 `App.tsx`에서 `QueryClientProvider` 등 필수 Provider 설정이 완료되어야 한다.
-- [ ] `shared` 패키지를 참조할 수 있도록 워크스페이스 의존성 설정이 확인되어야 한다.
+- [x] `shared` 패키지를 참조할 수 있도록 워크스페이스 의존성 설정이 확인되어야 한다.
 
 ## 참고 사항
 
