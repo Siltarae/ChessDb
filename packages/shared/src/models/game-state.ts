@@ -207,3 +207,58 @@ export const GameStateSchema: z.ZodType<GameState> = z.object({
   halfmoveClock: z.number(),
   fullmoveNumber: z.number(),
 });
+
+/**
+ * 표준 시작 포지션의 새 게임 상태를 반환합니다.
+ *
+ * @returns 표준 시작 포지션의 게임 상태
+ *
+ * const state = createInitialGameState();
+ */
+export const createInitialGameState = (): GameState => {
+  const board = createInitialBoard();
+
+  return {
+    board,
+    turn: COLOR.WHITE,
+    castlingRights:
+      CASTLE.WHITE_KING_SIDE |
+      CASTLE.WHITE_QUEEN_SIDE |
+      CASTLE.BLACK_KING_SIDE |
+      CASTLE.BLACK_QUEEN_SIDE,
+    enPassantSquare: null,
+    halfmoveClock: 0,
+    fullmoveNumber: 1,
+  };
+};
+
+const createInitialBoard = (): Board => {
+  const board = Array(64).fill(null);
+
+  const backRankOrder: readonly PieceType[] = [
+    PIECE_TYPE.ROOK,
+    PIECE_TYPE.KNIGHT,
+    PIECE_TYPE.BISHOP,
+    PIECE_TYPE.QUEEN,
+    PIECE_TYPE.KING,
+    PIECE_TYPE.BISHOP,
+    PIECE_TYPE.KNIGHT,
+    PIECE_TYPE.ROOK,
+  ] as const;
+
+  for (const [i, backRankPieceType] of backRankOrder.entries()) {
+    board[SQUARE.A1 + i] = createPiece(backRankPieceType, COLOR.WHITE);
+    board[SQUARE.A8 + i] = createPiece(backRankPieceType, COLOR.BLACK);
+  }
+
+  for (let i = 0; i < 8; i++) {
+    board[SQUARE.A2 + i] = createPiece(PIECE_TYPE.PAWN, COLOR.WHITE);
+    board[SQUARE.A7 + i] = createPiece(PIECE_TYPE.PAWN, COLOR.BLACK);
+  }
+
+  return board;
+};
+
+const createPiece = (type: PieceType, color: Color): Piece => {
+  return { type, color };
+};
