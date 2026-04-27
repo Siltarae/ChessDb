@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="980" viewBox="0 0 1440 980" role="img" aria-labelledby="title desc">
+  <title id="title">TASK-002 표준 시작 포지션 보드 표시 목업</title>
+  <desc id="desc">기보 입력 화면의 보드 영역에 8x8 체스판과 표준 시작 포지션 기물 SVG가 표시되는 상태를 구상한 목업이다. 기물 선택, 합법 수 하이라이트, 드래그, 착수 실행, 수순 기록은 표현하지 않는다.</desc>
+
+  <defs>
+    <style>
+      .bg { fill: #f6f7f8; }
+      .surface { fill: #ffffff; }
+      .panel { fill: #f9fafb; }
+      .border { stroke: #d6d9de; stroke-width: 1.5; }
+      .muted-border { stroke: #e4e7eb; stroke-width: 1; }
+      .text { fill: #15171a; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .muted { fill: #69707a; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .note { fill: #555d68; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .dark-square { fill: #8ca07c; }
+      .light-square { fill: #eef0df; }
+      .piece-light { fill: #fbfbfb; stroke: #20242a; stroke-width: 1.4; }
+      .piece-dark { fill: #20242a; stroke: #20242a; stroke-width: 1.4; }
+      .piece-label-light { fill: #20242a; font-family: Georgia, serif; font-weight: 700; }
+      .piece-label-dark { fill: #ffffff; font-family: Georgia, serif; font-weight: 700; }
+    </style>
+    <pattern id="checker" width="160" height="160" patternUnits="userSpaceOnUse">
+      <rect width="160" height="160" class="light-square" />
+      <rect x="80" y="0" width="80" height="80" class="dark-square" />
+      <rect x="0" y="80" width="80" height="80" class="dark-square" />
+    </pattern>
+  </defs>
+
+  <rect width="1440" height="980" class="bg" />
+
+  <text x="64" y="64" class="text" font-size="28" font-weight="700">표준 시작 포지션 보드 표시</text>
+  <text x="64" y="94" class="muted" font-size="15">TASK-001의 보드 shell 안에 실제 8x8 체스판과 시작 기물을 표시한다.</text>
+
+  <rect x="64" y="126" width="1312" height="728" rx="8" class="surface border" />
+
+  <text x="96" y="170" class="text" font-size="18" font-weight="700">기보 입력</text>
+  <text x="96" y="196" class="muted" font-size="13">보드 중심 레이아웃 유지 · 실제 상호작용은 후속 Task</text>
+
+  <rect x="96" y="226" width="640" height="640" rx="6" fill="#ffffff" stroke="#c8ccd2" stroke-width="2" />
+
+  <g transform="translate(96 226)">
+    <rect x="0" y="0" width="640" height="640" fill="url(#checker)" />
+
+    <g font-size="28" text-anchor="middle" dominant-baseline="middle">
+      <g>
+        <circle cx="40" cy="40" r="26" class="piece-dark" /><text x="40" y="42" class="piece-label-dark">R</text>
+        <circle cx="120" cy="40" r="26" class="piece-dark" /><text x="120" y="42" class="piece-label-dark">N</text>
+        <circle cx="200" cy="40" r="26" class="piece-dark" /><text x="200" y="42" class="piece-label-dark">B</text>
+        <circle cx="280" cy="40" r="26" class="piece-dark" /><text x="280" y="42" class="piece-label-dark">Q</text>
+        <circle cx="360" cy="40" r="26" class="piece-dark" /><text x="360" y="42" class="piece-label-dark">K</text>
+        <circle cx="440" cy="40" r="26" class="piece-dark" /><text x="440" y="42" class="piece-label-dark">B</text>
+        <circle cx="520" cy="40" r="26" class="piece-dark" /><text x="520" y="42" class="piece-label-dark">N</text>
+        <circle cx="600" cy="40" r="26" class="piece-dark" /><text x="600" y="42" class="piece-label-dark">R</text>
+      </g>
+      <g>
+        <circle cx="40" cy="120" r="22" class="piece-dark" /><text x="40" y="122" class="piece-label-dark">P</text>
+        <circle cx="120" cy="120" r="22" class="piece-dark" /><text x="120" y="122" class="piece-label-dark">P</text>
+        <circle cx="200" cy="120" r="22" class="piece-dark" /><text x="200" y="122" class="piece-label-dark">P</text>
+        <circle cx="280" cy="120" r="22" class="piece-dark" /><text x="280" y="122" class="piece-label-dark">P</text>
+        <circle cx="360" cy="120" r="22" class="piece-dark" /><text x="360" y="122" class="piece-label-dark">P</text>
+        <circle cx="440" cy="120" r="22" class="piece-dark" /><text x="440" y="122" class="piece-label-dark">P</text>
+        <circle cx="520" cy="120" r="22" class="piece-dark" /><text x="520" y="122" class="piece-label-dark">P</text>
+        <circle cx="600" cy="120" r="22" class="piece-dark" /><text x="600" y="122" class="piece-label-dark">P</text>
+      </g>
+      <g>
+        <circle cx="40" cy="520" r="22" class="piece-light" /><text x="40" y="522" class="piece-label-light">P</text>
+        <circle cx="120" cy="520" r="22" class="piece-light" /><text x="120" y="522" class="piece-label-light">P</text>
+        <circle cx="200" cy="520" r="22" class="piece-light" /><text x="200" y="522" class="piece-label-light">P</text>
+        <circle cx="280" cy="520" r="22" class="piece-light" /><text x="280" y="522" class="piece-label-light">P</text>
+        <circle cx="360" cy="520" r="22" class="piece-light" /><text x="360" y="522" class="piece-label-light">P</text>
+        <circle cx="440" cy="520" r="22" class="piece-light" /><text x="440" y="522" class="piece-label-light">P</text>
+        <circle cx="520" cy="520" r="22" class="piece-light" /><text x="520" y="522" class="piece-label-light">P</text>
+        <circle cx="600" cy="520" r="22" class="piece-light" /><text x="600" y="522" class="piece-label-light">P</text>
+      </g>
+      <g>
+        <circle cx="40" cy="600" r="26" class="piece-light" /><text x="40" y="602" class="piece-label-light">R</text>
+        <circle cx="120" cy="600" r="26" class="piece-light" /><text x="120" y="602" class="piece-label-light">N</text>
+        <circle cx="200" cy="600" r="26" class="piece-light" /><text x="200" y="602" class="piece-label-light">B</text>
+        <circle cx="280" cy="600" r="26" class="piece-light" /><text x="280" y="602" class="piece-label-light">Q</text>
+        <circle cx="360" cy="600" r="26" class="piece-light" /><text x="360" y="602" class="piece-label-light">K</text>
+        <circle cx="440" cy="600" r="26" class="piece-light" /><text x="440" y="602" class="piece-label-light">B</text>
+        <circle cx="520" cy="600" r="26" class="piece-light" /><text x="520" y="602" class="piece-label-light">N</text>
+        <circle cx="600" cy="600" r="26" class="piece-light" /><text x="600" y="602" class="piece-label-light">R</text>
+      </g>
+    </g>
+
+    <text x="14" y="622" class="muted" font-size="12">a1</text>
+    <text x="595" y="22" class="muted" font-size="12">h8</text>
+  </g>
+
+  <rect x="784" y="226" width="520" height="640" rx="8" class="panel border" />
+  <text x="820" y="274" class="text" font-size="18" font-weight="700">구조 메모</text>
+
+  <g class="note" font-size="14">
+    <text x="820" y="318">1. BoardShell은 프레임과 접근성 이름을 유지한다.</text>
+    <text x="820" y="350">2. ChessBoard는 8열 grid와 64개 칸만 책임진다.</text>
+    <text x="820" y="382">3. ChessSquare는 data-square와 칸 색상만 책임진다.</text>
+    <text x="820" y="414">4. ChessPiece는 로컬 SVG asset 표시만 책임진다.</text>
+    <text x="820" y="446">5. 시작 상태는 shared createInitialGameState를 소비한다.</text>
+  </g>
+
+  <line x1="820" y1="486" x2="1268" y2="486" class="muted-border" />
+
+  <text x="820" y="528" class="text" font-size="16" font-weight="700">기물 SVG asset 규칙</text>
+  <g class="note" font-size="14">
+    <text x="820" y="562">- Wikimedia Commons 개별 SVG 12개를 로컬에 저장</text>
+    <text x="820" y="592">- 위치: widgets/chess-board/assets/pieces/</text>
+    <text x="820" y="622">- 파일명: white-king.svg, black-pawn.svg 형식</text>
+    <text x="820" y="652">- README.md에 출처, 작성자, 라이선스, 수정 여부 기록</text>
+  </g>
+
+  <line x1="820" y1="692" x2="1268" y2="692" class="muted-border" />
+
+  <text x="820" y="734" class="text" font-size="16" font-weight="700">범위 밖</text>
+  <g class="note" font-size="14">
+    <text x="820" y="768">- 기물 선택과 합법 수 하이라이트</text>
+    <text x="820" y="798">- 드래그, 클릭 착수, 수순 기록</text>
+    <text x="820" y="828">- 저장 API와 초안 복원</text>
+  </g>
+
+  <rect x="64" y="890" width="1312" height="52" rx="8" fill="#ffffff" class="border" />
+  <text x="88" y="922" class="muted" font-size="13">구현 기준: 흰색 기준 보드. a1은 아래 왼쪽의 어두운 칸, h8은 위 오른쪽의 어두운 칸. 실제 기물 이미지는 후속 asset 수집 후 SVG로 교체한다.</text>
+</svg>
