@@ -66,7 +66,7 @@ describe('NotationInputLayout', () => {
       expect(screen.getByRole('region', { name: '기보 입력 보드 영역' })).toHaveClass(
         'aspect-square',
         'w-full',
-        'max-w-[720px]',
+        'max-w-180',
       );
     });
   });
@@ -76,7 +76,7 @@ describe('NotationInputLayout', () => {
       render(<SidebarShell />);
 
       const sidebar = screen.getByRole('complementary', { name: '기보 입력 사이드 패널' });
-      expect(sidebar).toHaveClass('flex', 'h-full', 'min-h-[320px]', 'flex-col');
+      expect(sidebar).toHaveClass('flex', 'h-full', 'min-h-80', 'flex-col');
 
       const scrollContainer = sidebar.querySelector('.overflow-y-auto');
       expect(scrollContainer).toBeInTheDocument();
