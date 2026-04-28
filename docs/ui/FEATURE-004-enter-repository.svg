@@ -1,0 +1,173 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1040" viewBox="0 0 1440 1040" role="img" aria-labelledby="title desc">
+  <title id="title">FEATURE-004 저장소 선택 후 내부 기본 뷰 진입 상태 mockup</title>
+  <desc id="desc">저장소 목록에서 선택한 저장소의 열기 액션을 통해 저장소 내부 기본 화면으로 진입한 상태를 표현한다. 좌측에는 선택된 저장소 행과 진입 액션을, 우측에는 전역 사이드바, 상단 저장소명, 분석 기본 뷰, 빈 저장소의 새 기보 입력 단서를 포함한 내부 화면 구조를 중간 충실도 mockup으로 보여준다.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#667085" />
+    </marker>
+    <style>
+      .page { fill: #f6f7f8; }
+      .surface { fill: #ffffff; stroke: #d6d9de; stroke-width: 1.5; }
+      .panel { fill: #f9fafb; stroke: #d6d9de; stroke-width: 1.2; }
+      .muted-panel { fill: #f1f3f5; stroke: #d6d9de; stroke-width: 1; }
+      .line { stroke: #d6d9de; stroke-width: 1; }
+      .flow { stroke: #667085; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+      .text { fill: #15171a; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .muted { fill: #69707a; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .small { fill: #555d68; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .button { fill: #e9ecef; stroke: #adb5bd; stroke-width: 1; }
+      .primary { fill: #dfe7ed; stroke: #8da2b2; stroke-width: 1; }
+      .input { fill: #ffffff; stroke: #aeb7c2; stroke-width: 1.2; }
+      .selected { fill: #eef2f6; stroke: #667085; stroke-width: 1.8; }
+      .active { fill: #dfe7ed; stroke: #8da2b2; stroke-width: 1.2; }
+      .ghost { fill: none; stroke: #b8c0ca; stroke-width: 1.2; stroke-dasharray: 6 5; }
+      .board-light { fill: #eef2f6; }
+      .board-dark { fill: #c8d0d9; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="1040" class="page" />
+
+  <text x="64" y="58" class="text" font-size="27" font-weight="700">저장소 내부 기본 뷰 진입</text>
+  <text x="64" y="88" class="muted" font-size="15">저장소 행의 열기 액션이 전역 사이드바와 저장소 컨텍스트를 유지한 분석 화면으로 이어지는지 검토한다.</text>
+
+  <!-- 좌측: 선택한 저장소와 열기 액션 -->
+  <rect x="64" y="126" width="388" height="720" rx="8" class="surface" />
+  <rect x="64" y="126" width="388" height="58" rx="8" class="panel" />
+  <line x1="64" y1="184" x2="452" y2="184" class="line" />
+  <text x="92" y="163" class="text" font-size="18" font-weight="700">저장소 선택</text>
+  <text x="92" y="216" class="text" font-size="15" font-weight="700">최근 저장소</text>
+  <text x="92" y="240" class="muted" font-size="12">선택된 행에서 열기를 실행해 내부 화면으로 들어간다</text>
+
+  <rect x="92" y="270" width="332" height="118" rx="8" class="selected" />
+  <text x="118" y="306" class="text" font-size="15" font-weight="700">개인 오프닝 노트</text>
+  <text x="118" y="330" class="muted" font-size="12">최근 수정 2026.04.27 · 기보 128개</text>
+  <text x="118" y="352" class="muted" font-size="12">현재 선택됨 · 내부 기본 뷰 진입 대상</text>
+  <rect x="118" y="370" width="100" height="30" rx="6" class="primary" />
+  <text x="145" y="390" class="text" font-size="12" font-weight="700">열기</text>
+  <rect x="230" y="370" width="76" height="30" rx="6" class="button" />
+  <text x="251" y="390" class="text" font-size="12">관리</text>
+  <circle cx="332" cy="385" r="14" class="button" />
+  <text x="327" y="390" class="muted" font-size="14">⋯</text>
+
+  <rect x="92" y="414" width="332" height="82" rx="8" class="panel" />
+  <text x="118" y="446" class="text" font-size="15" font-weight="700">클럽 분석 저장소</text>
+  <text x="118" y="470" class="muted" font-size="12">최근 수정 2026.04.22 · 기보 41개</text>
+  <rect x="326" y="438" width="66" height="30" rx="6" class="button" />
+  <text x="347" y="458" class="text" font-size="12">열기</text>
+
+  <rect x="92" y="512" width="332" height="82" rx="8" class="panel" />
+  <text x="118" y="544" class="text" font-size="15" font-weight="700">엔드게임 복습</text>
+  <text x="118" y="568" class="muted" font-size="12">최근 수정 2026.04.12 · 기보 23개</text>
+  <rect x="326" y="536" width="66" height="30" rx="6" class="button" />
+  <text x="347" y="556" class="text" font-size="12">열기</text>
+
+  <rect x="92" y="636" width="332" height="132" rx="8" class="ghost" />
+  <text x="118" y="670" class="text" font-size="15" font-weight="700">빈 저장소 진입 단서</text>
+  <text x="118" y="696" class="muted" font-size="12">새로 만든 저장소는 목록 대신</text>
+  <text x="118" y="718" class="muted" font-size="12">새 기보 입력 액션을 먼저 노출한다.</text>
+  <rect x="118" y="736" width="112" height="30" rx="6" class="primary" />
+  <text x="145" y="756" class="text" font-size="12" font-weight="700">새 기보 입력</text>
+
+  <!-- 흐름 표시 -->
+  <path d="M 218 385 C 326 385, 404 472, 526 472" class="flow" />
+  <text x="312" y="372" class="small" font-size="12">열기 선택</text>
+
+  <!-- 우측: 저장소 내부 기본 화면 -->
+  <rect x="526" y="126" width="850" height="720" rx="8" class="surface" />
+  <rect x="526" y="126" width="84" height="720" rx="8" class="muted-panel" />
+  <rect x="526" y="126" width="850" height="62" rx="8" class="panel" />
+  <line x1="610" y1="126" x2="610" y2="846" class="line" />
+  <line x1="526" y1="188" x2="1376" y2="188" class="line" />
+
+  <rect x="552" y="154" width="32" height="8" rx="4" fill="#9aa3ad" />
+  <rect x="548" y="230" width="40" height="40" rx="8" class="active" />
+  <text x="561" y="255" class="text" font-size="16" font-weight="700">분</text>
+  <rect x="548" y="288" width="40" height="40" rx="8" class="button" />
+  <text x="561" y="313" class="muted" font-size="16" font-weight="700">기</text>
+  <rect x="548" y="346" width="40" height="40" rx="8" class="button" />
+  <text x="561" y="371" class="muted" font-size="16" font-weight="700">통</text>
+  <rect x="548" y="404" width="40" height="40" rx="8" class="button" />
+  <text x="561" y="429" class="muted" font-size="16" font-weight="700">설</text>
+  <text x="546" y="778" class="muted" font-size="10">전역</text>
+  <text x="540" y="792" class="muted" font-size="10">사이드바</text>
+
+  <text x="638" y="162" class="text" font-size="18" font-weight="700">개인 오프닝 노트</text>
+  <text x="790" y="162" class="muted" font-size="12">저장소 내부 · 분석 기본 뷰</text>
+  <rect x="1186" y="144" width="78" height="28" rx="6" class="button" />
+  <text x="1205" y="163" class="text" font-size="12">내보내기</text>
+  <rect x="1274" y="144" width="74" height="28" rx="6" class="primary" />
+  <text x="1292" y="163" class="text" font-size="12" font-weight="700">새 기보</text>
+
+  <rect x="638" y="220" width="204" height="572" rx="8" class="panel" />
+  <text x="666" y="256" class="text" font-size="15" font-weight="700">기보 목록</text>
+  <text x="666" y="280" class="muted" font-size="12">최근 분석 순</text>
+  <rect x="666" y="310" width="148" height="58" rx="8" class="selected" />
+  <text x="684" y="334" class="text" font-size="12" font-weight="700">Sicilian Najdorf</text>
+  <text x="684" y="354" class="muted" font-size="11">15수 · 백 차례</text>
+  <rect x="666" y="384" width="148" height="48" rx="8" class="muted-panel" />
+  <text x="684" y="413" class="muted" font-size="12">Queen's Gambit</text>
+  <rect x="666" y="446" width="148" height="48" rx="8" class="muted-panel" />
+  <text x="684" y="475" class="muted" font-size="12">Ruy Lopez</text>
+  <rect x="666" y="666" width="148" height="72" rx="8" class="ghost" />
+  <text x="691" y="696" class="muted" font-size="12">비어 있으면</text>
+  <text x="688" y="718" class="muted" font-size="12">새 기보 입력</text>
+
+  <rect x="872" y="220" width="308" height="308" rx="8" class="surface" />
+  <rect x="896" y="244" width="260" height="260" rx="4" class="panel" />
+  <rect x="896" y="244" width="32.5" height="32.5" class="board-light" />
+  <rect x="928.5" y="244" width="32.5" height="32.5" class="board-dark" />
+  <rect x="961" y="244" width="32.5" height="32.5" class="board-light" />
+  <rect x="993.5" y="244" width="32.5" height="32.5" class="board-dark" />
+  <rect x="1026" y="244" width="32.5" height="32.5" class="board-light" />
+  <rect x="1058.5" y="244" width="32.5" height="32.5" class="board-dark" />
+  <rect x="1091" y="244" width="32.5" height="32.5" class="board-light" />
+  <rect x="1123.5" y="244" width="32.5" height="32.5" class="board-dark" />
+  <rect x="896" y="276.5" width="32.5" height="32.5" class="board-dark" />
+  <rect x="928.5" y="276.5" width="32.5" height="32.5" class="board-light" />
+  <rect x="961" y="276.5" width="32.5" height="32.5" class="board-dark" />
+  <rect x="993.5" y="276.5" width="32.5" height="32.5" class="board-light" />
+  <rect x="1026" y="276.5" width="32.5" height="32.5" class="board-dark" />
+  <rect x="1058.5" y="276.5" width="32.5" height="32.5" class="board-light" />
+  <rect x="1091" y="276.5" width="32.5" height="32.5" class="board-dark" />
+  <rect x="1123.5" y="276.5" width="32.5" height="32.5" class="board-light" />
+  <rect x="896" y="309" width="260" height="195" fill="none" stroke="#d6d9de" stroke-width="0.8" stroke-dasharray="32.5 32.5" />
+  <text x="1026" y="388" text-anchor="middle" class="muted" font-size="13">체스 보드</text>
+  <text x="1026" y="412" text-anchor="middle" class="muted" font-size="12">분석 기본 위치</text>
+
+  <rect x="872" y="552" width="308" height="188" rx="8" class="panel" />
+  <text x="898" y="586" class="text" font-size="15" font-weight="700">수순과 주석</text>
+  <rect x="898" y="612" width="232" height="14" rx="4" fill="#d8dde3" />
+  <rect x="898" y="642" width="252" height="14" rx="4" fill="#d8dde3" />
+  <rect x="898" y="672" width="188" height="14" rx="4" fill="#d8dde3" />
+  <rect x="898" y="704" width="112" height="28" rx="6" class="button" />
+  <text x="922" y="723" class="text" font-size="12">주석 추가</text>
+
+  <rect x="1210" y="220" width="138" height="520" rx="8" class="panel" />
+  <text x="1232" y="256" class="text" font-size="15" font-weight="700">분석 패널</text>
+  <text x="1232" y="282" class="muted" font-size="12">엔진 평가</text>
+  <rect x="1232" y="312" width="86" height="12" rx="4" fill="#d8dde3" />
+  <rect x="1232" y="342" width="58" height="12" rx="4" fill="#d8dde3" />
+  <line x1="1232" y1="382" x2="1324" y2="382" class="line" />
+  <text x="1232" y="414" class="muted" font-size="12">후보수</text>
+  <rect x="1232" y="438" width="70" height="26" rx="6" class="button" />
+  <text x="1248" y="456" class="text" font-size="11">...c5</text>
+  <rect x="1232" y="478" width="70" height="26" rx="6" class="button" />
+  <text x="1248" y="496" class="text" font-size="11">...e5</text>
+  <rect x="1232" y="518" width="70" height="26" rx="6" class="button" />
+  <text x="1248" y="536" class="text" font-size="11">...g6</text>
+
+  <rect x="638" y="806" width="710" height="24" rx="6" fill="#f1f3f5" />
+  <text x="658" y="823" class="small" font-size="12">진입 상태 핵심: 상단 저장소명은 현재 컨텍스트를 고정하고, 좌측 전역 사이드바의 분석 메뉴가 활성화된다.</text>
+
+  <!-- 상태 전환 요약 -->
+  <rect x="64" y="878" width="1312" height="88" rx="8" class="surface" />
+  <text x="92" y="914" class="text" font-size="16" font-weight="700">UI 질문</text>
+  <text x="92" y="944" class="small" font-size="13">1. 저장소 목록의 선택 행과 열기 액션이 내부 화면 진입의 출발점으로 충분히 명확한가?</text>
+  <text x="720" y="944" class="small" font-size="13">2. 내부 기본 화면에서 전역 사이드바, 저장소명, 분석 기본 뷰의 정보 계층이 분리되어 보이는가?</text>
+
+  <!-- 설계 메모 -->
+  <rect x="64" y="986" width="1312" height="34" rx="8" class="panel" />
+  <text x="92" y="1008" class="muted" font-size="12">mockup 메모: 기준 파일의 표면/패널/선택 행 톤을 유지. 컴포넌트 후보는 RepositoryListItem, RepositoryOpenAction, RepositoryShell, GlobalSidebar, AnalysisDefaultView, EmptyRepositoryHint.</text>
+</svg>

@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1040" viewBox="0 0 1440 1040" role="img" aria-labelledby="title desc">
+  <title id="title">FEATURE-004 저장소 삭제 확인 상태 mockup</title>
+  <desc id="desc">저장소 목록에서 특정 저장소의 삭제 액션을 누른 뒤, 즉시 삭제하지 않고 확인 상태를 거치는 UI를 표현한다. 삭제 대상 행 강조, 확인 문구, 위험 액션 버튼, 취소 버튼, 목록 맥락 유지를 검토하기 위한 중간 충실도 SVG mockup이다.</desc>
+
+  <defs>
+    <style>
+      .page { fill: #f6f7f8; }
+      .surface { fill: #ffffff; stroke: #d6d9de; stroke-width: 1.5; }
+      .panel { fill: #f9fafb; stroke: #d6d9de; stroke-width: 1.2; }
+      .muted-panel { fill: #f1f3f5; stroke: #d6d9de; stroke-width: 1; }
+      .line { stroke: #d6d9de; stroke-width: 1; }
+      .text { fill: #15171a; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .muted { fill: #69707a; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .small { fill: #555d68; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .button { fill: #e9ecef; stroke: #adb5bd; stroke-width: 1; }
+      .primary { fill: #dfe7ed; stroke: #8da2b2; stroke-width: 1; }
+      .danger { fill: #f3e6e6; stroke: #c98d8d; stroke-width: 1; }
+      .danger-strong { fill: #c24141; stroke: #a63333; stroke-width: 1; }
+      .danger-text { fill: #9d2f2f; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .input { fill: #ffffff; stroke: #aeb7c2; stroke-width: 1.2; }
+      .selected { fill: #eef2f6; stroke: #667085; stroke-width: 1.8; }
+      .delete-target { fill: #fff8f8; stroke: #c98d8d; stroke-width: 2; }
+      .confirm { fill: #fffafa; stroke: #c98d8d; stroke-width: 1.4; }
+      .ghost { fill: none; stroke: #b8c0ca; stroke-width: 1.2; stroke-dasharray: 6 5; }
+      .overlay { fill: #15171a; opacity: 0.04; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="1040" class="page" />
+
+  <text x="64" y="58" class="text" font-size="27" font-weight="700">저장소 삭제 확인 상태</text>
+  <text x="64" y="88" class="muted" font-size="15">삭제 액션은 즉시 실행되지 않고, 대상 저장소를 다시 확인한 뒤 확정 또는 취소한다.</text>
+
+  <!-- 저장소 선택/관리 화면: 삭제 확인 상태 -->
+  <rect x="64" y="126" width="820" height="720" rx="8" class="surface" />
+  <rect x="64" y="126" width="820" height="58" rx="8" class="panel" />
+  <line x1="64" y1="184" x2="884" y2="184" class="line" />
+  <text x="96" y="163" class="text" font-size="18" font-weight="700">저장소 선택</text>
+  <text x="220" y="163" class="muted" font-size="13">최근 작업한 저장소에서 계속하거나 새 저장소를 만든다</text>
+  <rect x="726" y="142" width="126" height="30" rx="6" class="primary" />
+  <text x="755" y="162" class="text" font-size="12" font-weight="700">새 저장소</text>
+
+  <text x="96" y="226" class="text" font-size="16" font-weight="700">내 저장소</text>
+  <text x="96" y="250" class="muted" font-size="12">삭제 확인 중에도 목록 맥락과 대상 행이 유지된다</text>
+
+  <rect x="96" y="278" width="736" height="82" rx="8" class="panel" />
+  <text x="122" y="310" class="text" font-size="15" font-weight="700">개인 오프닝 노트</text>
+  <text x="122" y="334" class="muted" font-size="12">최근 수정 2026.04.27 · 기보 128개 · 태그 9개</text>
+  <rect x="604" y="304" width="90" height="30" rx="6" class="button" />
+  <text x="628" y="324" class="text" font-size="12">열기</text>
+  <rect x="706" y="304" width="76" height="30" rx="6" class="button" />
+  <text x="727" y="324" class="text" font-size="12">관리</text>
+  <circle cx="806" cy="319" r="14" class="button" />
+  <text x="801" y="324" class="muted" font-size="14">⋯</text>
+
+  <rect x="96" y="376" width="736" height="82" rx="8" class="panel" />
+  <text x="122" y="408" class="text" font-size="15" font-weight="700">클럽 분석 저장소</text>
+  <text x="122" y="432" class="muted" font-size="12">최근 수정 2026.04.22 · 기보 41개 · 공유 안 함</text>
+  <rect x="604" y="402" width="90" height="30" rx="6" class="button" />
+  <text x="628" y="422" class="text" font-size="12">열기</text>
+  <rect x="706" y="402" width="76" height="30" rx="6" class="button" />
+  <text x="727" y="422" class="text" font-size="12">관리</text>
+  <circle cx="806" cy="417" r="14" class="button" />
+  <text x="801" y="422" class="muted" font-size="14">⋯</text>
+
+  <rect x="96" y="474" width="736" height="108" rx="8" class="delete-target" />
+  <text x="122" y="506" class="text" font-size="15" font-weight="700">엔드게임 복습</text>
+  <text x="122" y="530" class="muted" font-size="12">최근 수정 2026.04.12 · 기보 23개</text>
+  <rect x="122" y="548" width="146" height="22" rx="11" class="danger" />
+  <text x="140" y="563" class="danger-text" font-size="11" font-weight="700">삭제 확인 대기</text>
+  <rect x="604" y="506" width="90" height="30" rx="6" class="button" />
+  <text x="628" y="526" class="text" font-size="12">열기</text>
+  <rect x="706" y="506" width="76" height="30" rx="6" class="danger" />
+  <text x="727" y="526" class="danger-text" font-size="12" font-weight="700">삭제</text>
+  <circle cx="806" cy="521" r="14" class="danger" />
+  <text x="801" y="526" class="danger-text" font-size="14">⋯</text>
+
+  <rect x="96" y="606" width="736" height="150" rx="8" class="confirm" />
+  <text x="122" y="640" class="danger-text" font-size="16" font-weight="700">‘엔드게임 복습’을 삭제할까요?</text>
+  <text x="122" y="666" class="muted" font-size="12">이 단계에서는 아직 삭제되지 않았다. 아래 삭제 버튼을 누르면 목록에서 제거된다.</text>
+  <text x="122" y="690" class="muted" font-size="12">취소하면 삭제 확인 상태를 닫고 저장소 행은 그대로 유지된다.</text>
+  <rect x="122" y="714" width="112" height="32" rx="6" class="danger-strong" />
+  <text x="153" y="735" fill="#ffffff" font-family="Arial, 'Noto Sans KR', sans-serif" font-size="12" font-weight="700">삭제</text>
+  <rect x="246" y="714" width="112" height="32" rx="6" class="button" />
+  <text x="277" y="735" class="text" font-size="12" font-weight="700">취소</text>
+  <line x1="526" y1="626" x2="526" y2="736" class="line" />
+  <text x="552" y="650" class="small" font-size="12" font-weight="700">상호작용 단서</text>
+  <text x="552" y="676" class="small" font-size="12">삭제 대상 행은 danger 테두리와 배지로 식별한다.</text>
+  <text x="552" y="700" class="small" font-size="12">확정 버튼만 진한 danger 톤을 사용한다.</text>
+  <text x="552" y="724" class="small" font-size="12">취소는 일반 버튼으로 되돌림 액션임을 표현한다.</text>
+
+  <rect x="96" y="780" width="736" height="36" rx="8" class="muted-panel" />
+  <text x="122" y="803" class="muted" font-size="12">상태 결과: 취소 시 기본 목록으로 복귀 · 삭제 확정 시 ‘엔드게임 복습’ 행 제거 후 목록 갱신</text>
+
+  <!-- 우측: 상태 전후 비교 -->
+  <rect x="930" y="126" width="430" height="318" rx="8" class="surface" />
+  <text x="960" y="166" class="text" font-size="17" font-weight="700">삭제 액션 시작</text>
+  <text x="960" y="190" class="muted" font-size="12">관리 메뉴 또는 행 액션에서 삭제를 선택한 직후</text>
+  <rect x="984" y="224" width="322" height="82" rx="8" class="delete-target" />
+  <text x="1010" y="256" class="text" font-size="14" font-weight="700">엔드게임 복습</text>
+  <text x="1010" y="280" class="muted" font-size="12">기보 23개 · 삭제 대상</text>
+  <rect x="1186" y="250" width="86" height="30" rx="6" class="danger" />
+  <text x="1210" y="270" class="danger-text" font-size="12" font-weight="700">삭제</text>
+  <path d="M 1144 318 L 1144 352" stroke="#667085" stroke-width="1.6" fill="none" />
+  <path d="M 1136 344 L 1144 354 L 1152 344" fill="none" stroke="#667085" stroke-width="1.6" />
+  <rect x="984" y="366" width="322" height="48" rx="8" class="confirm" />
+  <text x="1010" y="396" class="danger-text" font-size="13" font-weight="700">확인 상태로 전환, 아직 삭제 아님</text>
+
+  <rect x="930" y="480" width="430" height="366" rx="8" class="surface" />
+  <text x="960" y="520" class="text" font-size="17" font-weight="700">확정 후 목록 상태</text>
+  <text x="960" y="544" class="muted" font-size="12">삭제 버튼을 확정했을 때만 대상 행이 사라진다</text>
+  <rect x="984" y="578" width="322" height="70" rx="8" class="panel" />
+  <text x="1010" y="608" class="text" font-size="14" font-weight="700">개인 오프닝 노트</text>
+  <text x="1010" y="630" class="muted" font-size="12">최근 수정 2026.04.27 · 기보 128개</text>
+  <rect x="984" y="666" width="322" height="70" rx="8" class="panel" />
+  <text x="1010" y="696" class="text" font-size="14" font-weight="700">클럽 분석 저장소</text>
+  <text x="1010" y="718" class="muted" font-size="12">최근 수정 2026.04.22 · 기보 41개</text>
+  <rect x="984" y="756" width="322" height="46" rx="8" class="muted-panel" />
+  <text x="1010" y="784" class="muted" font-size="12">‘엔드게임 복습’ 행은 삭제 확정 뒤에만 제거된다.</text>
+
+  <!-- 설계 메모 -->
+  <rect x="64" y="884" width="1296" height="88" rx="8" class="surface" />
+  <text x="92" y="922" class="text" font-size="16" font-weight="700">UI 결정 메모</text>
+  <text x="92" y="950" class="small" font-size="12">컴포넌트 후보: RepositoryList, RepositoryListItem, RepositoryActionMenu, DeleteRepositoryConfirm.</text>
+  <text x="640" y="950" class="small" font-size="12">색상 후보: 기존 danger #f3e6e6/#c98d8d, 확정 버튼 #c24141, 일반 버튼 #e9ecef.</text>
+
+  <rect x="64" y="988" width="1296" height="32" rx="8" class="panel" />
+  <text x="92" y="1009" class="muted" font-size="12">확인할 UI 질문: 삭제 확인을 행 아래 인라인 패널로 둘지, 행 내부 확장 영역으로 둘지 결정한다.</text>
+</svg>

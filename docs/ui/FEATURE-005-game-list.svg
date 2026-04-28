@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">FEATURE-005 기보 목록 기본 상태 중간 충실도 목업</title>
+  <desc id="desc">좌측 전역 사이드바에서 기보가 활성화되고 메인 전체가 기보 목록 뷰로 전환된 기본 상태를 표현한 UI 스케치다. 날짜순 목록, 결과, 종료 사유, 짧은 수순 요약, 코멘트와 평가 개수, 선택 상태와 열기 액션을 텍스트 중심으로 보여주며 보드나 작은 미리보기는 포함하지 않는다.</desc>
+
+  <defs>
+    <style>
+      .bg { fill: #f5f7f8; }
+      .frame { fill: #ffffff; stroke: #cfd6df; stroke-width: 1.2; }
+      .topbar { fill: #fbfcfd; stroke: #e0e5eb; stroke-width: 1; }
+      .sidebar { fill: #1f2a30; }
+      .sidebar-item { fill: #26343c; }
+      .sidebar-active { fill: #2f5f73; }
+      .surface { fill: #ffffff; stroke: #d7dde5; stroke-width: 1; }
+      .panel { fill: #f9fafb; stroke: #d7dde5; stroke-width: 1; }
+      .row { fill: #ffffff; stroke: #e4e8ee; stroke-width: 1; }
+      .selected { fill: #e9f2f5; stroke: #2f5f73; stroke-width: 1.5; }
+      .muted-fill { fill: #eef2f6; }
+      .accent { fill: #2f5f73; }
+      .success { fill: #e9f7ef; stroke: #83c59b; stroke-width: 1; }
+      .danger { fill: #fff0f0; stroke: #e28b8b; stroke-width: 1; }
+      .warning { fill: #fff8df; stroke: #e2b94b; stroke-width: 1; }
+      .neutral { fill: #f1f4f7; stroke: #cfd7e2; stroke-width: 1; }
+      .text { fill: #182026; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .muted { fill: #667085; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .inverse { fill: #ffffff; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .small { font-size: 12px; }
+      .label { font-size: 13px; font-weight: 700; }
+      .body { font-size: 14px; }
+      .title { font-size: 20px; font-weight: 700; }
+      .section-title { font-size: 16px; font-weight: 700; }
+      .mono { font-family: 'Courier New', monospace; }
+    </style>
+    <filter id="shadow" x="-8%" y="-8%" width="116%" height="116%">
+      <feDropShadow dx="0" dy="8" stdDeviation="14" flood-color="#101820" flood-opacity="0.10"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="900" class="bg"/>
+  <text x="56" y="52" class="text title">FEATURE-005 기보 목록 기본 상태</text>
+  <text x="56" y="80" class="muted body">전역 사이드바에서 기보를 선택하면 보드 없이 텍스트 중심의 기보 목록이 메인 화면 전체를 차지한다.</text>
+
+  <g id="game-list-screen" transform="translate(56 118)">
+    <rect x="0" y="0" width="1488" height="686" rx="10" class="frame" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="152" height="686" rx="10" class="sidebar"/>
+    <rect x="152" y="0" width="1336" height="56" class="topbar"/>
+
+    <text x="28" y="38" class="inverse" font-size="17" font-weight="700">ChessDb</text>
+    <rect x="18" y="86" width="116" height="38" rx="7" class="sidebar-item"/>
+    <text x="48" y="110" class="inverse small">새 기보</text>
+    <rect x="18" y="138" width="116" height="38" rx="7" class="sidebar-active"/>
+    <text x="45" y="162" class="inverse small" font-weight="700">기보</text>
+    <rect x="18" y="190" width="116" height="38" rx="7" class="sidebar-item"/>
+    <text x="45" y="214" class="inverse small">분석</text>
+
+    <text x="184" y="36" class="text title">기보 목록</text>
+    <text x="302" y="36" class="muted body">최근 저장일 기준 날짜순</text>
+    <rect x="1074" y="14" width="118" height="30" rx="6" fill="#ffffff" stroke="#c4ccd6"/>
+    <text x="1098" y="34" class="text small" font-weight="700">날짜순</text>
+    <text x="1162" y="34" class="muted small">↓</text>
+    <rect x="1204" y="14" width="126" height="30" rx="6" fill="#ffffff" stroke="#c4ccd6"/>
+    <text x="1230" y="34" class="text small" font-weight="700">전체 결과</text>
+    <rect x="1342" y="14" width="114" height="30" rx="6" class="accent"/>
+    <text x="1374" y="34" class="inverse small" font-weight="700">새로고침</text>
+
+    <rect x="184" y="84" width="1268" height="80" rx="8" class="panel"/>
+    <text x="212" y="118" class="text section-title">저장된 기보 128개</text>
+    <text x="212" y="145" class="muted body">최근 저장일이 위에 오며, 항목을 선택하거나 열기 버튼으로 상세 조회 화면에 진입한다.</text>
+    <rect x="1040" y="108" width="108" height="32" rx="16" class="success"/>
+    <text x="1065" y="129" class="text small" font-weight="700">승리 54</text>
+    <rect x="1162" y="108" width="108" height="32" rx="16" class="warning"/>
+    <text x="1187" y="129" class="text small" font-weight="700">무승부 21</text>
+    <rect x="1284" y="108" width="108" height="32" rx="16" class="danger"/>
+    <text x="1315" y="129" class="text small" font-weight="700">패배 53</text>
+
+    <rect x="184" y="188" width="1268" height="438" rx="8" class="surface"/>
+    <text x="212" y="224" class="muted label">저장일</text>
+    <text x="356" y="224" class="muted label">결과</text>
+    <text x="470" y="224" class="muted label">종료 사유</text>
+    <text x="642" y="224" class="muted label">짧은 수순 요약</text>
+    <text x="1110" y="224" class="muted label">메모</text>
+    <text x="1282" y="224" class="muted label">액션</text>
+    <line x1="204" y1="240" x2="1432" y2="240" stroke="#e1e6ed"/>
+
+    <g id="game-row-1" transform="translate(204 256)">
+      <rect x="0" y="0" width="1228" height="64" rx="7" class="row"/>
+      <text x="8" y="26" class="text body" font-weight="700">2026-04-27</text>
+      <text x="152" y="26" class="text body">1-0</text>
+      <rect x="262" y="10" width="82" height="24" rx="12" class="success"/>
+      <text x="280" y="27" class="text small">체크메이트</text>
+      <text x="438" y="26" class="text body mono">1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 ...</text>
+      <rect x="902" y="11" width="80" height="24" rx="12" class="neutral"/>
+      <text x="923" y="28" class="muted small">코멘트 3</text>
+      <rect x="994" y="11" width="70" height="24" rx="12" class="neutral"/>
+      <text x="1013" y="28" class="muted small">평가 5</text>
+      <rect x="1120" y="13" width="72" height="30" rx="6" fill="#ffffff" stroke="#c4ccd6"/>
+      <text x="1144" y="33" class="text small" font-weight="700">열기</text>
+      <text x="8" y="50" class="muted small">최근 분석됨 · 정식 저장됨</text>
+    </g>
+
+    <g id="game-row-2-selected" transform="translate(204 332)">
+      <rect x="0" y="0" width="1228" height="76" rx="7" class="selected"/>
+      <rect x="10" y="14" width="4" height="48" rx="2" class="accent"/>
+      <text x="28" y="28" class="text body" font-weight="700">2026-04-24</text>
+      <text x="172" y="28" class="text body">1/2-1/2</text>
+      <rect x="262" y="12" width="86" height="24" rx="12" class="warning"/>
+      <text x="280" y="29" class="text small">합의 무승부</text>
+      <text x="438" y="28" class="text body mono">1. d4 Nf6 2. c4 e6 3. Nc3 Bb4 ...</text>
+      <rect x="902" y="13" width="80" height="24" rx="12" class="neutral"/>
+      <text x="923" y="30" class="muted small">코멘트 6</text>
+      <rect x="994" y="13" width="70" height="24" rx="12" class="neutral"/>
+      <text x="1013" y="30" class="muted small">평가 9</text>
+      <rect x="1110" y="14" width="88" height="32" rx="6" class="accent"/>
+      <text x="1133" y="35" class="inverse small" font-weight="700">선택됨</text>
+      <text x="28" y="55" class="muted small">선택 상태: Enter 또는 열기 액션으로 상세 조회 진입</text>
+    </g>
+
+    <g id="game-row-3" transform="translate(204 420)">
+      <rect x="0" y="0" width="1228" height="64" rx="7" class="row"/>
+      <text x="8" y="26" class="text body" font-weight="700">2026-04-20</text>
+      <text x="152" y="26" class="text body">0-1</text>
+      <rect x="262" y="10" width="52" height="24" rx="12" class="danger"/>
+      <text x="280" y="27" class="text small">기권</text>
+      <text x="438" y="26" class="text body mono">1. c4 e5 2. Nc3 Nf6 3. g3 d5 ...</text>
+      <rect x="902" y="11" width="80" height="24" rx="12" class="neutral"/>
+      <text x="923" y="28" class="muted small">코멘트 1</text>
+      <rect x="994" y="11" width="70" height="24" rx="12" class="neutral"/>
+      <text x="1013" y="28" class="muted small">평가 2</text>
+      <rect x="1120" y="13" width="72" height="30" rx="6" fill="#ffffff" stroke="#c4ccd6"/>
+      <text x="1144" y="33" class="text small" font-weight="700">열기</text>
+      <text x="8" y="50" class="muted small">검토 대기 · 정식 저장됨</text>
+    </g>
+
+    <g id="game-row-4" transform="translate(204 496)">
+      <rect x="0" y="0" width="1228" height="64" rx="7" class="row"/>
+      <text x="8" y="26" class="text body" font-weight="700">2026-04-18</text>
+      <text x="152" y="26" class="text body">1-0</text>
+      <rect x="262" y="10" width="82" height="24" rx="12" class="success"/>
+      <text x="280" y="27" class="text small">체크메이트</text>
+      <text x="438" y="26" class="text body mono">1. e4 c5 2. Nf3 d6 3. d4 cxd4 ...</text>
+      <rect x="902" y="11" width="80" height="24" rx="12" class="neutral"/>
+      <text x="923" y="28" class="muted small">코멘트 0</text>
+      <rect x="994" y="11" width="70" height="24" rx="12" class="neutral"/>
+      <text x="1013" y="28" class="muted small">평가 1</text>
+      <rect x="1120" y="13" width="72" height="30" rx="6" fill="#ffffff" stroke="#c4ccd6"/>
+      <text x="1144" y="33" class="text small" font-weight="700">열기</text>
+      <text x="8" y="50" class="muted small">정식 저장됨 · 코멘트 없음</text>
+    </g>
+
+    <g id="pagination" transform="translate(204 584)">
+      <text x="0" y="24" class="muted small">1-4 / 128개 표시</text>
+      <rect x="1038" y="0" width="74" height="32" rx="6" fill="#ffffff" stroke="#c4ccd6"/>
+      <text x="1060" y="21" class="muted small" font-weight="700">이전</text>
+      <rect x="1124" y="0" width="74" height="32" rx="6" class="accent"/>
+      <text x="1146" y="21" class="inverse small" font-weight="700">다음</text>
+    </g>
+  </g>
+
+  <g id="design-notes" transform="translate(56 834)">
+    <rect x="0" y="-26" width="1488" height="48" rx="8" fill="#ffffff" stroke="#d7dde5"/>
+    <text x="18" y="4" class="muted small">구현 후보 메모: docs/ui/FEATURE-005-game-list-detail.svg와 동일하게 전역 사이드바 152px, 메인 여백 32px 전후, 흰 표면과 회색 경계, 저채도 청록 활성색을 사용한다. 목록 화면은 보드 미리보기 없이 날짜순 텍스트 테이블, 결과/종료 사유 배지, 코멘트·평가 개수 배지, 선택됨/열기 액션으로 구성한다.</text>
+  </g>
+</svg>

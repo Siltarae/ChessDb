@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1040" viewBox="0 0 1440 1040" role="img" aria-labelledby="title desc">
+  <title id="title">FEATURE-004 새 저장소 생성 입력 상태 mockup</title>
+  <desc id="desc">저장소 목록 화면에서 새 저장소 버튼을 누른 뒤 모달 없이 인라인 이름 입력 필드가 열린 상태를 표현한다. 입력값 예시, 생성과 취소 버튼, 이름 검증 메시지 자리, 중복 이름 오류 상태를 함께 검토하기 위한 중간 충실도 SVG mockup이다.</desc>
+
+  <defs>
+    <style>
+      .page { fill: #f6f7f8; }
+      .surface { fill: #ffffff; stroke: #d6d9de; stroke-width: 1.5; }
+      .panel { fill: #f9fafb; stroke: #d6d9de; stroke-width: 1.2; }
+      .muted-panel { fill: #f1f3f5; stroke: #d6d9de; stroke-width: 1; }
+      .line { stroke: #d6d9de; stroke-width: 1; }
+      .text { fill: #15171a; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .muted { fill: #69707a; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .small { fill: #555d68; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .button { fill: #e9ecef; stroke: #adb5bd; stroke-width: 1; }
+      .primary { fill: #dfe7ed; stroke: #8da2b2; stroke-width: 1; }
+      .input { fill: #ffffff; stroke: #aeb7c2; stroke-width: 1.2; }
+      .input-focus { fill: #ffffff; stroke: #667085; stroke-width: 1.8; }
+      .input-error { fill: #fffafa; stroke: #c98d8d; stroke-width: 1.6; }
+      .selected { fill: #eef2f6; stroke: #667085; stroke-width: 1.8; }
+      .ghost { fill: none; stroke: #b8c0ca; stroke-width: 1.2; stroke-dasharray: 6 5; }
+      .error { fill: #9f3a3a; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .success { fill: #3f6f54; font-family: Arial, 'Noto Sans KR', sans-serif; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="1040" class="page" />
+
+  <text x="64" y="58" class="text" font-size="27" font-weight="700">새 저장소 생성 입력 상태</text>
+  <text x="64" y="88" class="muted" font-size="15">저장소 목록 맥락을 유지한 채 인라인으로 이름을 입력하고 생성 또는 취소하는 흐름을 검토한다.</text>
+
+  <!-- 저장소 목록 화면: 새 저장소 버튼을 누른 뒤 인라인 입력이 열린 기본 상태 -->
+  <rect x="64" y="126" width="820" height="710" rx="8" class="surface" />
+  <rect x="64" y="126" width="820" height="58" rx="8" class="panel" />
+  <line x1="64" y1="184" x2="884" y2="184" class="line" />
+  <text x="96" y="163" class="text" font-size="18" font-weight="700">저장소 선택</text>
+  <text x="220" y="163" class="muted" font-size="13">최근 작업한 저장소에서 계속하거나 새 저장소를 만든다</text>
+  <rect x="726" y="142" width="126" height="30" rx="6" class="selected" />
+  <text x="755" y="162" class="text" font-size="12" font-weight="700">새 저장소</text>
+
+  <text x="96" y="226" class="text" font-size="16" font-weight="700">내 저장소</text>
+  <text x="96" y="250" class="muted" font-size="12">목록 상단에 생성 입력이 열리고 기존 저장소는 아래로 밀린다</text>
+
+  <rect x="96" y="278" width="736" height="154" rx="8" class="selected" />
+  <text x="122" y="310" class="text" font-size="15" font-weight="700">새 저장소 만들기</text>
+  <text x="122" y="334" class="muted" font-size="12">이름을 입력하면 생성 버튼으로 저장소 목록에 추가한다</text>
+  <text x="122" y="365" class="small" font-size="12" font-weight="700">저장소 이름</text>
+  <rect x="122" y="376" width="406" height="38" rx="6" class="input-focus" />
+  <text x="140" y="400" class="text" font-size="13">후보수 연구</text>
+  <text x="122" y="426" class="muted" font-size="11">검증 메시지 영역: 정상 상태에서는 도움말 또는 빈 줄로 높이를 유지한다</text>
+  <rect x="552" y="376" width="86" height="38" rx="6" class="primary" />
+  <text x="578" y="400" class="text" font-size="12" font-weight="700">생성</text>
+  <rect x="650" y="376" width="86" height="38" rx="6" class="button" />
+  <text x="676" y="400" class="text" font-size="12">취소</text>
+
+  <rect x="96" y="456" width="736" height="92" rx="8" class="panel" />
+  <text x="122" y="488" class="text" font-size="15" font-weight="700">개인 오프닝 노트</text>
+  <text x="122" y="512" class="muted" font-size="12">최근 수정 2026.04.27 · 기보 128개 · 태그 9개</text>
+  <rect x="604" y="482" width="90" height="30" rx="6" class="button" />
+  <text x="628" y="502" class="text" font-size="12">열기</text>
+  <rect x="706" y="482" width="76" height="30" rx="6" class="button" />
+  <text x="727" y="502" class="text" font-size="12">관리</text>
+  <circle cx="806" cy="497" r="14" class="button" />
+  <text x="801" y="502" class="muted" font-size="14">...</text>
+
+  <rect x="96" y="564" width="736" height="82" rx="8" class="panel" />
+  <text x="122" y="596" class="text" font-size="15" font-weight="700">클럽 분석 저장소</text>
+  <text x="122" y="620" class="muted" font-size="12">최근 수정 2026.04.22 · 기보 41개 · 공유 안 함</text>
+  <rect x="604" y="590" width="90" height="30" rx="6" class="button" />
+  <text x="628" y="610" class="text" font-size="12">열기</text>
+  <rect x="706" y="590" width="76" height="30" rx="6" class="button" />
+  <text x="727" y="610" class="text" font-size="12">관리</text>
+  <circle cx="806" cy="605" r="14" class="button" />
+  <text x="801" y="610" class="muted" font-size="14">...</text>
+
+  <rect x="96" y="662" width="736" height="82" rx="8" class="panel" />
+  <text x="122" y="694" class="text" font-size="15" font-weight="700">엔드게임 복습</text>
+  <text x="122" y="718" class="muted" font-size="12">최근 수정 2026.04.12 · 기보 23개</text>
+  <rect x="604" y="688" width="90" height="30" rx="6" class="button" />
+  <text x="628" y="708" class="text" font-size="12">열기</text>
+  <rect x="706" y="688" width="76" height="30" rx="6" class="button" />
+  <text x="727" y="708" class="text" font-size="12">관리</text>
+  <circle cx="806" cy="703" r="14" class="button" />
+  <text x="801" y="708" class="muted" font-size="14">...</text>
+
+  <rect x="96" y="770" width="736" height="36" rx="8" class="muted-panel" />
+  <text x="122" y="793" class="small" font-size="12">생성 성공 시 새 항목은 생성 순 정렬 규칙에 따라 목록에 추가된다.</text>
+
+  <!-- 우측: 검증 및 오류 상태 상세 -->
+  <rect x="930" y="126" width="430" height="364" rx="8" class="surface" />
+  <text x="960" y="166" class="text" font-size="17" font-weight="700">입력 검증 상태</text>
+  <text x="960" y="190" class="muted" font-size="12">같은 인라인 영역에서 메시지만 교체되어 레이아웃 흔들림을 줄인다</text>
+
+  <rect x="960" y="222" width="370" height="86" rx="8" class="panel" />
+  <text x="984" y="253" class="text" font-size="14" font-weight="700">비어 있음</text>
+  <rect x="984" y="266" width="202" height="30" rx="6" class="input" />
+  <text x="998" y="286" class="muted" font-size="12">예: 후보수 연구</text>
+  <rect x="1200" y="266" width="66" height="30" rx="6" class="button" opacity="0.65" />
+  <text x="1219" y="286" class="muted" font-size="12">생성</text>
+  <text x="984" y="319" class="muted" font-size="11">이름을 입력하면 생성할 수 있다</text>
+
+  <rect x="960" y="332" width="370" height="98" rx="8" class="panel" />
+  <text x="984" y="363" class="text" font-size="14" font-weight="700">중복 이름 오류</text>
+  <rect x="984" y="376" width="202" height="30" rx="6" class="input-error" />
+  <text x="998" y="396" class="text" font-size="12">개인 오프닝 노트</text>
+  <rect x="1200" y="376" width="66" height="30" rx="6" class="primary" />
+  <text x="1219" y="396" class="text" font-size="12" font-weight="700">생성</text>
+  <text x="984" y="421" class="error" font-size="11">이미 같은 이름의 저장소가 있다</text>
+
+  <rect x="930" y="526" width="430" height="310" rx="8" class="surface" />
+  <text x="960" y="566" class="text" font-size="17" font-weight="700">상호작용 단서</text>
+  <text x="960" y="594" class="small" font-size="13">1. 새 저장소 버튼은 입력 영역이 열린 동안 선택된 상태로 보인다.</text>
+  <text x="960" y="624" class="small" font-size="13">2. 입력 필드는 즉시 포커스 상태로 표시한다.</text>
+  <text x="960" y="654" class="small" font-size="13">3. 생성 버튼은 유효한 이름에서 기본 액션이 된다.</text>
+  <text x="960" y="684" class="small" font-size="13">4. 취소 버튼은 입력 영역을 닫고 기존 목록만 남긴다.</text>
+  <text x="960" y="714" class="small" font-size="13">5. 검증/오류 문구 자리는 항상 같은 높이를 유지한다.</text>
+  <text x="960" y="744" class="small" font-size="13">6. 모달을 쓰지 않아 목록 맥락과 생성 위치가 유지된다.</text>
+
+  <rect x="960" y="776" width="370" height="34" rx="8" class="muted-panel" />
+  <text x="982" y="798" class="muted" font-size="12">오류 색상은 삭제 danger보다 약하게 사용해 입력 문제로만 인식시킨다.</text>
+
+  <!-- 설계 메모 -->
+  <rect x="64" y="878" width="1296" height="116" rx="8" class="surface" />
+  <text x="92" y="916" class="text" font-size="16" font-weight="700">mockup 메모</text>
+  <text x="92" y="946" class="small" font-size="13">컴포넌트 후보: RepositoryList, InlineCreateRepository, RepositoryNameField, RepositoryListItem.</text>
+  <text x="92" y="970" class="small" font-size="13">간격 후보: 목록 컨테이너 32px 좌우 여백, 항목 간 16px, 입력 영역 내부 26px, 버튼 높이 38px.</text>
+  <text x="720" y="946" class="small" font-size="13">상태 후보: idle, creating, invalid-empty, invalid-duplicate, submitting.</text>
+  <text x="720" y="970" class="small" font-size="13">범위: 저장소 생성 입력 상태만 표현하며, 생성 성공 후 자동 진입 여부는 이 mockup에서 확정하지 않는다.</text>
+</svg>
