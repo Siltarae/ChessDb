@@ -234,10 +234,10 @@
 
   <g aria-label="숨겨진 탭 내용 단서">
     <line x1="1110" y1="838" x2="1326" y2="838" class="line"/>
-    <text x="1110" y="849" class="muted" font-size="10">숨김: 코멘트 메모, 평가 !/!!/?/!?, 기보 정보 날짜/결과</text>
+    <text x="1110" y="849" class="muted" font-size="10">숨김: 코멘트 메모, 평가 !/!!/?/!?/제거, 기보 정보 날짜/결과</text>
   </g>
 
   <!-- 설계 메모 -->
   <rect x="160" y="904" width="1212" height="22" rx="5" fill="#eef2f6"/>
-  <text x="176" y="919" class="muted" font-size="11">구현 후보 메모: FEATURE-002와 동일한 전역 사이드바 88px, 상단 바 64px, 보드 640px, 우측 패널 308px. 우측 패널은 MoveListPanel과 MetadataTabs로 구성하고 SAN 입력은 별도 섹션이 아니라 SAN 활성 탭 내용으로 포함. 색상 토큰 #2f5f73, #f8fafc, #d4dae2, #17202a를 공유.</text>
+  <text x="176" y="919" class="muted" font-size="11">구현 후보 메모: 우측 패널은 MoveListPanel과 MetadataTabs로 구성. 초안 폐기는 현재 초안 삭제, 새 기보는 확인 후 오늘 날짜가 채워진 새 draft 시작.</text>
 </svg>
