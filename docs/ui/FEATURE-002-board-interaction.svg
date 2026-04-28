@@ -72,8 +72,6 @@
   <!-- 상단 바 -->
   <text x="164" y="69" class="text" font-size="20" font-weight="700">새 기보 입력</text>
   <text x="294" y="69" class="muted" font-size="13">보드 상호작용과 수순 기록에 집중한 작업 화면</text>
-  <rect x="1110" y="54" width="96" height="28" rx="6" class="badge"/>
-  <text x="1131" y="73" class="muted" font-size="12">백 차례</text>
   <rect x="1222" y="50" width="72" height="36" rx="7" class="button-secondary"/>
   <text x="1245" y="73" class="text" font-size="13" font-weight="700">초기화</text>
   <rect x="1310" y="50" width="62" height="36" rx="7" class="button-secondary"/>
