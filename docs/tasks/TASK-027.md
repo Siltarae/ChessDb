@@ -2,8 +2,9 @@
 
 **작업 상태**: 대기 중  
 **선행 작업**: `[TASK-026]` (기보 결과와 종료 사유 입력)  
-**후속 작업**: `[TASK-025]` (정식 저장 확정 및 서버 전송)  
+**후속 작업**: `[TASK-022]` (초안 자동 저장)
 **연관 설계**: `[../architecture/project-rules.md]`, `[../architecture/directory-structure.md]`
+**UI 기준안**: `[../ui/FEATURE-003-tab-game-info.svg]`
 
 ---
 
@@ -14,15 +15,17 @@
 - **이번 작업에서 하지 않는 것**: 상대 이름, 장소 같은 추가 메타데이터는 현재 범위에서 다루지 않습니다.
 - **경계 메모**:
   - 날짜는 기본 메타데이터 필드로만 다루며, 목록/통계 활용은 후속 태스크에서 소비합니다.
+  - 날짜 입력은 `FEATURE-003` 메타데이터 탭의 기보 정보 탭 안에서 결과/종료 사유와 함께 제공한다.
 
 ## 🎯 1. 작업 목표
 
-- **최종 상태**: 사용자가 날짜를 선택하면 draft metadata의 `playedAt` 필드가 일관된 포맷으로 갱신됩니다.
+- **최종 상태**: 새 기보의 날짜 기본값은 오늘 날짜로 채워지고, 사용자가 날짜를 선택하거나 지우면 draft metadata의 `playedAt` 필드가 일관된 포맷으로 갱신됩니다.
 - **이번 작업의 최소 결과물**:
   - `apps/web/src/features/game-metadata-edit/ui/played-at-field.tsx`
   - `apps/web/src/features/game-metadata-edit/model/use-game-metadata-edit.ts`
   - `apps/web/src/entities/draft/model/draft-store.ts`
 - **성공 기준 (AC)**:
+  - 새 기보의 날짜 기본값은 오늘 날짜로 자동 채워진다.
   - 날짜 입력은 `YYYY-MM-DD` 또는 ISO date-only 규칙으로 저장된다.
   - 날짜를 지우면 metadata에서 해당 필드가 비워진다.
   - 날짜 입력 규칙이 결과/종료 사유와 같은 metadata update 흐름을 공유한다.
@@ -50,6 +53,7 @@
   - `draft-store`는 날짜 필드도 같은 metadata partial update 액션으로 저장합니다.
 - **데이터 모델 해석**:
   - `draft.metadata.playedAt`은 날짜만 표현하는 문자열 필드입니다.
+  - 새 draft 생성 시 `playedAt` 기본값은 현재 로컬 날짜의 `YYYY-MM-DD` 문자열입니다.
   - 시간대 정보가 필요한 범위가 아니므로 date-only 포맷을 우선 사용합니다.
 - **외부 의존성**:
   - `react`
@@ -74,6 +78,7 @@ updatePlayedAt('2026-04-21');
 
 - **필수 describe/it 목록**:
   - `describe('playedAt field')`
+  - `it('새 기보 생성 시 playedAt 기본값이 오늘 날짜로 채워진다')`
   - `it('날짜 선택 시 playedAt이 ISO date-only 문자열로 저장된다')`
   - `it('날짜 제거 시 playedAt이 비워진다')`
   - `it('날짜 업데이트가 result/termination을 덮어쓰지 않는다')`
@@ -86,6 +91,7 @@ updatePlayedAt('2026-04-21');
 ## ⚖️ 4. 기술 제약 및 규칙
 
 - 날짜는 문자열 포맷으로만 저장합니다.
+- 새 기보 생성 시 기본 날짜는 오늘 날짜로 설정합니다.
 - 시간대/시분초 정보는 현재 범위에 포함하지 않습니다.
 - metadata update 흐름은 TASK-026과 동일한 액션을 공유합니다.
 
@@ -95,11 +101,15 @@ updatePlayedAt('2026-04-21');
    - 달력에서 날짜 하나를 선택한다.
    - `draft.metadata.playedAt`이 date-only 문자열로 저장된다.
 
-2. **경계 시나리오: 날짜 제거**
+2. **정상 시나리오: 기본 날짜**
+   - 새 기보를 시작한다.
+   - `draft.metadata.playedAt`이 오늘 날짜의 date-only 문자열로 초기화된다.
+
+3. **경계 시나리오: 날짜 제거**
    - 선택된 날짜를 지운다.
    - `playedAt` 필드가 비워지고 다른 메타데이터는 유지된다.
 
-3. **실패 시나리오: 포맷 불일치**
+4. **실패 시나리오: 포맷 불일치**
    - UI는 Date 객체를 갖지만 store에 그대로 넣는다.
    - 직렬화 테스트가 기대하는 문자열 비교에서 실패해야 한다.
 
@@ -116,6 +126,7 @@ updatePlayedAt('2026-04-21');
 ## ✅ 7. 완료 판정 체크리스트
 
 - [ ] 날짜가 일관된 문자열 포맷으로 저장된다.
+- [ ] 새 기보의 날짜 기본값이 오늘 날짜로 채워진다.
 - [ ] 날짜 제거가 가능하다.
 - [ ] 결과/종료 사유와 같은 metadata 흐름을 공유한다.
 
