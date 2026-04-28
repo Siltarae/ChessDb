@@ -1,9 +1,10 @@
 # 📋 개별 작업 지침서: 다시하기 (TASK-019)
 
-**작업 상태**: 대기 중  
-**선행 작업**: `[TASK-018]` (되돌리기)  
-**후속 작업**: `FEATURE-002` 완료  
+**작업 상태**: 대기 중
+**선행 작업**: `[TASK-018]` (되돌리기)
+**후속 작업**: `FEATURE-002` 완료
 **연관 설계**: `[../architecture/project-rules.md]`, `[../architecture/directory-structure.md]`
+**UI 기준안**: `[../ui/FEATURE-002-board-interaction.svg]`
 
 ---
 
@@ -14,6 +15,7 @@
 - **이번 작업에서 하지 않는 것**: Variation 보존이나 여러 갈래 수순 분기는 현재 범위에서 다루지 않습니다.
 - **경계 메모**:
   - 이 문서는 단일 선형 히스토리만 지원합니다. 갈래(branch) 보존은 후순위 범위입니다.
+  - 다시하기 액션은 우측 수순 목록 보조 액션 영역에 배치하고, 다음 반수가 없으면 비활성화한다.
 
 ## 🎯 1. 작업 목표
 
@@ -47,7 +49,7 @@
 - **핵심 구현 대상**:
   - `game-store`에 `goToNextPly`, `canRedo`, `truncateFutureHistory`를 추가합니다.
   - `use-make-move`는 현재 포인터가 마지막 반수가 아니면 `truncateFutureHistory`를 먼저 실행한 뒤 새 수를 append합니다.
-  - `history-controls.tsx`에 Redo 버튼과 `ArrowRight` 단축키를 연결합니다.
+  - `history-controls.tsx`에 Redo 버튼과 키보드 단축키를 연결합니다.
 - **데이터 모델 해석**:
   - `history.length - 1`이 현재 선형 수열의 마지막 반수입니다.
   - `currentPlyIndex < history.length - 1`이면 다시하기 가능 상태로 해석합니다.
@@ -63,7 +65,7 @@
   - `nextPlyIndex`, `futureMoves`, `hasFutureHistory`
 - **이름별 사용 의도와 적용 시점**:
   - `truncateFutureHistory`는 되돌린 뒤 새 수를 둘 때만 호출합니다.
-  - `goToNextPly`는 다시하기 버튼과 단축키가 공통으로 사용하는 액션 이름으로 유지합니다.
+  - `goToNextPly`는 다시하기 버튼과 키보드 단축키가 호출하는 store 액션 이름으로 유지합니다.
 - **인수 이름 가이드**:
   - `currentPlyIndex`: 현재 기준 시점을 나타내는 인수 이름으로 유지합니다.
   - `nextState`: 잘라낸 뒤 추가할 새 반수 스냅샷을 의미할 때 사용합니다.
@@ -92,6 +94,7 @@ appendMove(nextState);
 - Variation 보존 로직을 도입하지 않습니다.
 - 다시하기와 미래 수열 삭제는 같은 store 규칙을 공유해야 합니다.
 - 히스토리 배열을 자를 때도 기존 객체를 직접 mutate하지 않습니다.
+- 키보드 단축키는 입력 필드 포커스 중에는 실행되지 않도록 막습니다.
 
 ## 🧪 5. 검증 시나리오 및 단언
 
@@ -111,7 +114,7 @@ appendMove(nextState);
 
 1. `game-store.ts`에 `goToNextPly`, `canRedo`, `truncateFutureHistory`를 추가합니다.
 2. `use-make-move.ts`에서 새 수 입력 전에 미래 수열 정리 규칙을 호출합니다.
-3. `history-controls.tsx`에 Redo 버튼과 disabled 조건을 연결합니다.
+3. `history-controls.tsx`에 Redo 버튼, 키보드 단축키, disabled 조건을 연결합니다.
 4. 되돌리기/다시하기/새 수 입력이 한 스토어 규칙으로 맞물리는지 테스트합니다.
 
 - **검증 실행**:
