@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1040" viewBox="0 0 1440 1040" role="img" aria-labelledby="title desc">
+  <title id="title">FEATURE-004 빈 저장소 목록 첫 진입 상태 와이어프레임</title>
+  <desc id="desc">저장소가 하나도 없는 사용자가 처음 진입했을 때 저장소를 먼저 만들어야 한다는 메시지와 새 저장소 만들기 액션을 중심으로 보여준다. 보드 워크스페이스는 아직 진입 전 상태이므로 작은 비활성 미리보기로만 표현한다.</desc>
+
+  <defs>
+    <style>
+      .page { fill: #f6f7f8; }
+      .surface { fill: #ffffff; stroke: #d6d9de; stroke-width: 1.5; }
+      .panel { fill: #f9fafb; stroke: #d6d9de; stroke-width: 1.2; }
+      .muted-panel { fill: #f1f3f5; stroke: #d6d9de; stroke-width: 1; }
+      .disabled-panel { fill: #eef0f2; stroke: #c7cdd4; stroke-width: 1.2; stroke-dasharray: 7 6; }
+      .line { stroke: #d6d9de; stroke-width: 1; }
+      .text { fill: #15171a; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .muted { fill: #69707a; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .small { fill: #555d68; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .button { fill: #e9ecef; stroke: #adb5bd; stroke-width: 1; }
+      .primary { fill: #dfe7ed; stroke: #8da2b2; stroke-width: 1; }
+      .input { fill: #ffffff; stroke: #aeb7c2; stroke-width: 1.2; }
+      .ghost { fill: none; stroke: #b8c0ca; stroke-width: 1.2; stroke-dasharray: 6 5; }
+      .empty-icon { fill: #eef2f6; stroke: #9aa7b4; stroke-width: 1.5; }
+      .disabled-text { fill: #8a929c; font-family: Arial, 'Noto Sans KR', sans-serif; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="1040" class="page" />
+
+  <text x="64" y="58" class="text" font-size="27" font-weight="700">빈 저장소 목록 첫 진입</text>
+  <text x="64" y="88" class="muted" font-size="15">저장소가 없을 때는 보드가 아니라 저장소 생성 액션을 첫 번째 의사결정으로 둔다.</text>
+
+  <!-- 메인: 빈 저장소 선택/관리 화면 -->
+  <rect x="64" y="126" width="820" height="680" rx="8" class="surface" />
+  <rect x="64" y="126" width="820" height="58" rx="8" class="panel" />
+  <line x1="64" y1="184" x2="884" y2="184" class="line" />
+  <text x="96" y="163" class="text" font-size="18" font-weight="700">저장소 선택</text>
+  <text x="220" y="163" class="muted" font-size="13">저장소를 만든 뒤 기보와 분석을 저장한다</text>
+  <rect x="708" y="142" width="144" height="30" rx="6" class="primary" />
+  <text x="742" y="162" class="text" font-size="12" font-weight="700">새 저장소 만들기</text>
+
+  <text x="96" y="226" class="text" font-size="16" font-weight="700">내 저장소</text>
+  <text x="96" y="250" class="muted" font-size="12">아직 생성된 저장소가 없다</text>
+
+  <rect x="96" y="278" width="736" height="386" rx="8" class="panel" />
+  <circle cx="464" cy="394" r="54" class="empty-icon" />
+  <rect x="434" y="370" width="60" height="48" rx="8" fill="#ffffff" stroke="#9aa7b4" stroke-width="1.5" />
+  <path d="M 446 386 H 482" stroke="#b8c0ca" stroke-width="3" stroke-linecap="round" />
+  <path d="M 446 400 H 474" stroke="#b8c0ca" stroke-width="3" stroke-linecap="round" />
+  <path d="M 446 414 H 486" stroke="#b8c0ca" stroke-width="3" stroke-linecap="round" />
+
+  <text x="464" y="486" text-anchor="middle" class="text" font-size="22" font-weight="700">저장소를 먼저 만들어야 합니다</text>
+  <text x="464" y="516" text-anchor="middle" class="muted" font-size="14">기보 목록과 보드 워크스페이스는 저장소를 만든 뒤 사용할 수 있습니다.</text>
+  <text x="464" y="540" text-anchor="middle" class="muted" font-size="14">첫 저장소 이름을 정하고 분석 기록을 시작하세요.</text>
+
+  <rect x="348" y="574" width="232" height="40" rx="7" class="primary" />
+  <text x="407" y="600" class="text" font-size="14" font-weight="700">새 저장소 만들기</text>
+
+  <rect x="180" y="694" width="568" height="64" rx="8" class="ghost" />
+  <text x="208" y="724" class="small" font-size="13" font-weight="700">생성 버튼 선택 후 예상 상태</text>
+  <text x="208" y="746" class="muted" font-size="12">이름 입력, 생성, 취소 액션을 제공한다. 목록 항목은 생성 완료 후에만 나타난다.</text>
+
+  <!-- 생성 입력 상태 예시 -->
+  <rect x="930" y="126" width="430" height="260" rx="8" class="surface" />
+  <text x="960" y="166" class="text" font-size="17" font-weight="700">첫 저장소 생성 상태</text>
+  <text x="960" y="190" class="muted" font-size="12">빈 목록 메시지를 유지한 채 이름 입력 흐름으로 전환한다</text>
+  <rect x="984" y="218" width="322" height="116" rx="8" class="panel" />
+  <text x="1010" y="250" class="text" font-size="15" font-weight="700">새 저장소 만들기</text>
+  <rect x="1010" y="270" width="244" height="32" rx="6" class="input" />
+  <text x="1024" y="291" class="muted" font-size="12">예: 개인 오프닝 노트</text>
+  <rect x="1010" y="316" width="86" height="28" rx="6" class="primary" />
+  <text x="1033" y="335" class="text" font-size="12" font-weight="700">생성</text>
+  <rect x="1108" y="316" width="86" height="28" rx="6" class="button" />
+  <text x="1131" y="335" class="text" font-size="12">취소</text>
+
+  <!-- 비활성 보드 워크스페이스 미리보기 -->
+  <rect x="930" y="426" width="430" height="380" rx="8" class="surface" />
+  <rect x="930" y="426" width="430" height="48" rx="8" class="panel" />
+  <line x1="930" y1="474" x2="1360" y2="474" class="line" />
+  <text x="960" y="457" class="text" font-size="15" font-weight="700">보드 워크스페이스</text>
+  <text x="1090" y="457" class="disabled-text" font-size="12">저장소 생성 전에는 비활성</text>
+
+  <rect x="960" y="502" width="142" height="250" rx="8" class="disabled-panel" />
+  <text x="993" y="534" class="disabled-text" font-size="14" font-weight="700">기보 목록</text>
+  <rect x="990" y="562" width="82" height="14" rx="4" fill="#d8dde3" opacity="0.55" />
+  <rect x="990" y="592" width="62" height="14" rx="4" fill="#d8dde3" opacity="0.55" />
+  <rect x="990" y="622" width="96" height="14" rx="4" fill="#d8dde3" opacity="0.55" />
+
+  <rect x="1124" y="502" width="176" height="176" rx="8" class="disabled-panel" />
+  <g opacity="0.45">
+    <rect x="1148" y="526" width="32" height="32" fill="#d8dde3" />
+    <rect x="1180" y="526" width="32" height="32" fill="#f8f9fa" />
+    <rect x="1212" y="526" width="32" height="32" fill="#d8dde3" />
+    <rect x="1244" y="526" width="32" height="32" fill="#f8f9fa" />
+    <rect x="1148" y="558" width="32" height="32" fill="#f8f9fa" />
+    <rect x="1180" y="558" width="32" height="32" fill="#d8dde3" />
+    <rect x="1212" y="558" width="32" height="32" fill="#f8f9fa" />
+    <rect x="1244" y="558" width="32" height="32" fill="#d8dde3" />
+    <rect x="1148" y="590" width="32" height="32" fill="#d8dde3" />
+    <rect x="1180" y="590" width="32" height="32" fill="#f8f9fa" />
+    <rect x="1212" y="590" width="32" height="32" fill="#d8dde3" />
+    <rect x="1244" y="590" width="32" height="32" fill="#f8f9fa" />
+    <rect x="1148" y="622" width="32" height="32" fill="#f8f9fa" />
+    <rect x="1180" y="622" width="32" height="32" fill="#d8dde3" />
+    <rect x="1212" y="622" width="32" height="32" fill="#f8f9fa" />
+    <rect x="1244" y="622" width="32" height="32" fill="#d8dde3" />
+  </g>
+  <rect x="1124" y="704" width="176" height="48" rx="8" class="disabled-panel" />
+  <text x="1164" y="733" class="disabled-text" font-size="13">상세 패널 비활성</text>
+  <text x="960" y="786" class="small" font-size="12">워크스페이스는 빈 상태의 주 화면이 아니라 생성 후 진입 가능한 영역임을 약하게 암시한다.</text>
+
+  <!-- 상태 전환 요약 -->
+  <rect x="64" y="842" width="1296" height="116" rx="8" class="surface" />
+  <text x="92" y="880" class="text" font-size="16" font-weight="700">상태 전환 질문</text>
+  <text x="92" y="910" class="small" font-size="13">1. 첫 진입: 저장소 목록 영역에는 빈 상태 메시지와 새 저장소 만들기 버튼만 강조한다.</text>
+  <text x="92" y="934" class="small" font-size="13">2. 생성 시작: 주요 액션은 이름 입력 상태로 전환되며 취소하면 다시 빈 목록 메시지로 돌아온다.</text>
+  <text x="720" y="910" class="small" font-size="13">3. 생성 완료: 새 저장소가 목록 첫 항목으로 나타나고 열기 액션으로 내부 기본 뷰에 진입한다.</text>
+  <text x="720" y="934" class="small" font-size="13">4. 진입 전: 기보 목록, 보드, 상세 패널은 저장소가 없을 때 조작 가능한 영역으로 보이지 않아야 한다.</text>
+
+  <!-- 설계 메모 -->
+  <rect x="64" y="978" width="1296" height="42" rx="8" class="panel" />
+  <text x="92" y="1004" class="muted" font-size="12">와이어프레임 메모: FEATURE-004-repository-entry.svg와 동일한 회색 기반 스타일을 사용. 컴포넌트 후보는 RepositoryEmptyState, CreateRepositoryDialog 또는 InlineCreateRepository, DisabledWorkspacePreview.</text>
+</svg>

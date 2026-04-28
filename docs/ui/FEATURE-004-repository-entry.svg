@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1040" viewBox="0 0 1440 1040" role="img" aria-labelledby="title desc">
+  <title id="title">FEATURE-004 저장소 관리와 진입 흐름 와이어프레임</title>
+  <desc id="desc">보드 워크스페이스에 들어가기 전 저장소를 선택하고 관리하는 진입 화면 구조를 표현한다. 저장소 목록, 새 저장소 생성 입력, 삭제 확인 상태, 저장소 선택 후 내부 기본 뷰로 이동하는 흐름과 좌측 전역 사이드바 및 상단 저장소명 유지 규칙을 함께 검토하기 위한 SVG 와이어프레임이다.</desc>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#667085" />
+    </marker>
+    <style>
+      .page { fill: #f6f7f8; }
+      .surface { fill: #ffffff; stroke: #d6d9de; stroke-width: 1.5; }
+      .panel { fill: #f9fafb; stroke: #d6d9de; stroke-width: 1.2; }
+      .muted-panel { fill: #f1f3f5; stroke: #d6d9de; stroke-width: 1; }
+      .line { stroke: #d6d9de; stroke-width: 1; }
+      .flow { stroke: #667085; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+      .text { fill: #15171a; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .muted { fill: #69707a; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .small { fill: #555d68; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .button { fill: #e9ecef; stroke: #adb5bd; stroke-width: 1; }
+      .primary { fill: #dfe7ed; stroke: #8da2b2; stroke-width: 1; }
+      .danger { fill: #f3e6e6; stroke: #c98d8d; stroke-width: 1; }
+      .input { fill: #ffffff; stroke: #aeb7c2; stroke-width: 1.2; }
+      .selected { fill: #eef2f6; stroke: #667085; stroke-width: 1.8; }
+      .ghost { fill: none; stroke: #b8c0ca; stroke-width: 1.2; stroke-dasharray: 6 5; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="1040" class="page" />
+
+  <text x="64" y="58" class="text" font-size="27" font-weight="700">저장소 관리와 진입 흐름</text>
+  <text x="64" y="88" class="muted" font-size="15">저장소를 고른 뒤 보드 워크스페이스로 들어가기 전의 선택/관리 상태를 한 화면에서 검토한다.</text>
+
+  <!-- 메인: 저장소 선택/관리 화면 -->
+  <rect x="64" y="126" width="820" height="680" rx="8" class="surface" />
+  <rect x="64" y="126" width="820" height="58" rx="8" class="panel" />
+  <line x1="64" y1="184" x2="884" y2="184" class="line" />
+  <text x="96" y="163" class="text" font-size="18" font-weight="700">저장소 선택</text>
+  <text x="220" y="163" class="muted" font-size="13">최근 작업한 저장소에서 계속하거나 새 저장소를 만든다</text>
+  <rect x="726" y="142" width="126" height="30" rx="6" class="primary" />
+  <text x="755" y="162" class="text" font-size="12" font-weight="700">새 저장소</text>
+
+  <text x="96" y="226" class="text" font-size="16" font-weight="700">내 저장소</text>
+  <text x="96" y="250" class="muted" font-size="12">선택하면 저장소 내부 기본 뷰로 이동한다</text>
+
+  <rect x="96" y="278" width="736" height="92" rx="8" class="selected" />
+  <text x="122" y="310" class="text" font-size="15" font-weight="700">개인 오프닝 노트</text>
+  <text x="122" y="334" class="muted" font-size="12">최근 수정 2026.04.27 · 기보 128개 · 태그 9개</text>
+  <rect x="604" y="304" width="90" height="30" rx="6" class="primary" />
+  <text x="628" y="324" class="text" font-size="12" font-weight="700">열기</text>
+  <rect x="706" y="304" width="76" height="30" rx="6" class="button" />
+  <text x="727" y="324" class="text" font-size="12">관리</text>
+  <circle cx="806" cy="319" r="14" class="button" />
+  <text x="801" y="324" class="muted" font-size="14">⋯</text>
+
+  <rect x="96" y="386" width="736" height="82" rx="8" class="panel" />
+  <text x="122" y="418" class="text" font-size="15" font-weight="700">클럽 분석 저장소</text>
+  <text x="122" y="442" class="muted" font-size="12">최근 수정 2026.04.22 · 기보 41개 · 공유 안 함</text>
+  <rect x="604" y="412" width="90" height="30" rx="6" class="button" />
+  <text x="628" y="432" class="text" font-size="12">열기</text>
+  <rect x="706" y="412" width="76" height="30" rx="6" class="button" />
+  <text x="727" y="432" class="text" font-size="12">관리</text>
+  <circle cx="806" cy="427" r="14" class="button" />
+  <text x="801" y="432" class="muted" font-size="14">⋯</text>
+
+  <rect x="96" y="484" width="736" height="82" rx="8" class="panel" />
+  <text x="122" y="516" class="text" font-size="15" font-weight="700">엔드게임 복습</text>
+  <text x="122" y="540" class="muted" font-size="12">최근 수정 2026.04.12 · 기보 23개</text>
+  <rect x="604" y="510" width="90" height="30" rx="6" class="button" />
+  <text x="628" y="530" class="text" font-size="12">열기</text>
+  <rect x="706" y="510" width="76" height="30" rx="6" class="button" />
+  <text x="727" y="530" class="text" font-size="12">관리</text>
+  <circle cx="806" cy="525" r="14" class="button" />
+  <text x="801" y="530" class="muted" font-size="14">⋯</text>
+
+  <rect x="96" y="598" width="344" height="148" rx="8" class="ghost" />
+  <text x="122" y="632" class="text" font-size="15" font-weight="700">인라인 생성 상태</text>
+  <rect x="122" y="654" width="282" height="34" rx="6" class="input" />
+  <text x="138" y="676" class="muted" font-size="12">예: 후보수 연구</text>
+  <rect x="122" y="704" width="84" height="30" rx="6" class="primary" />
+  <text x="146" y="724" class="text" font-size="12" font-weight="700">생성</text>
+  <rect x="218" y="704" width="84" height="30" rx="6" class="button" />
+  <text x="242" y="724" class="text" font-size="12">취소</text>
+
+  <rect x="472" y="598" width="360" height="148" rx="8" class="ghost" />
+  <text x="498" y="632" class="text" font-size="15" font-weight="700">삭제 확인 상태</text>
+  <text x="498" y="658" class="muted" font-size="12">‘엔드게임 복습’을 삭제할까요?</text>
+  <text x="498" y="680" class="muted" font-size="12">삭제 후에는 이 목록에서 사라진다.</text>
+  <rect x="498" y="704" width="96" height="30" rx="6" class="danger" />
+  <text x="521" y="724" class="text" font-size="12" font-weight="700">삭제</text>
+  <rect x="606" y="704" width="96" height="30" rx="6" class="button" />
+  <text x="629" y="724" class="text" font-size="12">유지</text>
+
+  <!-- 생성 모달 대안 -->
+  <rect x="930" y="126" width="430" height="260" rx="8" class="surface" />
+  <text x="960" y="166" class="text" font-size="17" font-weight="700">새 저장소 모달 대안</text>
+  <text x="960" y="190" class="muted" font-size="12">목록 맥락을 흐리지 않게 중앙 확인 흐름으로도 표현 가능</text>
+  <rect x="984" y="218" width="322" height="116" rx="8" class="panel" />
+  <text x="1010" y="250" class="text" font-size="15" font-weight="700">새 저장소 만들기</text>
+  <rect x="1010" y="270" width="244" height="32" rx="6" class="input" />
+  <text x="1024" y="291" class="muted" font-size="12">저장소 이름</text>
+  <rect x="1010" y="316" width="86" height="28" rx="6" class="primary" />
+  <text x="1033" y="335" class="text" font-size="12" font-weight="700">생성</text>
+  <rect x="1108" y="316" width="86" height="28" rx="6" class="button" />
+  <text x="1131" y="335" class="text" font-size="12">취소</text>
+
+  <!-- 흐름 표시 -->
+  <path d="M 694 319 C 855 318, 855 456, 1018 456" class="flow" />
+  <text x="760" y="300" class="small" font-size="12">열기</text>
+
+  <!-- 저장소 내부 기본 뷰 미리보기 -->
+  <rect x="930" y="426" width="430" height="380" rx="8" class="surface" />
+  <rect x="930" y="426" width="72" height="380" rx="8" class="muted-panel" />
+  <rect x="930" y="426" width="430" height="48" rx="8" class="panel" />
+  <line x1="1002" y1="426" x2="1002" y2="806" class="line" />
+  <line x1="930" y1="474" x2="1360" y2="474" class="line" />
+  <text x="1024" y="457" class="text" font-size="15" font-weight="700">개인 오프닝 노트</text>
+  <text x="1160" y="457" class="muted" font-size="12">저장소 내부 기본 뷰</text>
+
+  <rect x="952" y="452" width="28" height="8" rx="4" fill="#9aa3ad" />
+  <rect x="952" y="508" width="28" height="28" rx="6" class="button" />
+  <rect x="952" y="552" width="28" height="28" rx="6" class="button" />
+  <rect x="952" y="596" width="28" height="28" rx="6" class="button" />
+  <text x="946" y="744" class="muted" font-size="10">전역</text>
+  <text x="944" y="758" class="muted" font-size="10">사이드바</text>
+
+  <rect x="1024" y="502" width="142" height="250" rx="8" class="panel" />
+  <text x="1048" y="534" class="text" font-size="14" font-weight="700">기보 목록</text>
+  <rect x="1048" y="560" width="92" height="14" rx="4" fill="#d8dde3" />
+  <rect x="1048" y="590" width="74" height="14" rx="4" fill="#d8dde3" />
+  <rect x="1048" y="620" width="102" height="14" rx="4" fill="#d8dde3" />
+  <rect x="1048" y="650" width="82" height="14" rx="4" fill="#d8dde3" />
+
+  <rect x="1186" y="502" width="136" height="136" rx="8" class="panel" />
+  <text x="1254" y="575" text-anchor="middle" class="muted" font-size="13">보드 영역</text>
+  <rect x="1186" y="660" width="136" height="92" rx="8" class="panel" />
+  <text x="1218" y="712" class="muted" font-size="13">상세 패널</text>
+
+  <text x="1024" y="786" class="small" font-size="12">선택 후에도 좌측 전역 사이드바와 상단 저장소명은 유지된다.</text>
+
+  <!-- 상태 전환 요약 -->
+  <rect x="64" y="842" width="1296" height="116" rx="8" class="surface" />
+  <text x="92" y="880" class="text" font-size="16" font-weight="700">상태 전환 질문</text>
+  <text x="92" y="910" class="small" font-size="13">1. 기본: 저장소 목록을 보여주고 첫 방문자는 비어 있는 목록과 새 저장소 버튼을 본다.</text>
+  <text x="92" y="934" class="small" font-size="13">2. 생성: 새 저장소 버튼은 인라인 입력 또는 모달 중 하나로 이름 입력과 생성/취소 액션을 제공한다.</text>
+  <text x="720" y="910" class="small" font-size="13">3. 삭제: 항목 관리 액션은 바로 삭제하지 않고 확인 상태를 거친다.</text>
+  <text x="720" y="934" class="small" font-size="13">4. 진입: 열기를 선택하면 저장소 내부 기본 뷰로 이동하고 저장소명이 상단 컨텍스트가 된다.</text>
+
+  <!-- 설계 메모 -->
+  <rect x="64" y="978" width="1296" height="42" rx="8" class="panel" />
+  <text x="92" y="1004" class="muted" font-size="12">와이어프레임 메모: 색상은 상태 구분용 최소 대비만 사용. 컴포넌트 후보는 RepositoryList, RepositoryListItem, CreateRepositoryDialog 또는 InlineCreateRepository, DeleteRepositoryConfirm, RepositoryShell.</text>
+</svg>

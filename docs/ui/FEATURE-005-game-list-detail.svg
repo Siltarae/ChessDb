@@ -1,0 +1,237 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1260" viewBox="0 0 1600 1260" role="img" aria-labelledby="title desc">
+  <title id="title">FEATURE-005 기보 목록과 상세 조회 중간 충실도 목업</title>
+  <desc id="desc">좌측 전역 사이드바에서 기보를 선택한 뒤 메인 화면 전체가 기보 목록 뷰로 전환된 상태와, 특정 기보 선택 후 FEATURE-003의 중앙 보드 및 우측 수순 목록 + 메타데이터 탭 구조를 재사용하는 상세 뷰로 전환되는 상태를 한 SVG 안에 함께 표현한 UI 스케치다. 목록의 날짜순 정렬, 결과, 종료 사유, 짧은 수순 요약, 선택 상태와 상세 화면의 읽기 전용 정식 수순 및 수정 가능한 코멘트/평가 단서를 보여준다.</desc>
+
+  <defs>
+    <style>
+      .bg { fill: #f5f7f8; }
+      .frame { fill: #ffffff; stroke: #cfd6df; stroke-width: 1.2; }
+      .topbar { fill: #fbfcfd; stroke: #e0e5eb; stroke-width: 1; }
+      .sidebar { fill: #1f2a30; }
+      .sidebar-active { fill: #2f5f73; }
+      .surface { fill: #ffffff; stroke: #d7dde5; stroke-width: 1; }
+      .panel { fill: #f9fafb; stroke: #d7dde5; stroke-width: 1; }
+      .selected { fill: #e9f2f5; stroke: #2f5f73; stroke-width: 1.5; }
+      .row { fill: #ffffff; stroke: #e4e8ee; stroke-width: 1; }
+      .muted-fill { fill: #eef2f6; }
+      .readonly { fill: #f1f4f7; stroke: #cfd7e2; stroke-width: 1; }
+      .editable { fill: #fffaf0; stroke: #e2b94b; stroke-width: 1.2; }
+      .accent { fill: #2f5f73; }
+      .success { fill: #e9f7ef; stroke: #83c59b; stroke-width: 1; }
+      .danger { fill: #fff0f0; stroke: #e28b8b; stroke-width: 1; }
+      .warning { fill: #fff8df; stroke: #e2b94b; stroke-width: 1; }
+      .text { fill: #182026; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .muted { fill: #667085; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .inverse { fill: #ffffff; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .small { font-size: 12px; }
+      .label { font-size: 13px; font-weight: 700; }
+      .body { font-size: 14px; }
+      .title { font-size: 20px; font-weight: 700; }
+      .section-title { font-size: 16px; font-weight: 700; }
+      .mono { font-family: 'Courier New', monospace; }
+      .light-square { fill: #eef0df; }
+      .dark-square { fill: #8ca07c; }
+      .piece-light { fill: #fbfbfb; stroke: #20242a; stroke-width: 1.1; }
+      .piece-dark { fill: #20242a; stroke: #20242a; stroke-width: 1.1; }
+      .piece-label-light { fill: #20242a; font-family: Georgia, serif; font-weight: 700; }
+      .piece-label-dark { fill: #ffffff; font-family: Georgia, serif; font-weight: 700; }
+      .arrow { fill: none; stroke: #93a3b5; stroke-width: 2; marker-end: url(#arrow-head); }
+    </style>
+    <filter id="shadow" x="-8%" y="-8%" width="116%" height="116%">
+      <feDropShadow dx="0" dy="8" stdDeviation="14" flood-color="#101820" flood-opacity="0.10"/>
+    </filter>
+    <marker id="arrow-head" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L8,4.5 L0,9 Z" fill="#93a3b5"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="1260" class="bg"/>
+  <text x="56" y="52" class="text title">FEATURE-005 기보 목록과 상세 조회</text>
+  <text x="56" y="80" class="muted body">전역 사이드바에서 기보를 선택하면 목록 중심 화면으로 전환되고, 목록 항목 선택 후 상세 화면은 FEATURE-003의 보드 + 수순 목록 + 메타데이터 탭 구조를 따른다.</text>
+
+  <!-- 1. 기보 목록 뷰 -->
+  <g id="game-list-view" transform="translate(56 118)">
+    <text x="0" y="-22" class="text section-title">1. 전역 사이드바에서 기보 선택 후: 메인 전체가 기보 목록 뷰</text>
+    <rect x="0" y="0" width="1488" height="500" rx="10" class="frame" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="152" height="500" rx="10" class="sidebar"/>
+    <rect x="0" y="0" width="152" height="500" rx="10" fill="#1f2a30"/>
+    <rect x="152" y="0" width="1336" height="56" class="topbar"/>
+
+    <text x="28" y="38" class="inverse" font-size="17" font-weight="700">ChessDb</text>
+    <rect x="18" y="86" width="116" height="38" rx="7" fill="#26343c"/>
+    <text x="48" y="110" class="inverse small">새 기보</text>
+    <rect x="18" y="138" width="116" height="38" rx="7" class="sidebar-active"/>
+    <text x="45" y="162" class="inverse small" font-weight="700">기보</text>
+    <rect x="18" y="190" width="116" height="38" rx="7" fill="#26343c"/>
+    <text x="45" y="214" class="inverse small">분석</text>
+
+    <text x="184" y="36" class="text title">기보 목록</text>
+    <text x="302" y="36" class="muted body">최근 저장일 기준 날짜순</text>
+    <rect x="1246" y="14" width="106" height="30" rx="6" fill="#ffffff" stroke="#c4ccd6"/>
+    <text x="1272" y="34" class="text small" font-weight="700">날짜순</text>
+    <rect x="1364" y="14" width="92" height="30" rx="6" class="accent"/>
+    <text x="1388" y="34" class="inverse small" font-weight="700">새로고침</text>
+
+    <rect x="184" y="88" width="1268" height="372" rx="8" class="surface"/>
+    <text x="212" y="124" class="muted label">저장일</text>
+    <text x="358" y="124" class="muted label">결과</text>
+    <text x="472" y="124" class="muted label">종료 사유</text>
+    <text x="648" y="124" class="muted label">짧은 수순 요약</text>
+    <text x="1326" y="124" class="muted label">상태</text>
+    <line x1="204" y1="140" x2="1432" y2="140" stroke="#e1e6ed"/>
+
+    <g transform="translate(204 156)">
+      <rect x="0" y="0" width="1228" height="62" rx="7" class="row"/>
+      <text x="8" y="25" class="text body" font-weight="700">2026-04-27</text>
+      <text x="154" y="25" class="text body">1-0</text>
+      <rect x="262" y="9" width="82" height="24" rx="12" class="success"/>
+      <text x="280" y="26" class="text small">체크메이트</text>
+      <text x="444" y="25" class="text body mono">1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 ...</text>
+      <text x="1126" y="25" class="muted small">열기</text>
+      <text x="8" y="48" class="muted small">정식 저장됨 · 코멘트 3개 · 평가 5개</text>
+    </g>
+
+    <g transform="translate(204 230)">
+      <rect x="0" y="0" width="1228" height="70" rx="7" class="selected"/>
+      <rect x="10" y="12" width="4" height="46" rx="2" class="accent"/>
+      <text x="28" y="27" class="text body" font-weight="700">2026-04-24</text>
+      <text x="174" y="27" class="text body">1/2-1/2</text>
+      <rect x="262" y="11" width="72" height="24" rx="12" class="warning"/>
+      <text x="281" y="28" class="text small">합의 무승부</text>
+      <text x="444" y="27" class="text body mono">1. d4 Nf6 2. c4 e6 3. Nc3 Bb4 ...</text>
+      <rect x="1104" y="13" width="80" height="30" rx="6" class="accent"/>
+      <text x="1126" y="33" class="inverse small" font-weight="700">선택됨</text>
+      <text x="28" y="52" class="muted small">목록 항목 선택 시 상세 뷰로 이동할 대상</text>
+    </g>
+
+    <g transform="translate(204 314)">
+      <rect x="0" y="0" width="1228" height="62" rx="7" class="row"/>
+      <text x="8" y="25" class="text body" font-weight="700">2026-04-20</text>
+      <text x="154" y="25" class="text body">0-1</text>
+      <rect x="262" y="9" width="52" height="24" rx="12" class="danger"/>
+      <text x="280" y="26" class="text small">기권</text>
+      <text x="444" y="25" class="text body mono">1. c4 e5 2. Nc3 Nf6 3. g3 d5 ...</text>
+      <text x="1126" y="25" class="muted small">열기</text>
+      <text x="8" y="48" class="muted small">정식 저장됨 · 코멘트 1개 · 평가 2개</text>
+    </g>
+
+    <g transform="translate(204 388)">
+      <rect x="0" y="0" width="1228" height="52" rx="7" class="row"/>
+      <text x="8" y="31" class="text body" font-weight="700">2026-04-18</text>
+      <text x="154" y="31" class="text body">1-0</text>
+      <rect x="262" y="13" width="82" height="24" rx="12" class="success"/>
+      <text x="280" y="30" class="text small">체크메이트</text>
+      <text x="444" y="31" class="text body mono">1. e4 c5 2. Nf3 d6 3. d4 cxd4 ...</text>
+      <text x="1126" y="31" class="muted small">열기</text>
+    </g>
+  </g>
+
+  <path d="M800 642 C800 668 800 682 800 706" class="arrow"/>
+  <text x="824" y="674" class="muted body">선택한 기보를 열면 상세 뷰로 전환</text>
+
+  <!-- 2. 기보 상세 뷰 -->
+  <g id="game-detail-view" transform="translate(56 728)">
+    <text x="0" y="-22" class="text section-title">2. 특정 기보 선택 후: FEATURE-003 기반 중앙 보드 + 우측 수순/메타데이터 탭 패널</text>
+    <rect x="0" y="0" width="1488" height="440" rx="10" class="frame" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="152" height="440" rx="10" class="sidebar"/>
+    <rect x="152" y="0" width="1336" height="56" class="topbar"/>
+
+    <text x="28" y="38" class="inverse" font-size="17" font-weight="700">ChessDb</text>
+    <rect x="18" y="86" width="116" height="38" rx="7" fill="#26343c"/>
+    <text x="48" y="110" class="inverse small">새 기보</text>
+    <rect x="18" y="138" width="116" height="38" rx="7" class="sidebar-active"/>
+    <text x="45" y="162" class="inverse small" font-weight="700">기보</text>
+    <rect x="18" y="190" width="116" height="38" rx="7" fill="#26343c"/>
+    <text x="45" y="214" class="inverse small">분석</text>
+
+    <text x="184" y="36" class="text title">2026-04-24 · 1/2-1/2</text>
+    <text x="386" y="36" class="muted body">합의 무승부 · 43수 · 선택 수순: 12...Bb7</text>
+    <rect x="1282" y="14" width="84" height="30" rx="6" fill="#ffffff" stroke="#c4ccd6"/>
+    <text x="1304" y="34" class="text small" font-weight="700">목록</text>
+    <rect x="1378" y="14" width="78" height="30" rx="6" fill="#f1f4f7" stroke="#c4ccd6"/>
+    <text x="1398" y="34" class="muted small" font-weight="700">삭제</text>
+
+    <rect x="196" y="84" width="372" height="324" rx="8" class="surface"/>
+    <g transform="translate(220 106)">
+      <rect x="0" y="0" width="280" height="280" rx="5" fill="#ffffff" stroke="#c8ccd2" stroke-width="1.5"/>
+      <g>
+        <rect x="0" y="0" width="35" height="35" class="light-square"/><rect x="35" y="0" width="35" height="35" class="dark-square"/><rect x="70" y="0" width="35" height="35" class="light-square"/><rect x="105" y="0" width="35" height="35" class="dark-square"/><rect x="140" y="0" width="35" height="35" class="light-square"/><rect x="175" y="0" width="35" height="35" class="dark-square"/><rect x="210" y="0" width="35" height="35" class="light-square"/><rect x="245" y="0" width="35" height="35" class="dark-square"/>
+        <rect x="0" y="35" width="35" height="35" class="dark-square"/><rect x="35" y="35" width="35" height="35" class="light-square"/><rect x="70" y="35" width="35" height="35" class="dark-square"/><rect x="105" y="35" width="35" height="35" class="light-square"/><rect x="140" y="35" width="35" height="35" class="dark-square"/><rect x="175" y="35" width="35" height="35" class="light-square"/><rect x="210" y="35" width="35" height="35" class="dark-square"/><rect x="245" y="35" width="35" height="35" class="light-square"/>
+        <rect x="0" y="70" width="35" height="35" class="light-square"/><rect x="35" y="70" width="35" height="35" class="dark-square"/><rect x="70" y="70" width="35" height="35" class="light-square"/><rect x="105" y="70" width="35" height="35" class="dark-square"/><rect x="140" y="70" width="35" height="35" class="light-square"/><rect x="175" y="70" width="35" height="35" class="dark-square"/><rect x="210" y="70" width="35" height="35" class="light-square"/><rect x="245" y="70" width="35" height="35" class="dark-square"/>
+        <rect x="0" y="105" width="35" height="35" class="dark-square"/><rect x="35" y="105" width="35" height="35" class="light-square"/><rect x="70" y="105" width="35" height="35" class="dark-square"/><rect x="105" y="105" width="35" height="35" class="light-square"/><rect x="140" y="105" width="35" height="35" class="dark-square"/><rect x="175" y="105" width="35" height="35" class="light-square"/><rect x="210" y="105" width="35" height="35" class="dark-square"/><rect x="245" y="105" width="35" height="35" class="light-square"/>
+        <rect x="0" y="140" width="35" height="35" class="light-square"/><rect x="35" y="140" width="35" height="35" class="dark-square"/><rect x="70" y="140" width="35" height="35" class="light-square"/><rect x="105" y="140" width="35" height="35" class="dark-square"/><rect x="140" y="140" width="35" height="35" class="light-square"/><rect x="175" y="140" width="35" height="35" class="dark-square"/><rect x="210" y="140" width="35" height="35" class="light-square"/><rect x="245" y="140" width="35" height="35" class="dark-square"/>
+        <rect x="0" y="175" width="35" height="35" class="dark-square"/><rect x="35" y="175" width="35" height="35" class="light-square"/><rect x="70" y="175" width="35" height="35" class="dark-square"/><rect x="105" y="175" width="35" height="35" class="light-square"/><rect x="140" y="175" width="35" height="35" class="dark-square"/><rect x="175" y="175" width="35" height="35" class="light-square"/><rect x="210" y="175" width="35" height="35" class="dark-square"/><rect x="245" y="175" width="35" height="35" class="light-square"/>
+        <rect x="0" y="210" width="35" height="35" class="light-square"/><rect x="35" y="210" width="35" height="35" class="dark-square"/><rect x="70" y="210" width="35" height="35" class="light-square"/><rect x="105" y="210" width="35" height="35" class="dark-square"/><rect x="140" y="210" width="35" height="35" class="light-square"/><rect x="175" y="210" width="35" height="35" class="dark-square"/><rect x="210" y="210" width="35" height="35" class="light-square"/><rect x="245" y="210" width="35" height="35" class="dark-square"/>
+        <rect x="0" y="245" width="35" height="35" class="dark-square"/><rect x="35" y="245" width="35" height="35" class="light-square"/><rect x="70" y="245" width="35" height="35" class="dark-square"/><rect x="105" y="245" width="35" height="35" class="light-square"/><rect x="140" y="245" width="35" height="35" class="dark-square"/><rect x="175" y="245" width="35" height="35" class="light-square"/><rect x="210" y="245" width="35" height="35" class="dark-square"/><rect x="245" y="245" width="35" height="35" class="light-square"/>
+      </g>
+      <rect x="175" y="70" width="35" height="35" fill="#f6d76a" opacity="0.65"/>
+      <rect x="210" y="105" width="35" height="35" fill="#f6d76a" opacity="0.65"/>
+      <g font-size="16" text-anchor="middle" dominant-baseline="middle">
+        <circle cx="52.5" cy="17.5" r="12" class="piece-dark"/><text x="52.5" y="18.5" class="piece-label-dark">R</text>
+        <circle cx="122.5" cy="17.5" r="12" class="piece-dark"/><text x="122.5" y="18.5" class="piece-label-dark">B</text>
+        <circle cx="157.5" cy="17.5" r="12" class="piece-dark"/><text x="157.5" y="18.5" class="piece-label-dark">K</text>
+        <circle cx="227.5" cy="17.5" r="12" class="piece-dark"/><text x="227.5" y="18.5" class="piece-label-dark">R</text>
+        <circle cx="87.5" cy="52.5" r="10" class="piece-dark"/><text x="87.5" y="53.5" class="piece-label-dark">P</text>
+        <circle cx="192.5" cy="52.5" r="10" class="piece-dark"/><text x="192.5" y="53.5" class="piece-label-dark">P</text>
+        <circle cx="227.5" cy="122.5" r="11" class="piece-dark"/><text x="227.5" y="123.5" class="piece-label-dark">B</text>
+        <circle cx="87.5" cy="192.5" r="10" class="piece-light"/><text x="87.5" y="193.5" class="piece-label-light">P</text>
+        <circle cx="157.5" cy="227.5" r="10" class="piece-light"/><text x="157.5" y="228.5" class="piece-label-light">P</text>
+        <circle cx="52.5" cy="262.5" r="12" class="piece-light"/><text x="52.5" y="263.5" class="piece-label-light">R</text>
+        <circle cx="157.5" cy="262.5" r="12" class="piece-light"/><text x="157.5" y="263.5" class="piece-label-light">K</text>
+      </g>
+    </g>
+    <text x="234" y="398" class="muted small">선택 수순의 보드 상태 · 하이라이트는 현재 착수</text>
+
+    <rect x="600" y="84" width="856" height="324" rx="8" class="panel"/>
+    <rect x="624" y="106" width="306" height="280" rx="7" class="surface"/>
+    <text x="646" y="134" class="text section-title">수순 목록</text>
+    <text x="746" y="134" class="muted small">FEATURE-003 우측 상단 영역</text>
+    <rect x="812" y="114" width="90" height="24" rx="12" class="readonly"/>
+    <text x="834" y="131" class="muted small">읽기 전용</text>
+    <g class="body mono">
+      <text x="646" y="170" class="text">1. d4 Nf6</text>
+      <text x="646" y="202" class="text">2. c4 e6</text>
+      <text x="646" y="234" class="text">3. Nc3 Bb4</text>
+      <rect x="640" y="252" width="242" height="30" rx="5" class="selected"/>
+      <text x="646" y="273" class="text">12. Re1 Bb7</text>
+      <text x="646" y="310" class="muted">13. Rc1 Rc8</text>
+      <text x="646" y="342" class="muted">14. h3 h6</text>
+    </g>
+    <text x="646" y="372" class="muted small">수순 목록 위치와 백/흑 2열 구조는 FEATURE-003과 동일, 정식 저장 후에는 선택만 가능</text>
+
+    <rect x="956" y="106" width="476" height="280" rx="7" class="surface"/>
+    <text x="978" y="134" class="text section-title">메타데이터 탭</text>
+    <text x="1100" y="134" class="muted small">SAN · 코멘트 · 평가 · 기보 정보</text>
+    <g transform="translate(978 152)">
+      <rect x="0" y="0" width="52" height="28" rx="7" fill="#ffffff" stroke="#bcc7d4"/>
+      <text x="15" y="19" class="muted small" font-weight="700">SAN</text>
+      <rect x="60" y="0" width="70" height="28" rx="7" class="accent"/>
+      <text x="76" y="19" class="inverse small" font-weight="700">코멘트</text>
+      <rect x="138" y="0" width="58" height="28" rx="7" fill="#ffffff" stroke="#bcc7d4"/>
+      <text x="153" y="19" class="muted small" font-weight="700">평가</text>
+      <rect x="204" y="0" width="86" height="28" rx="7" fill="#ffffff" stroke="#bcc7d4"/>
+      <text x="218" y="19" class="muted small" font-weight="700">기보 정보</text>
+    </g>
+    <rect x="978" y="198" width="204" height="74" rx="6" class="editable"/>
+    <text x="994" y="224" class="text body">흑의 비숍 전개로</text>
+    <text x="994" y="248" class="text body">장기 압박을 준비.</text>
+    <text x="994" y="266" class="muted small">코멘트 탭에서 편집</text>
+    <rect x="978" y="292" width="178" height="30" rx="15" class="success"/>
+    <text x="994" y="312" class="text small">자동 저장됨 · 방금 전</text>
+
+    <text x="1218" y="214" class="muted small">평가 탭 상태 예시</text>
+    <rect x="1218" y="232" width="48" height="34" rx="8" fill="#ffffff" stroke="#bcc7d4"/>
+    <text x="1238" y="255" class="text body" font-weight="700">!</text>
+    <rect x="1278" y="232" width="52" height="34" rx="8" class="selected"/>
+    <text x="1295" y="255" class="text body" font-weight="700">!!</text>
+    <rect x="1342" y="232" width="52" height="34" rx="8" fill="#ffffff" stroke="#bcc7d4"/>
+    <text x="1361" y="255" class="muted body" font-weight="700">?</text>
+    <text x="1218" y="312" class="muted small">같은 탭 영역 안에서 코멘트/평가만 수정 가능</text>
+  </g>
+
+  <!-- 설계 메모 -->
+  <g id="design-notes" transform="translate(56 1196)">
+    <rect x="0" y="-26" width="1488" height="48" rx="8" fill="#ffffff" stroke="#d7dde5"/>
+    <text x="18" y="4" class="muted small">구현 후보 메모: 목록 뷰는 텍스트 중심으로 유지한다. 보드가 있는 상세 뷰는 FEATURE-003의 앱 프레임, 중앙 보드, 우측 수순 목록 + SAN/코멘트/평가/기보 정보 탭 구조를 재사용하고, 정식 저장 후 수순만 읽기 전용으로 잠근다.</text>
+  </g>
+</svg>

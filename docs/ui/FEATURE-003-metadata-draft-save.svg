@@ -1,0 +1,243 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="980" viewBox="0 0 1440 980" role="img" aria-labelledby="title desc">
+  <title id="title">FEATURE-003 기보 메타데이터와 초안 저장 목업</title>
+  <desc id="desc">FEATURE-002의 새 기보 입력 화면 구조와 색상 톤을 유지하면서 우측 패널 상단에는 백/흑 2열 수순 목록, 마지막 착수 하이라이트, 소형 되돌리기와 다시하기를 배치하고, 하단에는 SAN, 코멘트, 평가, 기보 정보 탭을 하나의 메타데이터 확장 영역으로 묶은 중간 충실도 SVG 목업이다. SAN은 별도 섹션이 아니라 활성 탭 내용으로 표시하며, 상단 바에는 초안 저장 상태, 정식 저장, 초안 폐기, 새 기보 액션을 함께 배치한다.</desc>
+
+  <defs>
+    <style>
+      .page { fill: #f4f6f8; }
+      .surface { fill: #ffffff; }
+      .topbar { fill: #fbfcfd; }
+      .sidebar { fill: #17202a; }
+      .sidebar-soft { fill: #22303d; }
+      .panel { fill: #ffffff; stroke: #d4dae2; stroke-width: 1.2; }
+      .subpanel { fill: #f8fafc; stroke: #dbe1e8; stroke-width: 1; }
+      .line { stroke: #dbe1e8; stroke-width: 1; }
+      .text { fill: #15171a; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .muted { fill: #687381; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .inverse { fill: #f8fafc; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .inverse-muted { fill: #aeb8c4; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .button-primary { fill: #2f5f73; }
+      .button-secondary { fill: #ffffff; stroke: #bcc7d4; stroke-width: 1; }
+      .button-danger { fill: #fff5f2; stroke: #e6b5aa; stroke-width: 1; }
+      .button-quiet { fill: #eef2f6; stroke: #d7dde5; stroke-width: 1; }
+      .light-square { fill: #eef0df; }
+      .dark-square { fill: #8ca07c; }
+      .last-move { fill: #f5c542; opacity: 0.46; }
+      .move-cell-active { fill: #dff0ea; stroke: #72a897; stroke-width: 1.2; }
+      .selected-square { fill: #7dd3fc; opacity: 0.34; }
+      .selected { fill: none; stroke: #0f766e; stroke-width: 2.2; opacity: 0.62; }
+      .piece-light { fill: #fbfbfb; stroke: #20242a; stroke-width: 1.4; }
+      .piece-dark { fill: #20242a; stroke: #20242a; stroke-width: 1.4; }
+      .piece-label-light { fill: #20242a; font-family: Georgia, serif; font-weight: 700; }
+      .piece-label-dark { fill: #ffffff; font-family: Georgia, serif; font-weight: 700; }
+      .badge { fill: #eef4f7; stroke: #c8d6df; stroke-width: 1; }
+      .badge-ok { fill: #e8f5ee; stroke: #9fcbb2; stroke-width: 1; }
+      .badge-warn { fill: #fff7e6; stroke: #f0c36a; stroke-width: 1; }
+      .field { fill: #ffffff; stroke: #bcc7d4; stroke-width: 1; }
+      .field-focus { fill: #ffffff; stroke: #2f5f73; stroke-width: 1.4; }
+      .active-chip { fill: #dff0ea; stroke: #72a897; stroke-width: 1.2; }
+      .warning-note { fill: #fff7e6; stroke: #f0c36a; stroke-width: 1; }
+    </style>
+    <filter id="soft-shadow" x="-8%" y="-8%" width="116%" height="116%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#1f2937" flood-opacity="0.11"/>
+    </filter>
+    <pattern id="board-pattern" width="160" height="160" patternUnits="userSpaceOnUse">
+      <rect width="160" height="160" class="light-square"/>
+      <rect x="80" y="0" width="80" height="80" class="dark-square"/>
+      <rect x="0" y="80" width="80" height="80" class="dark-square"/>
+    </pattern>
+  </defs>
+
+  <rect width="1440" height="980" class="page"/>
+
+  <!-- 전역 앱 프레임: FEATURE-002와 같은 구조 -->
+  <rect x="40" y="36" width="1360" height="900" rx="12" class="surface" filter="url(#soft-shadow)"/>
+  <rect x="40" y="36" width="88" height="900" rx="12" class="sidebar"/>
+  <rect x="128" y="36" width="1272" height="64" class="topbar"/>
+  <line x1="128" y1="100" x2="1400" y2="100" class="line"/>
+  <line x1="128" y1="36" x2="128" y2="936" stroke="#293746" stroke-width="1"/>
+
+  <!-- 좌측 전역 사이드바 -->
+  <text x="84" y="78" text-anchor="middle" class="inverse" font-size="18" font-weight="700">CDB</text>
+  <rect x="58" y="126" width="52" height="52" rx="8" fill="#2f5f73"/>
+  <text x="84" y="158" text-anchor="middle" class="inverse" font-size="18" font-weight="700">＋</text>
+  <text x="84" y="194" text-anchor="middle" class="inverse-muted" font-size="11">입력</text>
+  <rect x="58" y="226" width="52" height="52" rx="8" class="sidebar-soft"/>
+  <text x="84" y="258" text-anchor="middle" class="inverse-muted" font-size="17">▤</text>
+  <text x="84" y="294" text-anchor="middle" class="inverse-muted" font-size="11">기보</text>
+  <rect x="58" y="326" width="52" height="52" rx="8" class="sidebar-soft"/>
+  <text x="84" y="358" text-anchor="middle" class="inverse-muted" font-size="17">◎</text>
+  <text x="84" y="394" text-anchor="middle" class="inverse-muted" font-size="11">분석</text>
+  <rect x="58" y="816" width="52" height="52" rx="8" class="sidebar-soft"/>
+  <text x="84" y="848" text-anchor="middle" class="inverse-muted" font-size="17">⚙</text>
+  <text x="84" y="884" text-anchor="middle" class="inverse-muted" font-size="11">설정</text>
+
+  <!-- 상단 바: 초안 저장 상태와 저장 액션 중심 -->
+  <text x="164" y="69" class="text" font-size="20" font-weight="700">새 기보 입력</text>
+  <text x="294" y="69" class="muted" font-size="13">수순 패널 아래에 메모와 기보 정보를 붙여 저장하는 작업 화면</text>
+  <rect x="690" y="53" width="132" height="30" rx="15" class="badge-ok"/>
+  <circle cx="708" cy="68" r="4" fill="#2d8b57"/>
+  <text x="720" y="73" class="text" font-size="12" font-weight="700">초안 저장됨</text>
+  <rect x="834" y="53" width="138" height="30" rx="15" class="badge"/>
+  <text x="852" y="73" class="muted" font-size="12">마지막 14:32</text>
+  <rect x="984" y="53" width="148" height="30" rx="15" class="badge-warn"/>
+  <text x="1002" y="73" class="muted" font-size="12">새로고침 복원</text>
+  <rect x="1148" y="50" width="82" height="36" rx="7" class="button-primary"/>
+  <text x="1163" y="73" fill="#ffffff" font-family="Arial, 'Noto Sans KR', sans-serif" font-size="13" font-weight="700">정식 저장</text>
+  <rect x="1242" y="50" width="82" height="36" rx="7" class="button-danger"/>
+  <text x="1257" y="73" fill="#9b3327" font-family="Arial, 'Noto Sans KR', sans-serif" font-size="13" font-weight="700">초안 폐기</text>
+  <rect x="1334" y="50" width="50" height="36" rx="7" class="button-secondary"/>
+  <text x="1347" y="73" class="text" font-size="13" font-weight="700">새 기보</text>
+
+  <!-- 중앙 보드 작업 영역: FEATURE-002와 같은 새 기보 입력 맥락 -->
+  <rect x="160" y="128" width="880" height="760" rx="10" fill="#f8fafc" stroke="#d4dae2" stroke-width="1.2"/>
+  <text x="190" y="168" class="text" font-size="17" font-weight="700">보드</text>
+  <text x="246" y="168" class="muted" font-size="13">새 기보 입력 화면의 보드와 마지막 이동 표시를 그대로 유지</text>
+
+  <g transform="translate(270 190)">
+    <rect x="0" y="0" width="640" height="640" rx="6" fill="#ffffff" stroke="#b9c3cf" stroke-width="2"/>
+    <rect x="0" y="0" width="640" height="640" fill="url(#board-pattern)"/>
+
+    <!-- 선택 수 12. Bxe6의 출발/도착 맥락 -->
+    <rect x="400" y="400" width="80" height="80" class="last-move"/>
+    <rect x="320" y="160" width="80" height="80" class="last-move"/>
+    <rect x="320" y="160" width="80" height="80" class="selected-square"/>
+    <rect x="322" y="162" width="76" height="76" rx="3" class="selected"/>
+
+    <!-- 좌표 라벨 -->
+    <g class="muted" font-size="11">
+      <text x="10" y="22">8</text><text x="10" y="102">7</text><text x="10" y="182">6</text><text x="10" y="262">5</text>
+      <text x="10" y="342">4</text><text x="10" y="422">3</text><text x="10" y="502">2</text><text x="10" y="582">1</text>
+      <text x="38" y="628">a</text><text x="118" y="628">b</text><text x="198" y="628">c</text><text x="278" y="628">d</text>
+      <text x="358" y="628">e</text><text x="438" y="628">f</text><text x="518" y="628">g</text><text x="598" y="628">h</text>
+    </g>
+
+    <!-- 기물은 맥락 표시 수준으로 단순화 -->
+    <g font-size="28" text-anchor="middle" dominant-baseline="middle" opacity="0.88">
+      <g>
+        <circle cx="40" cy="40" r="26" class="piece-dark"/><text x="40" y="42" class="piece-label-dark">R</text>
+        <circle cx="200" cy="40" r="26" class="piece-dark"/><text x="200" y="42" class="piece-label-dark">B</text>
+        <circle cx="280" cy="40" r="26" class="piece-dark"/><text x="280" y="42" class="piece-label-dark">Q</text>
+        <circle cx="360" cy="40" r="26" class="piece-dark"/><text x="360" y="42" class="piece-label-dark">K</text>
+        <circle cx="600" cy="40" r="26" class="piece-dark"/><text x="600" y="42" class="piece-label-dark">R</text>
+      </g>
+      <g>
+        <circle cx="40" cy="120" r="22" class="piece-dark"/><text x="40" y="122" class="piece-label-dark">P</text>
+        <circle cx="120" cy="120" r="22" class="piece-dark"/><text x="120" y="122" class="piece-label-dark">P</text>
+        <circle cx="200" cy="120" r="22" class="piece-dark"/><text x="200" y="122" class="piece-label-dark">P</text>
+        <circle cx="440" cy="120" r="22" class="piece-dark"/><text x="440" y="122" class="piece-label-dark">P</text>
+        <circle cx="520" cy="120" r="22" class="piece-dark"/><text x="520" y="122" class="piece-label-dark">P</text>
+        <circle cx="600" cy="120" r="22" class="piece-dark"/><text x="600" y="122" class="piece-label-dark">P</text>
+      </g>
+      <g>
+        <circle cx="360" cy="200" r="28" class="piece-light"/><text x="360" y="202" class="piece-label-light">B</text>
+        <circle cx="360" cy="360" r="22" class="piece-light"/><text x="360" y="362" class="piece-label-light">P</text>
+        <circle cx="440" cy="440" r="28" class="piece-light"/><text x="440" y="442" class="piece-label-light">B</text>
+      </g>
+      <g>
+        <circle cx="40" cy="520" r="22" class="piece-light"/><text x="40" y="522" class="piece-label-light">P</text>
+        <circle cx="120" cy="520" r="22" class="piece-light"/><text x="120" y="522" class="piece-label-light">P</text>
+        <circle cx="200" cy="520" r="22" class="piece-light"/><text x="200" y="522" class="piece-label-light">P</text>
+        <circle cx="520" cy="520" r="22" class="piece-light"/><text x="520" y="522" class="piece-label-light">P</text>
+        <circle cx="600" cy="520" r="22" class="piece-light"/><text x="600" y="522" class="piece-label-light">P</text>
+      </g>
+      <g>
+        <circle cx="40" cy="600" r="26" class="piece-light"/><text x="40" y="602" class="piece-label-light">R</text>
+        <circle cx="280" cy="600" r="26" class="piece-light"/><text x="280" y="602" class="piece-label-light">Q</text>
+        <circle cx="360" cy="600" r="26" class="piece-light"/><text x="360" y="602" class="piece-label-light">K</text>
+        <circle cx="600" cy="600" r="26" class="piece-light"/><text x="600" y="602" class="piece-label-light">R</text>
+      </g>
+    </g>
+  </g>
+
+  <rect x="270" y="836" width="640" height="52" rx="7" fill="#ffffff" stroke="#dbe1e8"/>
+  <text x="292" y="854" class="muted" font-size="11" font-weight="700">색상 메모</text>
+  <rect x="292" y="862" width="14" height="10" class="light-square"/>
+  <text x="312" y="872" class="muted" font-size="10">밝은 칸 #eef0df</text>
+  <rect x="404" y="862" width="14" height="10" class="dark-square"/>
+  <text x="424" y="872" class="muted" font-size="10">어두운 칸 #8ca07c</text>
+  <rect x="528" y="862" width="14" height="10" class="last-move"/>
+  <text x="548" y="872" class="muted" font-size="10">마지막 수 #f5c542 46%</text>
+  <rect x="686" y="862" width="14" height="10" class="selected-square"/>
+  <text x="706" y="872" class="muted" font-size="10">선택 칸 #7dd3fc 34%</text>
+  <rect x="830" y="862" width="14" height="10" fill="#dff0ea" stroke="#72a897"/>
+  <text x="850" y="872" class="muted" font-size="10">활성 칩 #dff0ea</text>
+  <rect x="292" y="878" width="14" height="8" fill="#2f5f73"/>
+  <text x="312" y="886" class="muted" font-size="9">주요 버튼 #2f5f73</text>
+  <rect x="420" y="878" width="14" height="8" fill="#ffffff" stroke="#d4dae2"/>
+  <text x="440" y="886" class="muted" font-size="9">패널 #ffffff / 선 #d4dae2</text>
+  <rect x="570" y="878" width="14" height="8" fill="#f8fafc" stroke="#dbe1e8"/>
+  <text x="590" y="886" class="muted" font-size="9">보조 패널 #f8fafc</text>
+  <rect x="704" y="878" width="14" height="8" fill="#17202a"/>
+  <text x="724" y="886" class="muted" font-size="9">사이드바 #17202a</text>
+
+  <!-- 우측 상세 패널: FEATURE-002 수순 패널 + FEATURE-003 메타데이터 탭 확장 -->
+  <rect x="1064" y="128" width="308" height="760" rx="10" class="panel"/>
+  <text x="1090" y="166" class="text" font-size="18" font-weight="700">새 기보 입력</text>
+  <text x="1090" y="190" class="muted" font-size="12">수순 목록 아래에 SAN 포함 메타데이터 탭을 배치</text>
+
+  <rect x="1090" y="214" width="256" height="342" rx="8" class="subpanel"/>
+  <rect x="1110" y="232" width="144" height="22" rx="11" class="badge"/>
+  <text x="1122" y="247" class="muted" font-size="11" font-weight="700">FEATURE-002 수순 패널</text>
+  <g aria-label="수순 목록 보조 액션">
+    <rect x="1266" y="230" width="24" height="24" rx="5" class="button-secondary"/>
+    <text x="1278" y="247" text-anchor="middle" class="text" font-size="13" font-weight="700">↶</text>
+    <rect x="1298" y="230" width="24" height="24" rx="5" class="button-quiet"/>
+    <text x="1310" y="247" text-anchor="middle" class="muted" font-size="13" font-weight="700">↷</text>
+  </g>
+  <text x="1110" y="282" class="text" font-size="15" font-weight="700">수순 목록</text>
+  <text x="1216" y="282" class="muted" font-size="12">SAN</text>
+  <line x1="1110" y1="300" x2="1326" y2="300" class="line"/>
+  <text x="1122" y="324" class="muted" font-size="11">#</text>
+  <text x="1164" y="324" class="muted" font-size="11">백</text>
+  <text x="1248" y="324" class="muted" font-size="11">흑</text>
+  <line x1="1230" y1="334" x2="1230" y2="414" class="line"/>
+  <rect x="1110" y="342" width="216" height="38" rx="6" fill="#ffffff" stroke="#dbe1e8"/>
+  <text x="1124" y="366" class="text" font-size="13" font-weight="700">1.</text>
+  <text x="1164" y="366" class="text" font-size="13" font-weight="700">e4</text>
+  <rect x="1238" y="348" width="76" height="26" rx="5" class="move-cell-active"/>
+  <text x="1248" y="366" class="text" font-size="13" font-weight="700">Nf6</text>
+  <rect x="1110" y="394" width="216" height="46" rx="7" fill="#ffffff" stroke="#e2e7ee" stroke-dasharray="4 4"/>
+  <text x="1218" y="422" text-anchor="middle" class="muted" font-size="12">다음 착수 전까지 추가 행 숨김</text>
+  <line x1="1328" y1="342" x2="1328" y2="488" stroke="#d5dce5" stroke-width="4" stroke-linecap="round"/>
+  <line x1="1328" y1="342" x2="1328" y2="384" stroke="#9ca8b6" stroke-width="4" stroke-linecap="round"/>
+  <text x="1110" y="482" class="muted" font-size="11">첫 착수 전에는 목록 숨김/축약 안내만 표시</text>
+  <text x="1110" y="502" class="muted" font-size="11">↶/↷는 작은 보조 액션, 마지막 착수 셀만 강조</text>
+  <rect x="1110" y="518" width="216" height="18" rx="9" class="badge"/>
+  <text x="1122" y="531" class="muted" font-size="11">다음 입력은 하단 SAN 탭에서 처리</text>
+
+  <rect x="1090" y="580" width="256" height="282" rx="8" class="subpanel"/>
+  <rect x="1110" y="598" width="190" height="22" rx="11" class="badge-ok"/>
+  <text x="1122" y="613" class="text" font-size="11" font-weight="700">FEATURE-003 메타데이터 확장</text>
+
+  <g aria-label="메타데이터 탭">
+    <rect x="1110" y="634" width="44" height="28" rx="7" fill="#2f5f73"/>
+    <text x="1121" y="653" fill="#ffffff" font-family="Arial, 'Noto Sans KR', sans-serif" font-size="12" font-weight="700">SAN</text>
+    <rect x="1158" y="634" width="62" height="28" rx="7" fill="#ffffff" stroke="#bcc7d4"/>
+    <text x="1172" y="653" class="muted" font-size="12" font-weight="700">코멘트</text>
+    <rect x="1224" y="634" width="48" height="28" rx="7" fill="#ffffff" stroke="#bcc7d4"/>
+    <text x="1236" y="653" class="muted" font-size="12" font-weight="700">평가</text>
+    <rect x="1276" y="634" width="58" height="28" rx="7" fill="#ffffff" stroke="#bcc7d4"/>
+    <text x="1283" y="653" class="muted" font-size="11" font-weight="700">기보 정보</text>
+  </g>
+
+  <text x="1110" y="690" class="text" font-size="15" font-weight="700">SAN</text>
+  <text x="1150" y="690" class="muted" font-size="12">Enter로 적용 가능</text>
+  <rect x="1110" y="708" width="154" height="36" rx="7" class="field-focus"/>
+  <text x="1124" y="731" class="muted" font-size="13">예: Bxe6</text>
+  <rect x="1274" y="708" width="52" height="36" rx="7" class="button-primary"/>
+  <text x="1287" y="731" fill="#ffffff" font-family="Arial, 'Noto Sans KR', sans-serif" font-size="13" font-weight="700">적용</text>
+  <rect x="1110" y="758" width="216" height="26" rx="13" class="badge"/>
+  <text x="1122" y="775" class="muted" font-size="11">최근 SAN: 12. Bxe6!!</text>
+  <text x="1110" y="806" class="muted" font-size="11">입력 성공 시 수순 목록 마지막 셀 갱신</text>
+  <text x="1110" y="824" class="muted" font-size="11">잘못된 SAN은 입력칸 아래 오류로 표시</text>
+
+  <g aria-label="숨겨진 탭 내용 단서">
+    <line x1="1110" y1="838" x2="1326" y2="838" class="line"/>
+    <text x="1110" y="849" class="muted" font-size="10">숨김: 코멘트 메모, 평가 !/!!/?/!?, 기보 정보 날짜/결과</text>
+  </g>
+
+  <!-- 설계 메모 -->
+  <rect x="160" y="904" width="1212" height="22" rx="5" fill="#eef2f6"/>
+  <text x="176" y="919" class="muted" font-size="11">구현 후보 메모: FEATURE-002와 동일한 전역 사이드바 88px, 상단 바 64px, 보드 640px, 우측 패널 308px. 우측 패널은 MoveListPanel과 MetadataTabs로 구성하고 SAN 입력은 별도 섹션이 아니라 SAN 활성 탭 내용으로 포함. 색상 토큰 #2f5f73, #f8fafc, #d4dae2, #17202a를 공유.</text>
+</svg>

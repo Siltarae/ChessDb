@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">FEATURE-005 빈 기보 목록 상태 중간 충실도 목업</title>
+  <desc id="desc">좌측 전역 사이드바에서 기보가 활성화된 상태에서, 현재 저장소에 정식 저장된 기보가 하나도 없을 때 표시되는 빈 목록 화면을 표현한 UI 스케치다. 메인 목록 영역에는 빈 상태 메시지, 새 기보 작성 액션, 분석 보드로 돌아가기 액션, 빈 저장소에서 새 기보 입력을 자연스럽게 시작할 수 있는 단서를 함께 배치한다.</desc>
+
+  <defs>
+    <style>
+      .bg { fill: #f5f7f8; }
+      .frame { fill: #ffffff; stroke: #cfd6df; stroke-width: 1.2; }
+      .topbar { fill: #fbfcfd; stroke: #e0e5eb; stroke-width: 1; }
+      .sidebar { fill: #1f2a30; }
+      .sidebar-active { fill: #2f5f73; }
+      .surface { fill: #ffffff; stroke: #d7dde5; stroke-width: 1; }
+      .panel { fill: #f9fafb; stroke: #d7dde5; stroke-width: 1; }
+      .muted-fill { fill: #eef2f6; }
+      .readonly { fill: #f1f4f7; stroke: #cfd7e2; stroke-width: 1; }
+      .accent { fill: #2f5f73; }
+      .accent-soft { fill: #e9f2f5; stroke: #b8ccd5; stroke-width: 1; }
+      .warning { fill: #fff8df; stroke: #e2b94b; stroke-width: 1; }
+      .text { fill: #182026; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .muted { fill: #667085; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .inverse { fill: #ffffff; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .small { font-size: 12px; }
+      .label { font-size: 13px; font-weight: 700; }
+      .body { font-size: 14px; }
+      .title { font-size: 20px; font-weight: 700; }
+      .section-title { font-size: 16px; font-weight: 700; }
+      .mono { font-family: 'Courier New', monospace; }
+      .light-square { fill: #eef0df; }
+      .dark-square { fill: #8ca07c; }
+      .piece-light { fill: #fbfbfb; stroke: #20242a; stroke-width: 1.1; }
+      .piece-dark { fill: #20242a; stroke: #20242a; stroke-width: 1.1; }
+      .piece-label-light { fill: #20242a; font-family: Georgia, serif; font-weight: 700; }
+      .piece-label-dark { fill: #ffffff; font-family: Georgia, serif; font-weight: 700; }
+      .arrow { fill: none; stroke: #93a3b5; stroke-width: 2; marker-end: url(#arrow-head); }
+    </style>
+    <filter id="shadow" x="-8%" y="-8%" width="116%" height="116%">
+      <feDropShadow dx="0" dy="8" stdDeviation="14" flood-color="#101820" flood-opacity="0.10"/>
+    </filter>
+    <marker id="arrow-head" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L8,4.5 L0,9 Z" fill="#93a3b5"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="900" class="bg"/>
+  <text x="56" y="52" class="text title">FEATURE-005 빈 기보 목록 상태</text>
+  <text x="56" y="80" class="muted body">정식 저장된 기보가 없는 저장소에서 목록 화면이 막다른 길처럼 보이지 않도록, 새 입력과 분석 보드 복귀를 같은 정보 계층 안에 둔다.</text>
+
+  <g id="empty-game-list-view" transform="translate(56 118)">
+    <text x="0" y="-22" class="text section-title">전역 사이드바에서 기보 선택 후: 저장된 기보 없음</text>
+    <rect x="0" y="0" width="1488" height="640" rx="10" class="frame" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="152" height="640" rx="10" class="sidebar"/>
+    <rect x="0" y="0" width="152" height="640" rx="10" fill="#1f2a30"/>
+    <rect x="152" y="0" width="1336" height="56" class="topbar"/>
+
+    <text x="28" y="38" class="inverse" font-size="17" font-weight="700">ChessDb</text>
+    <rect x="18" y="86" width="116" height="38" rx="7" fill="#26343c"/>
+    <text x="48" y="110" class="inverse small">새 기보</text>
+    <rect x="18" y="138" width="116" height="38" rx="7" class="sidebar-active"/>
+    <text x="45" y="162" class="inverse small" font-weight="700">기보</text>
+    <rect x="18" y="190" width="116" height="38" rx="7" fill="#26343c"/>
+    <text x="45" y="214" class="inverse small">분석</text>
+
+    <text x="184" y="36" class="text title">기보 목록</text>
+    <text x="302" y="36" class="muted body">정식 저장된 기보 0개</text>
+    <rect x="1246" y="14" width="106" height="30" rx="6" fill="#ffffff" stroke="#c4ccd6"/>
+    <text x="1272" y="34" class="muted small" font-weight="700">날짜순</text>
+    <rect x="1364" y="14" width="92" height="30" rx="6" fill="#ffffff" stroke="#c4ccd6"/>
+    <text x="1388" y="34" class="muted small" font-weight="700">새로고침</text>
+
+    <rect x="184" y="88" width="1268" height="500" rx="8" class="surface"/>
+    <text x="212" y="124" class="muted label">저장일</text>
+    <text x="358" y="124" class="muted label">결과</text>
+    <text x="472" y="124" class="muted label">종료 사유</text>
+    <text x="648" y="124" class="muted label">짧은 수순 요약</text>
+    <text x="1326" y="124" class="muted label">상태</text>
+    <line x1="204" y1="140" x2="1432" y2="140" stroke="#e1e6ed"/>
+
+    <g id="empty-state" transform="translate(430 176)">
+      <rect x="0" y="0" width="776" height="316" rx="10" class="panel"/>
+
+      <g transform="translate(70 52)">
+        <rect x="0" y="0" width="132" height="132" rx="8" fill="#ffffff" stroke="#c8ccd2" stroke-width="1.5"/>
+        <g>
+          <rect x="14" y="14" width="26" height="26" class="light-square"/>
+          <rect x="40" y="14" width="26" height="26" class="dark-square"/>
+          <rect x="66" y="14" width="26" height="26" class="light-square"/>
+          <rect x="92" y="14" width="26" height="26" class="dark-square"/>
+          <rect x="14" y="40" width="26" height="26" class="dark-square"/>
+          <rect x="40" y="40" width="26" height="26" class="light-square"/>
+          <rect x="66" y="40" width="26" height="26" class="dark-square"/>
+          <rect x="92" y="40" width="26" height="26" class="light-square"/>
+          <rect x="14" y="66" width="26" height="26" class="light-square"/>
+          <rect x="40" y="66" width="26" height="26" class="dark-square"/>
+          <rect x="66" y="66" width="26" height="26" class="light-square"/>
+          <rect x="92" y="66" width="26" height="26" class="dark-square"/>
+          <rect x="14" y="92" width="26" height="26" class="dark-square"/>
+          <rect x="40" y="92" width="26" height="26" class="light-square"/>
+          <rect x="66" y="92" width="26" height="26" class="dark-square"/>
+          <rect x="92" y="92" width="26" height="26" class="light-square"/>
+        </g>
+        <g font-size="15" text-anchor="middle" dominant-baseline="middle">
+          <circle cx="53" cy="27" r="10" class="piece-dark"/>
+          <text x="53" y="28" class="piece-label-dark">K</text>
+          <circle cx="79" cy="105" r="10" class="piece-light"/>
+          <text x="79" y="106" class="piece-label-light">K</text>
+        </g>
+        <path d="M152 70 C184 70 198 70 226 70" class="arrow"/>
+      </g>
+
+      <text x="330" y="76" class="text title">아직 저장된 기보가 없습니다</text>
+      <text x="330" y="106" class="muted body">분석 보드에서 수순을 입력한 뒤 정식 저장하면 이 목록에 날짜순으로 나타납니다.</text>
+      <text x="330" y="132" class="muted body">첫 기보를 바로 작성하거나, 현재 분석 보드로 돌아가 진행 중인 수순을 이어갈 수 있습니다.</text>
+
+      <rect x="330" y="168" width="142" height="40" rx="7" class="accent"/>
+      <text x="362" y="193" class="inverse body" font-weight="700">새 기보 작성</text>
+      <rect x="488" y="168" width="176" height="40" rx="7" fill="#ffffff" stroke="#c4ccd6"/>
+      <text x="522" y="193" class="text body" font-weight="700">분석 보드로 돌아가기</text>
+
+      <rect x="330" y="232" width="390" height="58" rx="7" class="accent-soft"/>
+      <text x="350" y="259" class="text small" font-weight="700">입력 단서</text>
+      <text x="426" y="252" class="muted small">첫 수를 두면 임시 기보가 시작됩니다.</text>
+      <text x="426" y="272" class="muted small">정식 저장 전까지는 목록에 표시되지 않습니다.</text>
+    </g>
+
+    <g id="empty-list-footnote" transform="translate(204 532)">
+      <rect x="0" y="0" width="1228" height="34" rx="6" class="readonly"/>
+      <text x="16" y="22" class="muted small">빈 목록 기준: 임시 분석, 저장하지 않은 초안, 삭제된 기보는 정식 저장 목록 개수에 포함하지 않는다.</text>
+    </g>
+  </g>
+
+  <!-- 설계 메모 -->
+  <g id="design-notes" transform="translate(56 804)">
+    <rect x="0" y="-26" width="1488" height="54" rx="8" fill="#ffffff" stroke="#d7dde5"/>
+    <text x="18" y="-3" class="muted small">구현 후보 메모: FEATURE-005-game-list-detail.svg의 전역 사이드바 152px, 메인 여백 32px 전후, 흰 표면·회색 경계·저채도 청록 강조를 유지한다.</text>
+    <text x="18" y="17" class="muted small">빈 상태는 표 헤더 아래 중앙 패널로 배치하고, 기본 액션은 새 기보 작성, 보조 액션은 분석 보드 복귀로 둔다. 빈 저장소 입력 단서는 작은 정보 박스로만 노출한다.</text>
+  </g>
+</svg>
