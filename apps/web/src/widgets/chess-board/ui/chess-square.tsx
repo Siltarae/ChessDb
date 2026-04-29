@@ -6,10 +6,29 @@ type ChessSquareProps = {
   label: string;
   tone: 'light' | 'dark';
   piece: Piece | null;
+  isLegalMoveHighlighted: boolean;
+  isSelected: boolean;
+  onClick: () => void;
 };
 
-export const ChessSquare = ({ square, label, tone, piece }: ChessSquareProps): React.ReactNode => {
+export const ChessSquare = ({
+  square,
+  label,
+  tone,
+  piece,
+  isLegalMoveHighlighted,
+  isSelected,
+  onClick,
+}: ChessSquareProps): React.ReactNode => {
   const squareToneClass = tone === 'dark' ? 'bg-[#8ca07c]' : 'bg-[#eef0df]';
+  const selectedClass = isSelected ? 'bg-square-selected' : '';
+  const hasPiece = piece !== null;
+
+  const legalMoveClass = isLegalMoveHighlighted
+    ? hasPiece
+      ? 'bg-square-capture'
+      : 'bg-square-legal'
+    : '';
 
   return (
     <div
@@ -17,9 +36,10 @@ export const ChessSquare = ({ square, label, tone, piece }: ChessSquareProps): R
       data-square={label}
       data-tone={tone}
       aria-label={label}
-      className={`flex aspect-square items-center justify-center ${squareToneClass}`}
+      className={`relative flex aspect-square items-center justify-center ${squareToneClass} ${selectedClass} ${legalMoveClass}`}
+      onClick={onClick}
     >
-      {piece ? <ChessPiece piece={piece} /> : null}
+      {hasPiece ? <ChessPiece piece={piece} /> : null}
     </div>
   );
 };

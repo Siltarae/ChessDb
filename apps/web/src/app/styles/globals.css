@@ -50,6 +50,14 @@ body {
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --color-square-selected: rgba(56, 189, 248, 0.45);
+  --background-image-square-legal: radial-gradient(rgba(37, 99, 235, 0.54) 19%, transparent 20%);
+  --background-image-square-capture: radial-gradient(
+    transparent 0%,
+    transparent 79%,
+    rgba(37, 99, 235, 0.54) 80%,
+    rgba(37, 99, 235, 0.54) 100%
+  );
 }
 
 :root {
