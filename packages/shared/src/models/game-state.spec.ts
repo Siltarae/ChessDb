@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import type { Piece, Square } from './game-state.js';
 import {
   CASTLE,
   COLOR,
@@ -7,7 +8,6 @@ import {
   PIECE_TYPE,
   SQUARE,
 } from './game-state.js';
-import type { Piece, Square } from './game-state.js';
 
 // [1] Mock 데이터 및 Fixture 분리
 const VALID_INITIAL_STATE = {
