@@ -30,8 +30,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Lint, Build, and Test
-        run: pnpm turbo run lint build test
+      - name: Format, Lint, Build, and Test
+        run: pnpm turbo run format:check lint build test
 
       - name: Enforce Shared Coverage Thresholds
         run: pnpm --filter @chess-db/shared test:coverage
+
+      - name: Enforce Web Coverage Thresholds
+        run: pnpm --filter @chess-db/web test:coverage

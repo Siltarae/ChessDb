@@ -1,4 +1,4 @@
-import { createInitialGameState } from '@chess-db/shared';
+import { COLOR, PIECE_TYPE, createInitialGameState } from '@chess-db/shared';
 import { cleanup, render } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 
@@ -7,6 +7,7 @@ import blackQueen from '../assets/pieces/black-queen.svg';
 import whiteKing from '../assets/pieces/white-king.svg';
 import whiteRook from '../assets/pieces/white-rook.svg';
 import { ChessBoard } from './chess-board';
+import { ChessPiece } from './chess-piece';
 
 afterEach(() => {
   cleanup();
@@ -54,22 +55,26 @@ describe('ChessBoard', () => {
     it('주요 시작 위치에 맞는 SVG 기물을 표시해야 한다', () => {
       const { container } = render(<ChessBoard boardState={createInitialGameState().board} />);
 
-      expect(getSquare(container, 'a1').querySelector('img')).toHaveAttribute(
-        'src',
-        whiteRook,
+      expect(getSquare(container, 'a1').querySelector('img')).toHaveAttribute('src', whiteRook);
+      expect(getSquare(container, 'e1').querySelector('img')).toHaveAttribute('src', whiteKing);
+      expect(getSquare(container, 'd8').querySelector('img')).toHaveAttribute('src', blackQueen);
+      expect(getSquare(container, 'e8').querySelector('img')).toHaveAttribute('src', blackKing);
+    });
+  });
+
+  describe('기물 컴포넌트를 렌더링할 때', () => {
+    it('기물이 없는 칸은 이미지를 렌더링하지 않아야 한다', () => {
+      const { container } = render(<ChessPiece piece={null} />);
+
+      expect(container.querySelector('img')).not.toBeInTheDocument();
+    });
+
+    it('표시 asset이 없는 기물은 이미지를 렌더링하지 않아야 한다', () => {
+      const { container } = render(
+        <ChessPiece piece={{ type: PIECE_TYPE.NONE, color: COLOR.WHITE }} />,
       );
-      expect(getSquare(container, 'e1').querySelector('img')).toHaveAttribute(
-        'src',
-        whiteKing,
-      );
-      expect(getSquare(container, 'd8').querySelector('img')).toHaveAttribute(
-        'src',
-        blackQueen,
-      );
-      expect(getSquare(container, 'e8').querySelector('img')).toHaveAttribute(
-        'src',
-        blackKing,
-      );
+
+      expect(container.querySelector('img')).not.toBeInTheDocument();
     });
   });
 });
