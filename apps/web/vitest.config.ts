@@ -12,6 +12,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   test: {
     environment: 'jsdom',
+    exclude: ['e2e/**', 'node_modules/**', 'dist/**'],
     passWithNoTests: true,
     setupFiles: ['./src/setup-tests.ts'],
     coverage: {
