@@ -4,4 +4,7 @@ build
 .turbo
 .next
 coverage
+playwright-report
+test-results
+blob-report
 pnpm-lock.yaml
