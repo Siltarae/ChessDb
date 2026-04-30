@@ -1,8 +1,8 @@
 # 📋 개별 작업 지침서: 합법 수 착수와 보드 갱신 (TASK-016)
 
-**작업 상태**: 대기 중
+**작업 상태**: 완료
 **선행 작업**: `[TASK-003]` (현재 턴 상태 계약), `[TASK-015]` (하이라이트), `[TASK-060]` (수 실행 엔진)
-**후속 작업**: `[TASK-017]` (수순 기록)
+**후속 작업**: `[TASK-099]` (Playwright E2E 환경 구성), `[TASK-100]` (기보 입력 핵심 흐름 E2E 스모크 테스트), `[TASK-017]` (수순 기록)
 **연관 설계**: `[../architecture/patterns.md]`
 **UI 기준안**: `[../ui/FEATURE-002-board-interaction.svg]`
 
@@ -10,7 +10,7 @@
 
 ## 0. 현재 코드 상태와 이 작업의 위치
 
-- **현재 상태 요약**: 기물을 선택하고 갈 수 있는 곳을 볼 수는 있으나, 실제로 말을 옮겨 게임을 진행할 수는 없습니다.
+- **현재 상태 요약**: 합법 수 착수, 보드 갱신, 턴 전환, 선택 상태 정리, 마지막 수 표시가 구현되어 `apps/web` 검증을 통과한 상태입니다.
 - **이 작업의 책임**: 하이라이트된 합법 수 칸을 클릭했을 때 실제로 상태를 전이시키고 보드를 갱신합니다.
 
 - **이번 작업에서 하지 않는 것**: `[TASK-017]` (수순 기록)에 연결된 후속 책임과 E2E 환경/브라우저 스모크 검증은 이번 태스크에서 함께 닫지 않는다.
@@ -55,7 +55,7 @@
 
 - **인터랙션 로직**:
   - `selectedSquare`가 있는 상태에서 '합법 수'로 표시된 `targetSquare` 클릭.
-  - `executeMove(currentGameState, { from: selectedSquare, to: targetSquare })` 호출.
+  - `getLegalMoves(selectedSquare, gameState)`에서 `move.to === targetSquare`인 `Move` 전체를 찾아 `executeMove(currentGameState, move)` 호출.
   - 반환된 새로운 `GameState`로 Zustand 스토어 업데이트.
   - `selectedSquare`를 `null`로 초기화하여 선택 해제.
 - **핵심 조립/흐름 규칙**:
@@ -157,9 +157,24 @@ makeMove(toSquare);
 
 ## ✅ 7. 완료 판정 체크리스트
 
-- [ ] 기물이 시작점에서 목표점으로 정확히 이동한다.
-- [ ] 착수 완료 후 즉시 반대편 색상의 턴으로 전환된다.
-- [ ] 캡처 상황 시 상대 기물이 보드에서 사라지고 내 기물이 그 자리를 차지한다.
+- [x] 기물이 시작점에서 목표점으로 정확히 이동한다.
+- [x] 착수 완료 후 즉시 반대편 색상의 턴으로 전환된다.
+- [x] 캡처 상황 시 상대 기물이 보드에서 사라지고 내 기물이 그 자리를 차지한다.
+- [x] 착수 완료 후 선택 상태와 합법 수 하이라이트가 정리된다.
+- [x] 마지막 착수의 출발/도착 칸이 보드에서 구분되어 표시된다.
+- [x] `TASK-017`, `TASK-099`, `TASK-100` 범위는 이번 완료 판정에 섞지 않았다.
+
+## ✅ 8. 완료 판정 기록
+
+- **판정일**: 2026-04-30
+- **구현 커밋**: `9d6f2f4 feat: 클릭 기반 기물 이동 및 게임 상태 업데이트 구현`
+- **검증 결과**:
+  - `pnpm --filter @chess-db/web test` 통과
+  - `pnpm --filter @chess-db/web test:coverage` 통과
+  - `pnpm --filter @chess-db/web lint` 통과
+  - `pnpm --filter @chess-db/web format:check` 통과
+  - `pnpm --filter @chess-db/web build` 통과
+- **범위 확인**: E2E 환경과 브라우저 스모크 검증은 `TASK-099`, `TASK-100`에서 별도 완료 판정한다.
 
 ## 💬 9. 추천 커밋 메시지
 
