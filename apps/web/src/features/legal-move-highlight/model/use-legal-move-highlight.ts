@@ -34,6 +34,7 @@ export const useLegalMoveHighlight = (gameState: GameState) => {
     selectedSquare,
     highlightSquares,
     selectSquare,
+    clearSelection,
   };
 };
 

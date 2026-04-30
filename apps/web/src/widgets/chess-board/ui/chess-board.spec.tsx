@@ -32,6 +32,7 @@ const renderChessBoard = (props: Partial<React.ComponentProps<typeof ChessBoard>
       highlightSquares={props.highlightSquares ?? []}
       selectedSquare={props.selectedSquare ?? null}
       onSquareClick={props.onSquareClick ?? (() => {})}
+      lastMove={props.lastMove ?? null}
     />,
   );
 };
@@ -103,6 +104,16 @@ describe('ChessBoard', () => {
       fireEvent.click(getSquare(container, 'g1'));
 
       expect(onSquareClick).toHaveBeenCalledWith(SQUARE.G1);
+    });
+
+    it('마지막 착수의 출발 칸과 도착 칸에 last move class를 적용해야 한다', () => {
+      const { container } = renderChessBoard({
+        lastMove: { from: SQUARE.E2, to: SQUARE.E4 },
+      });
+
+      expect(getSquare(container, 'e2')).toHaveClass('bg-square-last-move');
+      expect(getSquare(container, 'e4')).toHaveClass('bg-square-last-move');
+      expect(getSquare(container, 'e3')).not.toHaveClass('bg-square-last-move');
     });
   });
 

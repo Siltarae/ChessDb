@@ -51,6 +51,7 @@ body {
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
   --color-square-selected: rgba(56, 189, 248, 0.45);
+  --color-square-last-move: rgba(245, 197, 66, 0.46);
   --background-image-square-legal: radial-gradient(rgba(37, 99, 235, 0.54) 19%, transparent 20%);
   --background-image-square-capture: radial-gradient(
     transparent 0%,
