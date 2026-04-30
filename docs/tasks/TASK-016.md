@@ -92,7 +92,7 @@
 
 ```ts
 const { makeMove } = useMakeMove();
-makeMove(fromSquare, toSquare);
+makeMove(toSquare);
 ```
 
 - **필수 describe/it 목록**:
@@ -146,8 +146,12 @@ makeMove(fromSquare, toSquare);
 3. **핵심 구현**: 합법 수 착수와 보드 갱신 범위의 핵심 로직, 화면, 타입, 문서 또는 테스트를 작성한다.
 4. **연동**: 공개 export, 소비 코드, 테스트 연결, 후속 태스크가 기대하는 연결점을 맞춘다.
 5. **검증 실행**:
-   - `pnpm --filter @chess-db/web build`
    - `pnpm --filter @chess-db/web test`
+   - `pnpm --filter @chess-db/web test:coverage`
+   - `pnpm --filter @chess-db/web lint`
+   - `pnpm --filter @chess-db/web format:check`
+   - `pnpm --filter @chess-db/web build`
+   - 포맷 검증이 실패하면 `pnpm --filter @chess-db/web format`을 실행한 뒤 다시 `format:check`를 확인한다.
 6. **자가 점검**: 범위 침범, 수정 금지 파일 변경, 링크 경로, 후속 태스크와의 책임 충돌 여부를 점검한다.
 
 ## ✅ 7. 완료 판정 체크리스트
