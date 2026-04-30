@@ -35,6 +35,9 @@
 - [TASK-003 현재 턴 초기화와 전환 규칙](../tasks/TASK-003.md)
 - [TASK-015 선택 기물 합법 수 하이라이트](../tasks/TASK-015.md)
 - [TASK-016 합법 수 착수와 보드 갱신](../tasks/TASK-016.md)
+- [TASK-096 프로모션 기물 선택 UI](../tasks/TASK-096.md)
+- [TASK-098 체크 상태 표시](../tasks/TASK-098.md)
+- [TASK-097 착수 후 게임 종료 상태 감지 및 표시](../tasks/TASK-097.md)
 - [TASK-062 기물 이동의 SAN(Standard Algebraic Notation) 표기 변환 로직](../tasks/TASK-062.md)
 - [TASK-017 수순 목록 기록](../tasks/TASK-017.md)
 - [TASK-018 되돌리기](../tasks/TASK-018.md)
@@ -44,3 +47,4 @@
 
 - 체스 도메인 로직(FEATURE-001)을 바탕으로 UI 렌더링 및 사용자 이벤트 처리에 집중한다.
 - 보드 기준 크기는 데스크탑에서 640px 정사각형을 우선 기준으로 삼되, 반응형 축소 시 정사각형 비율을 유지한다.
+- 프로모션 선택, 체크 상태, 게임 종료 상태처럼 화면 상태가 필요한 Task는 구현 전에 `docs/ui/TASK-xxx-*.svg` 스케치를 먼저 작성하고 합의한다.

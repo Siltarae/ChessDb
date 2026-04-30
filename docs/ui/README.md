@@ -38,6 +38,9 @@
 | `FEATURE-006-analysis-statistics.svg`     | 채택 | `FEATURE-006` 분석 보드와 저장소 통계 조회 기준안. `FEATURE-003/005` 앱 프레임과 640px 보드 구조를 유지하고, 우측에 분석 수순 목록, 스크롤 가능한 다음 수 후보, 관련 기보 링크를 배치한다. |
 | `TASK-001-board-centered.svg`             | 채택 | `TASK-001` 기보 입력 화면 shell의 기준안. 보드 중심 2열 레이아웃과 모바일 스택 구조를 확인하기 위한 목업이다.                                                                              |
 | `TASK-002-standard-start-board.svg`       | 채택 | `TASK-002` 표준 시작 포지션 보드 표시 목업. 8x8 보드, 시작 기물 배치, Wikimedia Commons SVG asset 사용 방향을 확인하기 위한 기준안이다.                                                    |
+| `TASK-096-promotion-piece-selection.svg`  | 예정 | `TASK-096` 프로모션 기물 선택 UI 기준안. 승격 후보 4개, 선택 전 보류 상태, 선택 후 착수 확정 흐름을 검토한다.                                                                              |
+| `TASK-097-game-end-status.svg`            | 예정 | `TASK-097` 착수 후 게임 종료 상태 표시 기준안. 종료 배너/패널, 보드 입력 비활성 상태, 되돌리기 후 상태 갱신 흐름을 검토한다.                                                               |
+| `TASK-098-check-status.svg`               | 예정 | `TASK-098` 체크 상태 표시 기준안. 체크받은 왕 칸 강조, 상태 배지, 마지막 착수 하이라이트와의 우선순위를 검토한다.                                                                          |
 
 ## SVG 작성 기준
 
