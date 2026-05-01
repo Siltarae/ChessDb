@@ -4,6 +4,7 @@ import {
   selectGameState,
   useGameStore,
 } from '@/entities/game/model/game-store';
+import { useCheckStatus } from '@/features/check-status/model/use-check-status';
 import { useLegalMoveHighlight } from '@/features/legal-move-highlight/model/use-legal-move-highlight';
 import { useMakeMove } from '@/features/make-move/model/use-make-move';
 import { PromotionPieceSelector } from '@/features/promotion-selection/ui/promotion-piece-selector';
@@ -28,6 +29,8 @@ export const BoardShell = () => {
       highlightSquares,
       clearSelection,
     });
+
+  const { checkedKingSquare } = useCheckStatus(gameState);
 
   const promotionCandidates =
     pendingPromotionMove?.candidates.flatMap((move) =>
@@ -106,6 +109,7 @@ export const BoardShell = () => {
         selectedSquare={selectedSquare}
         onSquareClick={handleSquareClick}
         lastMove={lastMove}
+        checkedKingSquare={checkedKingSquare}
       />
     </section>
   );

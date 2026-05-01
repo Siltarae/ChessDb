@@ -9,6 +9,7 @@ type ChessBoardProps = {
   selectedSquare: Square | null;
   onSquareClick: (square: Square) => void;
   lastMove: LastMove | null;
+  checkedKingSquare: Square | null;
 };
 
 export const ChessBoard = ({
@@ -17,6 +18,7 @@ export const ChessBoard = ({
   selectedSquare,
   onSquareClick,
   lastMove,
+  checkedKingSquare,
 }: ChessBoardProps): React.ReactNode => {
   return (
     <div className="grid aspect-square  w-full  grid-cols-8">
@@ -28,6 +30,7 @@ export const ChessBoard = ({
         const isLegalMoveHighlighted = highlightSquares.includes(displaySquare);
         const isSelected = selectedSquare === displaySquare;
         const isLastMove = lastMove?.from === displaySquare || lastMove?.to === displaySquare;
+        const isCheckedKingSquare = checkedKingSquare === displaySquare;
 
         return (
           <ChessSquare
@@ -39,6 +42,7 @@ export const ChessBoard = ({
             isLegalMoveHighlighted={isLegalMoveHighlighted}
             isSelected={isSelected}
             isLastMove={isLastMove}
+            isCheckedKingSquare={isCheckedKingSquare}
             onClick={() => onSquareClick(displaySquare)}
           />
         );

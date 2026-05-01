@@ -33,6 +33,7 @@ const renderChessBoard = (props: Partial<React.ComponentProps<typeof ChessBoard>
       selectedSquare={props.selectedSquare ?? null}
       onSquareClick={props.onSquareClick ?? (() => {})}
       lastMove={props.lastMove ?? null}
+      checkedKingSquare={props.checkedKingSquare ?? null}
     />,
   );
 };
@@ -114,6 +115,23 @@ describe('ChessBoard', () => {
       expect(getSquare(container, 'e2')).toHaveClass('bg-square-last-move');
       expect(getSquare(container, 'e4')).toHaveClass('bg-square-last-move');
       expect(getSquare(container, 'e3')).not.toHaveClass('bg-square-last-move');
+    });
+
+    it('체크받은 왕 칸에 checked king class를 적용해야 한다', () => {
+      const { container } = renderChessBoard({ checkedKingSquare: SQUARE.E1 });
+
+      expect(getSquare(container, 'e1')).toHaveClass('bg-square-checked-king');
+      expect(getSquare(container, 'e2')).not.toHaveClass('bg-square-checked-king');
+    });
+
+    it('체크받은 왕 칸 표시와 마지막 착수 표시가 같은 칸에서 공존해야 한다', () => {
+      const { container } = renderChessBoard({
+        checkedKingSquare: SQUARE.E1,
+        lastMove: { from: SQUARE.E8, to: SQUARE.E1 },
+      });
+
+      expect(getSquare(container, 'e1')).toHaveClass('bg-square-checked-king');
+      expect(getSquare(container, 'e1')).toHaveClass('bg-square-last-move');
     });
   });
 
