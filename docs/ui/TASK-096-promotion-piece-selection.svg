@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="860" viewBox="0 0 1280 860" role="img" aria-labelledby="title desc">
+  <title id="title">TASK-096 프로모션 기물 선택 UI 목업</title>
+  <desc id="desc">프로모션 착수 직후 보드 상태와 턴을 확정하지 않고, 프로모션 도착 칸 위에 퀸 후보 칸을 겹쳐 둔 세로 팝오버를 표시하는 중간 충실도 목업이다. 백 폰은 퀸 후보 칸부터 아래로 퀸, 나이트, 룩, 비숍 순서로 후보를 표시하고, 흑 폰은 반대 순서인 비숍, 룩, 나이트, 퀸 순서로 표시해 퀸 후보가 프로모션 도착 칸 위에 오도록 한다. 선택 전에는 보류 상태 배지를 표시하고 보드 입력 충돌을 막는다.</desc>
+
+  <defs>
+    <style>
+      .page { fill: #f4f6f8; }
+      .surface { fill: #ffffff; }
+      .panel { fill: #ffffff; stroke: #d4dae2; stroke-width: 1.2; }
+      .subpanel { fill: #f8fafc; stroke: #dbe1e8; stroke-width: 1; }
+      .line { stroke: #dbe1e8; stroke-width: 1; }
+      .text { fill: #15171a; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .muted { fill: #687381; font-family: Arial, 'Noto Sans KR', sans-serif; }
+      .small { fill: #687381; font-family: Arial, 'Noto Sans KR', sans-serif; font-size: 12px; }
+      .light-square { fill: #eef0df; }
+      .dark-square { fill: #8ca07c; }
+      .selected { fill: #7dd3fc; opacity: 0.48; }
+      .pending { fill: #f5c542; opacity: 0.58; }
+      .locked { fill: #0f172a; opacity: 0.10; }
+      .popover { fill: #ffffff; stroke: #2f5f73; stroke-width: 1.5; }
+      .popover-shadow { fill: #1f2937; opacity: 0.14; }
+      .choice { fill: #ffffff; stroke: #c4cdd7; stroke-width: 1; }
+      .choice-active { fill: #dff0ea; stroke: #2f5f73; stroke-width: 2; }
+      .choice-disabled { fill: #eef2f6; stroke: #d7dde5; stroke-width: 1; }
+      .badge { fill: #eef4f7; stroke: #c8d6df; stroke-width: 1; }
+      .warn { fill: #fff7e6; stroke: #f0c36a; stroke-width: 1; }
+      .piece-light { fill: #fbfbfb; stroke: #20242a; stroke-width: 1.3; }
+      .piece-dark { fill: #20242a; stroke: #20242a; stroke-width: 1.3; }
+      .piece-label-light { fill: #20242a; font-family: Georgia, serif; font-weight: 700; }
+      .piece-label-dark { fill: #ffffff; font-family: Georgia, serif; font-weight: 700; }
+      .arrow { fill: none; stroke: #2f5f73; stroke-width: 2; marker-end: url(#arrow-head); }
+    </style>
+    <filter id="soft-shadow" x="-16%" y="-16%" width="132%" height="132%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#1f2937" flood-opacity="0.16"/>
+    </filter>
+    <pattern id="board-pattern" width="112" height="112" patternUnits="userSpaceOnUse">
+      <rect width="112" height="112" class="light-square"/>
+      <rect x="56" y="0" width="56" height="56" class="dark-square"/>
+      <rect x="0" y="56" width="56" height="56" class="dark-square"/>
+    </pattern>
+    <marker id="arrow-head" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#2f5f73"/>
+    </marker>
+  </defs>
+
+  <rect width="1280" height="860" class="page"/>
+  <rect x="40" y="36" width="1200" height="788" rx="12" class="surface" filter="url(#soft-shadow)"/>
+
+  <text x="72" y="82" class="text" font-size="24" font-weight="700">TASK-096 프로모션 기물 선택 UI</text>
+  <text x="72" y="110" class="muted" font-size="14">프로모션 도착 칸 근처에 팝오버를 열고, 선택 전까지 착수를 보류한다.</text>
+
+  <rect x="72" y="138" width="782" height="626" rx="10" class="panel"/>
+  <text x="102" y="176" class="text" font-size="17" font-weight="700">기본 상태: 백 폰 a7-a8 프로모션 선택 대기</text>
+  <text x="102" y="200" class="muted" font-size="13">Q 후보 칸을 프로모션 도착 칸 위에 겹치고, 그 아래로 N, R, B를 세로 배치한다.</text>
+
+  <g transform="translate(142 236)">
+    <rect x="0" y="0" width="448" height="448" rx="6" fill="#ffffff" stroke="#b9c3cf" stroke-width="2"/>
+    <rect x="0" y="0" width="448" height="448" fill="url(#board-pattern)"/>
+
+    <rect x="0" y="0" width="56" height="56" class="pending"/>
+    <rect x="0" y="56" width="56" height="56" class="selected"/>
+    <rect x="0" y="0" width="448" height="448" class="locked"/>
+
+    <g class="muted" font-size="10">
+      <text x="8" y="18">8</text><text x="8" y="74">7</text><text x="8" y="130">6</text><text x="8" y="186">5</text>
+      <text x="8" y="242">4</text><text x="8" y="298">3</text><text x="8" y="354">2</text><text x="8" y="410">1</text>
+      <text x="26" y="436">a</text><text x="82" y="436">b</text><text x="138" y="436">c</text><text x="194" y="436">d</text>
+      <text x="250" y="436">e</text><text x="306" y="436">f</text><text x="362" y="436">g</text><text x="418" y="436">h</text>
+    </g>
+
+    <g font-size="22" text-anchor="middle" dominant-baseline="middle">
+      <circle cx="28" cy="84" r="18" class="piece-light"/><text x="28" y="86" class="piece-label-light">P</text>
+      <circle cx="252" cy="420" r="20" class="piece-light"/><text x="252" y="422" class="piece-label-light">K</text>
+      <circle cx="252" cy="28" r="20" class="piece-dark"/><text x="252" y="30" class="piece-label-dark">K</text>
+    </g>
+
+    <path d="M28 84 C28 62, 28 44, 28 28" class="arrow"/>
+
+    <g transform="translate(0 0)" filter="url(#soft-shadow)">
+      <rect x="2" y="4" width="64" height="222" rx="10" class="popover-shadow"/>
+      <rect x="-4" y="-4" width="64" height="222" rx="10" class="popover"/>
+
+      <g transform="translate(4 4)">
+        <rect x="0" y="0" width="48" height="42" rx="7" class="choice-active"/>
+        <text x="24" y="27" text-anchor="middle" class="text" font-size="23" font-family="Georgia" font-weight="700">Q</text>
+        <text x="64" y="26" class="text" font-size="12" font-weight="700">퀸부터 선택</text>
+      </g>
+      <g transform="translate(4 58)">
+        <rect x="0" y="0" width="48" height="42" rx="7" class="choice"/>
+        <text x="24" y="27" text-anchor="middle" class="text" font-size="23" font-family="Georgia" font-weight="700">N</text>
+      </g>
+      <g transform="translate(4 112)">
+        <rect x="0" y="0" width="48" height="42" rx="7" class="choice"/>
+        <text x="24" y="27" text-anchor="middle" class="text" font-size="23" font-family="Georgia" font-weight="700">R</text>
+      </g>
+      <g transform="translate(4 166)">
+        <rect x="0" y="0" width="48" height="42" rx="7" class="choice"/>
+        <text x="24" y="27" text-anchor="middle" class="text" font-size="23" font-family="Georgia" font-weight="700">B</text>
+      </g>
+    </g>
+  </g>
+
+  <g transform="translate(626 250)">
+    <rect x="0" y="0" width="188" height="212" rx="9" class="subpanel"/>
+    <text x="16" y="30" class="text" font-size="14" font-weight="700">상태 계약</text>
+    <rect x="16" y="48" width="118" height="28" rx="14" class="badge"/>
+    <text x="30" y="67" class="text" font-size="12" font-weight="700">선택 전 보류</text>
+    <text x="16" y="100" class="muted" font-size="12">현재 턴: 백 유지</text>
+    <text x="16" y="124" class="muted" font-size="12">a7 폰은 아직 이동 전</text>
+    <text x="16" y="148" class="muted" font-size="12">다른 보드 클릭 잠금</text>
+    <text x="16" y="172" class="muted" font-size="12">백 후보: Q, N, R, B</text>
+  </g>
+
+  <g transform="translate(626 486)">
+    <rect x="0" y="0" width="188" height="154" rx="9" class="warn"/>
+    <text x="16" y="30" class="text" font-size="14" font-weight="700">취소 정책</text>
+    <text x="16" y="58" class="muted" font-size="12">닫기 버튼 또는 보드 외부 클릭</text>
+    <text x="16" y="82" class="muted" font-size="12">원래 폰 재선택도 취소로 처리</text>
+    <text x="16" y="106" class="muted" font-size="12">취소 후 선택/하이라이트 정리</text>
+    <text x="16" y="130" class="muted" font-size="12">보드 상태와 턴은 그대로 유지</text>
+  </g>
+
+  <rect x="886" y="138" width="322" height="626" rx="10" class="panel"/>
+  <text x="916" y="176" class="text" font-size="17" font-weight="700">보조 상태: 흑 폰 h2-h1</text>
+  <text x="916" y="200" class="muted" font-size="13">흑은 반대 순서로 쌓아 Q 후보가 도착 칸 위에 오게 한다.</text>
+
+  <g transform="translate(936 236)">
+    <rect x="0" y="0" width="224" height="224" rx="6" fill="#ffffff" stroke="#b9c3cf" stroke-width="2"/>
+    <rect x="0" y="0" width="224" height="224" fill="url(#board-pattern)"/>
+    <rect x="196" y="196" width="28" height="28" class="pending"/>
+    <rect x="196" y="168" width="28" height="28" class="selected"/>
+    <rect x="0" y="0" width="224" height="224" class="locked"/>
+
+    <g font-size="14" text-anchor="middle" dominant-baseline="middle">
+      <circle cx="210" cy="182" r="11" class="piece-dark"/><text x="210" y="184" class="piece-label-dark">P</text>
+      <circle cx="126" cy="14" r="12" class="piece-dark"/><text x="126" y="16" class="piece-label-dark">K</text>
+      <circle cx="126" cy="210" r="12" class="piece-light"/><text x="126" y="212" class="piece-label-light">K</text>
+    </g>
+
+    <path d="M210 182 C210 194, 210 202, 210 210" class="arrow"/>
+
+    <g transform="translate(184 44)" filter="url(#soft-shadow)">
+      <rect x="0" y="0" width="52" height="202" rx="9" class="popover"/>
+      <rect x="2" y="8" width="48" height="42" rx="7" class="choice"/>
+      <text x="26" y="35" text-anchor="middle" class="text" font-size="23" font-family="Georgia" font-weight="700">B</text>
+      <rect x="2" y="56" width="48" height="42" rx="7" class="choice"/>
+      <text x="26" y="83" text-anchor="middle" class="text" font-size="23" font-family="Georgia" font-weight="700">R</text>
+      <rect x="2" y="104" width="48" height="42" rx="7" class="choice"/>
+      <text x="26" y="131" text-anchor="middle" class="text" font-size="23" font-family="Georgia" font-weight="700">N</text>
+      <rect x="2" y="152" width="48" height="42" rx="7" class="choice-active"/>
+      <text x="26" y="179" text-anchor="middle" class="text" font-size="23" font-family="Georgia" font-weight="700">Q</text>
+    </g>
+  </g>
+
+  <g transform="translate(916 510)">
+    <rect x="0" y="0" width="262" height="178" rx="9" class="subpanel"/>
+    <text x="18" y="30" class="text" font-size="14" font-weight="700">선택 후 확정 상태</text>
+    <text x="18" y="58" class="muted" font-size="12">1. 선택한 후보의 Move 전체를 실행</text>
+    <text x="18" y="82" class="muted" font-size="12">2. 도착 칸에 선택 기물 표시</text>
+    <text x="18" y="106" class="muted" font-size="12">3. 현재 턴 전환과 last move 표시</text>
+    <text x="18" y="130" class="muted" font-size="12">4. pendingPromotionMove 정리</text>
+    <text x="18" y="154" class="muted" font-size="12">5. SAN/수순 기록은 후속 Task에서 처리</text>
+  </g>
+
+  <line x1="72" y1="792" x2="1208" y2="792" class="line"/>
+  <text x="72" y="820" class="small">구현 메모: 팝오버 버튼 접근성 이름은 "퀸으로 승격", "룩으로 승격", "비숍으로 승격", "나이트로 승격"처럼 선택 결과가 드러나야 한다.</text>
+  <text x="72" y="842" class="small">범위 메모: 이 목업은 프로모션 선택 UI만 다룬다. SAN 표기, 수순 목록, 체크 상태, 게임 종료 표시는 후속 Task에서 결정한다.</text>
+</svg>
