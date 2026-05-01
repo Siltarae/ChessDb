@@ -15,7 +15,7 @@ module.exports = tseslint.config(
     },
     rules: {
       '@typescript-eslint/consistent-type-imports': 'error',
-      'no-console': 'warn',
+      'no-console': 'error',
       '@typescript-eslint/naming-convention': [
         'error',
         {

@@ -9,6 +9,7 @@ type ChessSquareProps = {
   isLegalMoveHighlighted: boolean;
   isSelected: boolean;
   isLastMove: boolean;
+  isCheckedKingSquare: boolean;
   onClick: () => void;
 };
 
@@ -20,6 +21,7 @@ export const ChessSquare = ({
   isLegalMoveHighlighted,
   isSelected,
   isLastMove,
+  isCheckedKingSquare,
   onClick,
 }: ChessSquareProps): React.ReactNode => {
   const squareToneClass = tone === 'dark' ? 'bg-[#8ca07c]' : 'bg-[#eef0df]';
@@ -33,6 +35,8 @@ export const ChessSquare = ({
       : 'bg-square-legal'
     : '';
 
+  const checkClass = isCheckedKingSquare ? 'bg-square-checked-king' : '';
+
   return (
     <div
       key={square}
@@ -41,10 +45,11 @@ export const ChessSquare = ({
       data-selected={isSelected}
       data-legal-move={isLegalMoveHighlighted}
       data-last-move={isLastMove}
+      data-checked={isCheckedKingSquare}
       aria-label={label}
       role="button"
       tabIndex={0}
-      className={`relative flex aspect-square items-center justify-center ${squareToneClass} ${selectedClass} ${legalMoveClass} ${lastMoveClass}`}
+      className={`relative flex aspect-square items-center justify-center ${squareToneClass} ${selectedClass} ${legalMoveClass} ${lastMoveClass} ${checkClass}`}
       onClick={onClick}
     >
       {hasPiece ? <ChessPiece piece={piece} /> : null}
