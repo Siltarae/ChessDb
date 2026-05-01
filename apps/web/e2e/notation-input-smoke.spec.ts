@@ -83,6 +83,64 @@ test.describe('기보 입력 핵심 흐름 E2E 스모크', () => {
     await expect(square(page, 'e6')).toHaveAttribute('data-legal-move', 'true');
     await expect(square(page, 'e5')).toHaveAttribute('data-legal-move', 'true');
   });
+
+  test('상대 기물이 있는 합법 수를 클릭하면 캡처하고 턴이 전환된다', async ({ page }) => {
+    await page.goto('/');
+
+    await move(page, 'e2', 'e4');
+    await move(page, 'd7', 'd5');
+
+    await square(page, 'e4').click();
+
+    await expect(square(page, 'd5')).toHaveAttribute('data-legal-move', 'true');
+
+    await square(page, 'd5').click();
+
+    await expect(pieceOn(square(page, 'e4'), 'white pawn')).toHaveCount(0);
+    await expect(pieceOn(square(page, 'd5'), 'black pawn')).toHaveCount(0);
+    await expect(pieceOn(square(page, 'd5'), 'white pawn')).toBeVisible();
+    await expect(square(page, 'e4')).toHaveAttribute('data-last-move', 'true');
+    await expect(square(page, 'd5')).toHaveAttribute('data-last-move', 'true');
+    await expect(page.getByRole('status', { name: '현재 턴 흑' })).toBeAttached();
+  });
+
+  test('프로모션 후보 칸을 클릭하면 선택 전에는 착수가 확정되지 않고 기물 선택 후 확정된다', async ({
+    page,
+  }) => {
+    await page.goto('/');
+
+    await openWhitePromotionSelector(page);
+
+    await expect(page.getByRole('dialog', { name: '프로모션 기물 선택' })).toBeVisible();
+    await expect(pieceOn(square(page, 'b7'), 'white pawn')).toBeVisible();
+    await expect(pieceOn(square(page, 'a8'), 'black rook')).toBeVisible();
+    await expect(page.getByRole('status', { name: '현재 턴 백' })).toBeAttached();
+
+    await page.getByRole('button', { name: '나이트로 승격' }).click();
+
+    await expect(page.getByRole('dialog', { name: '프로모션 기물 선택' })).toHaveCount(0);
+    await expect(pieceOn(square(page, 'b7'), 'white pawn')).toHaveCount(0);
+    await expect(pieceOn(square(page, 'a8'), 'black rook')).toHaveCount(0);
+    await expect(pieceOn(square(page, 'a8'), 'white knight')).toBeVisible();
+    await expect(page.getByRole('status', { name: '현재 턴 흑' })).toBeAttached();
+  });
+
+  test('프로모션 선택 UI 바깥을 클릭하면 보류 중인 프로모션을 취소한다', async ({ page }) => {
+    await page.goto('/');
+
+    await openWhitePromotionSelector(page);
+
+    await expect(page.getByRole('dialog', { name: '프로모션 기물 선택' })).toBeVisible();
+
+    await page.getByRole('complementary', { name: '기보 입력 사이드 패널' }).click();
+
+    await expect(page.getByRole('dialog', { name: '프로모션 기물 선택' })).toHaveCount(0);
+    await expect(pieceOn(square(page, 'b7'), 'white pawn')).toBeVisible();
+    await expect(pieceOn(square(page, 'a8'), 'black rook')).toBeVisible();
+    await expect(pieceOn(square(page, 'a8'), 'white knight')).toHaveCount(0);
+    await expect(square(page, 'b7')).toHaveAttribute('data-selected', 'false');
+    await expect(page.getByRole('status', { name: '현재 턴 백' })).toBeAttached();
+  });
 });
 
 const square = (page: Page, label: string) => {
@@ -91,4 +149,23 @@ const square = (page: Page, label: string) => {
 
 const pieceOn = (squareLocator: Locator, name: string) => {
   return squareLocator.getByAltText(name);
+};
+
+const move = async (page: Page, from: string, to: string) => {
+  await square(page, from).click();
+  await square(page, to).click();
+};
+
+const openWhitePromotionSelector = async (page: Page) => {
+  await move(page, 'a2', 'a4');
+  await move(page, 'h7', 'h5');
+  await move(page, 'a4', 'a5');
+  await move(page, 'h5', 'h4');
+  await move(page, 'a5', 'a6');
+  await move(page, 'g7', 'g5');
+  await move(page, 'a6', 'b7');
+  await move(page, 'g5', 'g4');
+
+  await square(page, 'b7').click();
+  await square(page, 'a8').click();
 };
