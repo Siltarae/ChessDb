@@ -9,6 +9,12 @@ import { useCheckStatus } from '@/features/check-status/model/use-check-status';
 import { useGameResultStatus } from '@/features/game-result/model/use-game-result-status';
 import { useLegalMoveHighlight } from '@/features/legal-move-highlight/model/use-legal-move-highlight';
 import { useMakeMove } from '@/features/make-move/model/use-make-move';
+import {
+  selectAppendMoveHistory,
+  selectMoveHistoryItems,
+  selectSelectedHalfMoveIndex,
+  useMoveHistoryStore,
+} from '@/features/move-history/model/move-history-store';
 import { PromotionPieceSelector } from '@/features/promotion-selection/ui/promotion-piece-selector';
 import { ChessBoard } from '@/widgets/chess-board/ui/chess-board';
 import { COLOR, type Color, type Square } from '@chess-db/shared';
@@ -24,10 +30,15 @@ export const BoardShell = () => {
   const { selectedSquare, highlightSquares, selectSquare, clearSelection } =
     useLegalMoveHighlight(gameState);
 
+  const historyItems = useMoveHistoryStore(selectMoveHistoryItems);
+  const selectedHalfMoveIndex = useMoveHistoryStore(selectSelectedHalfMoveIndex);
+  const appendMoveHistory = useMoveHistoryStore(selectAppendMoveHistory);
+
   const { makeMove, lastMove, pendingPromotionMove, clearPendingPromotion, selectPromotionPiece } =
     useMakeMove({
       gameState,
       applyGameState,
+      appendMoveHistory,
       selectedSquare,
       highlightSquares,
       clearSelection,
@@ -50,7 +61,18 @@ export const BoardShell = () => {
       ? undefined
       : getPromotionPopoverStyle(pendingPromotionMove.to, gameState.turn);
 
-  const isBoardInputDisabled = !canStartNewMove;
+  const latestHalfMoveIndex = historyItems.length > 0 ? historyItems.length - 1 : null;
+  const isViewingHistory =
+    selectedHalfMoveIndex !== null && selectedHalfMoveIndex !== latestHalfMoveIndex;
+
+  const selectedHistoryItem =
+    selectedHalfMoveIndex === null ? null : historyItems[selectedHalfMoveIndex];
+
+  const displayBoardState = selectedHistoryItem?.afterState.board ?? boardState;
+  const displayHighlightSquares = isViewingHistory ? [] : highlightSquares;
+  const displaySelectedSquare = isViewingHistory ? null : selectedSquare;
+  const displayCheckedKingSquare = isViewingHistory ? null : checkedKingSquare;
+  const isBoardInputDisabled = !canStartNewMove || isViewingHistory;
 
   const handlePromotionCancel = useCallback(() => {
     clearPendingPromotion();
@@ -90,8 +112,8 @@ export const BoardShell = () => {
       return;
     }
 
-    const moveSucceeded = makeMove(square);
-    if (moveSucceeded) return;
+    const hasMoveSucceeded = makeMove(square);
+    if (hasMoveSucceeded) return;
 
     selectSquare(square);
   };
@@ -121,12 +143,12 @@ export const BoardShell = () => {
         </div>
       ) : null}
       <ChessBoard
-        boardState={boardState}
-        highlightSquares={highlightSquares}
-        selectedSquare={selectedSquare}
+        boardState={displayBoardState}
+        highlightSquares={displayHighlightSquares}
+        selectedSquare={displaySelectedSquare}
         onSquareClick={handleSquareClick}
         lastMove={lastMove}
-        checkedKingSquare={checkedKingSquare}
+        checkedKingSquare={displayCheckedKingSquare}
       />
     </section>
   );

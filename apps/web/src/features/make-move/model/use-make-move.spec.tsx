@@ -18,6 +18,7 @@ const renderMakeMoveHook = ({
   selectedSquare = SQUARE.E2,
   highlightSquares = [SQUARE.E4],
   applyGameState = vi.fn(),
+  appendMoveHistory = vi.fn(),
   clearSelection = vi.fn(),
 }: Partial<Parameters<typeof useMakeMove>[0]> = {}) =>
   renderHook(() =>
@@ -26,6 +27,7 @@ const renderMakeMoveHook = ({
       selectedSquare,
       highlightSquares,
       applyGameState,
+      appendMoveHistory,
       clearSelection,
     }),
   );
@@ -64,14 +66,24 @@ const createWhitePromotionGameState = (): GameState => {
 describe('합법 수 착수와 보드 갱신', () => {
   it('하이라이트된 합법 수를 실행하면 기물이 이동하고 턴이 전환되어야 한다', () => {
     const applyGameState = vi.fn();
+    const appendMoveHistory = vi.fn();
     const clearSelection = vi.fn();
-    const { result } = renderMakeMoveHook({ applyGameState, clearSelection });
+    const { result } = renderMakeMoveHook({ applyGameState, appendMoveHistory, clearSelection });
 
     act(() => {
       expect(result.current.makeMove(SQUARE.E4)).toBe(true);
     });
 
     const nextGameState = applyGameState.mock.calls[0]?.[0] as GameState;
+    expect(appendMoveHistory).toHaveBeenCalledWith({
+      beforeState: createInitialGameState(),
+      move: expect.objectContaining({
+        from: SQUARE.E2,
+        to: SQUARE.E4,
+      }),
+      afterState: nextGameState,
+      san: 'e4',
+    });
     expect(nextGameState.board[SQUARE.E2]).toBeNull();
     expect(nextGameState.board[SQUARE.E4]).toEqual({
       type: PIECE_TYPE.PAWN,
@@ -157,12 +169,14 @@ describe('합법 수 착수와 보드 갱신', () => {
   it('프로모션 후보 칸을 클릭하면 즉시 착수하지 않고 후보를 보류해야 한다', () => {
     const gameState = createWhitePromotionGameState();
     const applyGameState = vi.fn();
+    const appendMoveHistory = vi.fn();
     const clearSelection = vi.fn();
     const { result } = renderMakeMoveHook({
       gameState,
       selectedSquare: SQUARE.A7,
       highlightSquares: [SQUARE.A8],
       applyGameState,
+      appendMoveHistory,
       clearSelection,
     });
 
@@ -171,6 +185,7 @@ describe('합법 수 착수와 보드 갱신', () => {
     });
 
     expect(applyGameState).not.toHaveBeenCalled();
+    expect(appendMoveHistory).not.toHaveBeenCalled();
     expect(clearSelection).not.toHaveBeenCalled();
     expect(result.current.lastMove).toBeNull();
     expect(result.current.pendingPromotionMove).toMatchObject({
@@ -188,12 +203,14 @@ describe('합법 수 착수와 보드 갱신', () => {
   it('보류 중인 프로모션 기물을 선택하면 해당 기물로 착수를 확정해야 한다', () => {
     const gameState = createWhitePromotionGameState();
     const applyGameState = vi.fn();
+    const appendMoveHistory = vi.fn();
     const clearSelection = vi.fn();
     const { result } = renderMakeMoveHook({
       gameState,
       selectedSquare: SQUARE.A7,
       highlightSquares: [SQUARE.A8],
       applyGameState,
+      appendMoveHistory,
       clearSelection,
     });
 
@@ -206,6 +223,16 @@ describe('합법 수 착수와 보드 갱신', () => {
     });
 
     const nextGameState = applyGameState.mock.calls[0]?.[0] as GameState;
+    expect(appendMoveHistory).toHaveBeenCalledWith({
+      beforeState: gameState,
+      move: expect.objectContaining({
+        from: SQUARE.A7,
+        to: SQUARE.A8,
+        promotion: PIECE_TYPE.KNIGHT,
+      }),
+      afterState: nextGameState,
+      san: 'a8=N',
+    });
     expect(nextGameState.board[SQUARE.A7]).toBeNull();
     expect(nextGameState.board[SQUARE.A8]).toEqual({
       type: PIECE_TYPE.KNIGHT,

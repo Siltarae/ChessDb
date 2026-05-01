@@ -1,5 +1,7 @@
 import type { LastMove } from '@/entities/game/model/game-view-state';
+import type { AppendMoveHistoryInput } from '@/features/move-history/model/move-history-store';
 import {
+  convertToSan,
   executeMove,
   getLegalMoves,
   type GameState,
@@ -14,6 +16,7 @@ type UseMakeMoveParams = {
   selectedSquare: Square | null;
   highlightSquares: Square[];
   applyGameState: (nextGameState: GameState) => void;
+  appendMoveHistory: (input: AppendMoveHistoryInput) => void;
   clearSelection: () => void;
 };
 
@@ -36,6 +39,7 @@ export const useMakeMove = ({
   selectedSquare,
   highlightSquares,
   applyGameState,
+  appendMoveHistory,
   clearSelection,
 }: UseMakeMoveParams): UseMakeMoveResult => {
   const [lastMove, setLastMove] = useState<LastMove | null>(null);
@@ -47,6 +51,15 @@ export const useMakeMove = ({
     (move: Move): void => {
       const nextGameState = executeMove(gameState, move);
 
+      const san = convertToSan(gameState, move, nextGameState);
+
+      appendMoveHistory({
+        beforeState: gameState,
+        move,
+        afterState: nextGameState,
+        san,
+      });
+
       applyGameState(nextGameState);
 
       setLastMove({
@@ -56,7 +69,7 @@ export const useMakeMove = ({
 
       clearSelection();
     },
-    [gameState, applyGameState, clearSelection],
+    [gameState, applyGameState, clearSelection, appendMoveHistory],
   );
 
   const makeMove = useCallback(

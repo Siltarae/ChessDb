@@ -1,4 +1,29 @@
+import {
+  selectGameState,
+  selectRepetitionHistory,
+  useGameStore,
+} from '@/entities/game/model/game-store';
+import { useGameResultStatus } from '@/features/game-result/model/use-game-result-status';
+import {
+  groupMoveHistoryRows,
+  useMoveHistoryStore,
+} from '@/features/move-history/model/move-history-store';
+import { MoveHistoryPanel } from '@/widgets/move-history/ui/move-history-panel';
+import { useMemo } from 'react';
+
 export function SidebarShell() {
+  const gameState = useGameStore(selectGameState);
+  const repetitionHistory = useGameStore(selectRepetitionHistory);
+
+  const { historyItems, selectedHalfMoveIndex, selectHalfMove } = useMoveHistoryStore();
+  const gameResultStatus = useGameResultStatus(gameState, repetitionHistory);
+
+  const rows = useMemo(() => groupMoveHistoryRows(historyItems), [historyItems]);
+
+  const handleSelectHalfMove = (halfMoveIndex: number) => {
+    selectHalfMove(halfMoveIndex);
+  };
+
   return (
     <aside
       aria-label="기보 입력 사이드 패널"
@@ -11,7 +36,12 @@ export function SidebarShell() {
 
       <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
         <div className="rounded-md border border-dashed bg-muted/40 px-4 py-8 text-center text-sm text-muted-foreground">
-          수순 패널 영역
+          <MoveHistoryPanel
+            rows={rows}
+            selectedHalfMoveIndex={selectedHalfMoveIndex}
+            gameResultStatus={gameResultStatus}
+            onSelectHalfMove={handleSelectHalfMove}
+          />
         </div>
       </div>
     </aside>
