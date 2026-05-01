@@ -3,15 +3,18 @@ import {
   MOVE_KIND,
   PIECE_TYPE,
   SQUARE,
+  executeMove,
   type Board,
   type Color,
   type GameState,
+  type Move,
   type Piece,
 } from '@chess-db/shared';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { BoardShell } from './board-shell';
+import { useMoveHistoryStore } from '@/features/move-history/model/move-history-store';
 
 const mockApplyGameState = vi.fn();
 const mockSelectSquare = vi.fn();
@@ -76,8 +79,25 @@ vi.mock('@/features/game-result/model/use-game-result-status', () => ({
 }));
 
 vi.mock('@/widgets/chess-board/ui/chess-board', () => ({
-  ChessBoard: ({ onSquareClick }: { onSquareClick: (square: number) => void }) => (
-    <button type="button" onClick={() => onSquareClick(SQUARE.E4)}>
+  ChessBoard: ({
+    boardState,
+    highlightSquares,
+    selectedSquare,
+    onSquareClick,
+  }: {
+    boardState: Board;
+    highlightSquares: number[];
+    selectedSquare: number | null;
+    onSquareClick: (square: number) => void;
+  }) => (
+    <button
+      type="button"
+      data-piece-e2={toPieceLabel(boardState[SQUARE.E2] ?? null)}
+      data-piece-e4={toPieceLabel(boardState[SQUARE.E4] ?? null)}
+      data-highlight-count={highlightSquares.length}
+      data-selected-square={selectedSquare ?? 'none'}
+      onClick={() => onSquareClick(SQUARE.E4)}
+    >
       mock chess board
     </button>
   ),
@@ -85,6 +105,7 @@ vi.mock('@/widgets/chess-board/ui/chess-board', () => ({
 
 const createBoard = (): Board => {
   const board = Array.from({ length: 64 }, () => null) as (Piece | null)[];
+  board[SQUARE.E2] = { type: PIECE_TYPE.PAWN, color: COLOR.WHITE };
   board[SQUARE.A7] = { type: PIECE_TYPE.PAWN, color: COLOR.WHITE };
   board[SQUARE.H2] = { type: PIECE_TYPE.PAWN, color: COLOR.BLACK };
 
@@ -150,6 +171,8 @@ beforeEach(() => {
   mockGameResultStatus.isGameOver = false;
   mockGameResultStatus.resultReason = null;
   mockGameResultStatus.canStartNewMove = true;
+
+  useMoveHistoryStore.getState().clearMoveHistory();
 });
 
 afterEach(() => {
@@ -267,4 +290,82 @@ describe('BoardShell', () => {
       width: '12.5%',
     });
   });
+
+  it('과거 수순을 선택하면 해당 반수의 afterState 보드를 표시하고 새 입력을 막아야 한다', () => {
+    const beforeState = createGameState();
+    const move: Move = {
+      from: SQUARE.E2,
+      to: SQUARE.E4,
+      kind: MOVE_KIND.DOUBLE_PAWN_PUSH,
+    };
+    const afterState = executeMove(beforeState, move);
+    const currentBoard = Array.from(createBoard()) as (Piece | null)[];
+    currentBoard[SQUARE.E2] = { type: PIECE_TYPE.PAWN, color: COLOR.WHITE };
+    currentBoard[SQUARE.E4] = null;
+
+    mockGameStoreState.state.gameState = beforeState;
+    mockGameStoreState.state.boardState = currentBoard as Board;
+    mockLegalMoveHighlight.highlightSquares = [SQUARE.E4];
+    mockLegalMoveHighlight.selectedSquare = SQUARE.E2;
+    useMoveHistoryStore.getState().appendMoveHistory({
+      beforeState,
+      move,
+      afterState,
+      san: 'e4',
+    });
+    useMoveHistoryStore.getState().appendMoveHistory({
+      beforeState: afterState,
+      move: {
+        from: SQUARE.H2,
+        to: SQUARE.H1,
+        kind: MOVE_KIND.NORMAL,
+      },
+      afterState: {
+        ...afterState,
+        fullmoveNumber: 2,
+      },
+      san: 'h1',
+    });
+    useMoveHistoryStore.getState().selectHalfMove(0);
+
+    render(<BoardShell />);
+
+    const board = screen.getByRole('button', { name: 'mock chess board' });
+    expect(board).toHaveAttribute('data-piece-e2', 'empty');
+    expect(board).toHaveAttribute('data-piece-e4', 'white pawn');
+    expect(board).toHaveAttribute('data-highlight-count', '0');
+    expect(board).toHaveAttribute('data-selected-square', 'none');
+
+    fireEvent.click(board);
+
+    expect(mockMakeMove).not.toHaveBeenCalled();
+    expect(mockSelectSquare).not.toHaveBeenCalled();
+  });
 });
+
+const toPieceLabel = (piece: Piece | null) => {
+  if (piece === null) {
+    return 'empty';
+  }
+
+  return `${piece.color === COLOR.WHITE ? 'white' : 'black'} ${toPieceTypeLabel(piece.type)}`;
+};
+
+const toPieceTypeLabel = (pieceType: Piece['type']) => {
+  switch (pieceType) {
+    case PIECE_TYPE.PAWN:
+      return 'pawn';
+    case PIECE_TYPE.KNIGHT:
+      return 'knight';
+    case PIECE_TYPE.BISHOP:
+      return 'bishop';
+    case PIECE_TYPE.ROOK:
+      return 'rook';
+    case PIECE_TYPE.QUEEN:
+      return 'queen';
+    case PIECE_TYPE.KING:
+      return 'king';
+    default:
+      return 'unknown';
+  }
+};

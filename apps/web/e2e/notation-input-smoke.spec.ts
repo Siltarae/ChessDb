@@ -27,6 +27,46 @@ test.describe('기보 입력 핵심 흐름 E2E 스모크', () => {
     await expect(page.getByRole('status', { name: '현재 턴 흑' })).toBeAttached();
   });
 
+  test('실제 보드 착수 뒤 우측 수순 목록에 SAN이 순서대로 표시된다', async ({ page }) => {
+    await page.goto('/');
+
+    const moveHistoryPanel = page.getByRole('region', { name: '수순 목록' });
+
+    await expect(moveHistoryPanel).toBeVisible();
+    await expect(moveHistoryPanel.getByText('아직 기록된 수가 없습니다.')).toBeVisible();
+
+    await move(page, 'e2', 'e4');
+
+    await expect(moveHistoryPanel.getByText('아직 기록된 수가 없습니다.')).toHaveCount(0);
+    await expect(moveHistoryPanel.getByText('1.')).toBeVisible();
+    await expect(moveHistoryPanel.getByRole('button', { name: 'e4', exact: true })).toBeVisible();
+
+    await move(page, 'e7', 'e5');
+    await move(page, 'g1', 'f3');
+    await move(page, 'b8', 'c6');
+
+    await expect(moveHistoryPanel.getByText('2.')).toBeVisible();
+    await expect(moveHistoryPanel.locator('button:not([disabled])')).toHaveText([
+      'e4',
+      'e5',
+      'Nf3',
+      'Nc6',
+    ]);
+    await expect(
+      moveHistoryPanel.getByRole('button', { name: 'Nc6', exact: true }),
+    ).toHaveAttribute('aria-current', 'step');
+
+    await moveHistoryPanel.getByRole('button', { name: 'e4', exact: true }).click();
+
+    await expect(moveHistoryPanel.getByRole('button', { name: 'e4', exact: true })).toHaveAttribute(
+      'data-selected',
+      'true',
+    );
+    await expect(
+      moveHistoryPanel.getByRole('button', { name: 'Nc6', exact: true }),
+    ).toHaveAttribute('aria-current', 'step');
+  });
+
   test('불법 칸을 클릭하면 보드 상태와 현재 턴이 유지된다', async ({ page }) => {
     await page.goto('/');
 
@@ -118,6 +158,9 @@ test.describe('기보 입력 핵심 흐름 E2E 스모크', () => {
 
     await page.getByRole('button', { name: '나이트로 승격' }).click();
 
+    await expect(
+      page.getByRole('region', { name: '수순 목록' }).getByRole('button', { name: /a8=N/ }),
+    ).toBeVisible();
     await expect(page.getByRole('dialog', { name: '프로모션 기물 선택' })).toHaveCount(0);
     await expect(pieceOn(square(page, 'b7'), 'white pawn')).toHaveCount(0);
     await expect(pieceOn(square(page, 'a8'), 'black rook')).toHaveCount(0);
@@ -144,7 +187,9 @@ test.describe('기보 입력 핵심 흐름 E2E 스모크', () => {
 });
 
 const square = (page: Page, label: string) => {
-  return page.getByRole('button', { name: label, exact: true });
+  return page
+    .getByRole('region', { name: '기보 입력 보드 영역' })
+    .getByRole('button', { name: label, exact: true });
 };
 
 const pieceOn = (squareLocator: Locator, name: string) => {
