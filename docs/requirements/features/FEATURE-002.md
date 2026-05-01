@@ -39,7 +39,7 @@
 - [TASK-100 기보 입력 핵심 흐름 E2E 스모크 테스트](../tasks/TASK-100.md)
 - [TASK-096 프로모션 기물 선택 UI](../tasks/TASK-096.md)
 - [TASK-098 체크 상태 표시](../tasks/TASK-098.md)
-- [TASK-097 착수 후 게임 종료 상태 감지 및 표시](../tasks/TASK-097.md)
+- [TASK-097 착수 후 게임 종료 상태 감지 및 입력 차단](../tasks/TASK-097.md)
 - [TASK-062 기물 이동의 SAN(Standard Algebraic Notation) 표기 변환 로직](../tasks/TASK-062.md)
 - [TASK-017 수순 목록 기록](../tasks/TASK-017.md)
 - [TASK-018 되돌리기](../tasks/TASK-018.md)

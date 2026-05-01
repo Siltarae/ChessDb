@@ -2,9 +2,11 @@ import {
   selectApplyGameState,
   selectBoardState,
   selectGameState,
+  selectRepetitionHistory,
   useGameStore,
 } from '@/entities/game/model/game-store';
 import { useCheckStatus } from '@/features/check-status/model/use-check-status';
+import { useGameResultStatus } from '@/features/game-result/model/use-game-result-status';
 import { useLegalMoveHighlight } from '@/features/legal-move-highlight/model/use-legal-move-highlight';
 import { useMakeMove } from '@/features/make-move/model/use-make-move';
 import { PromotionPieceSelector } from '@/features/promotion-selection/ui/promotion-piece-selector';
@@ -16,6 +18,7 @@ export const BoardShell = () => {
   const promotionSelectorRef = useRef<HTMLDivElement | null>(null);
   const gameState = useGameStore(selectGameState);
   const boardState = useGameStore(selectBoardState);
+  const repetitionHistory = useGameStore(selectRepetitionHistory);
   const applyGameState = useGameStore(selectApplyGameState);
 
   const { selectedSquare, highlightSquares, selectSquare, clearSelection } =
@@ -32,6 +35,11 @@ export const BoardShell = () => {
 
   const { checkedKingSquare } = useCheckStatus(gameState);
 
+  const { isGameOver, resultReason, canStartNewMove } = useGameResultStatus(
+    gameState,
+    repetitionHistory,
+  );
+
   const promotionCandidates =
     pendingPromotionMove?.candidates.flatMap((move) =>
       move.promotion === undefined ? [] : [{ promotion: move.promotion }],
@@ -41,6 +49,8 @@ export const BoardShell = () => {
     pendingPromotionMove === null
       ? undefined
       : getPromotionPopoverStyle(pendingPromotionMove.to, gameState.turn);
+
+  const isBoardInputDisabled = !canStartNewMove;
 
   const handlePromotionCancel = useCallback(() => {
     clearPendingPromotion();
@@ -72,6 +82,10 @@ export const BoardShell = () => {
   }, [handlePromotionCancel, pendingPromotionMove]);
 
   const handleSquareClick = (square: Square) => {
+    if (isBoardInputDisabled) {
+      return;
+    }
+
     if (pendingPromotionMove !== null) {
       return;
     }
@@ -81,6 +95,9 @@ export const BoardShell = () => {
 
     selectSquare(square);
   };
+
+  void isGameOver;
+  void resultReason;
 
   return (
     <section

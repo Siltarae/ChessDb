@@ -1,4 +1,10 @@
-import { COLOR, PIECE_TYPE, SQUARE, createInitialGameState } from '@chess-db/shared';
+import {
+  COLOR,
+  PIECE_TYPE,
+  SQUARE,
+  createInitialGameState,
+  positionFingerprint,
+} from '@chess-db/shared';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import {
@@ -6,12 +12,16 @@ import {
   selectBoardState,
   selectCurrentTurn,
   selectGameState,
+  selectRepetitionHistory,
   useGameStore,
 } from './game-store';
 
 describe('game-store', () => {
   beforeEach(() => {
-    useGameStore.getState().applyGameState(createInitialGameState());
+    useGameStore.setState({
+      gameState: createInitialGameState(),
+      repetitionHistory: {},
+    });
   });
 
   describe('useGameStore로 초기 상태를 만들 때', () => {
@@ -51,6 +61,22 @@ describe('game-store', () => {
       expect(selectGameState(updatedState)).toBe(nextGameState);
       expect(selectBoardState(updatedState)).toBe(nextGameState.board);
       expect(selectCurrentTurn(updatedState)).toBe(COLOR.BLACK);
+    });
+
+    it('반복 이력에는 현재 상태가 아니라 이동 직전 상태의 fingerprint를 누적해야 한다', () => {
+      const state = useGameStore.getState();
+      const currentGameState = selectGameState(state);
+      const applyGameState = selectApplyGameState(state);
+      const nextGameState = {
+        ...currentGameState,
+        turn: COLOR.BLACK,
+      };
+
+      applyGameState(nextGameState);
+
+      const repetitionHistory = selectRepetitionHistory(useGameStore.getState());
+      expect(repetitionHistory[positionFingerprint(currentGameState)]).toBe(1);
+      expect(repetitionHistory[positionFingerprint(nextGameState)]).toBeUndefined();
     });
   });
 });
