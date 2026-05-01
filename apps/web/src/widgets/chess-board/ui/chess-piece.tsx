@@ -1,5 +1,5 @@
 import type { Piece } from '@chess-db/shared';
-import { getPieceAsset } from '../model/piece-display';
+import { getPieceAccessibleName, getPieceAsset } from '../model/piece-display';
 
 type ChessPieceProps = {
   piece: Piece | null;
@@ -11,10 +11,11 @@ export const ChessPiece = ({ piece }: ChessPieceProps): React.ReactNode => {
   }
 
   const pieceAsset = getPieceAsset(piece);
+  const accessibleName = getPieceAccessibleName(piece);
 
-  if (!pieceAsset) {
+  if (!pieceAsset || !accessibleName) {
     return null;
   }
 
-  return <img src={pieceAsset} alt={`${piece.color} ${piece.type}`} className="size-full" />;
+  return <img src={pieceAsset} alt={accessibleName} className="size-full" />;
 };

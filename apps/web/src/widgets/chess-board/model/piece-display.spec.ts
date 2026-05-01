@@ -13,7 +13,7 @@ import whiteKnight from '../assets/pieces/white-knight.svg';
 import whitePawn from '../assets/pieces/white-pawn.svg';
 import whiteQueen from '../assets/pieces/white-queen.svg';
 import whiteRook from '../assets/pieces/white-rook.svg';
-import { getPieceAsset } from './piece-display';
+import { getPieceAccessibleName, getPieceAsset } from './piece-display';
 
 const PIECE_ASSET_CASES: readonly [string, Piece, string][] = [
   ['white pawn', { type: PIECE_TYPE.PAWN, color: COLOR.WHITE }, whitePawn],
@@ -36,8 +36,13 @@ describe('piece-display', () => {
       expect(getPieceAsset(piece)).toBe(asset);
     });
 
+    it.each(PIECE_ASSET_CASES)('%s 숫자 상수를 접근성 이름으로 매핑해야 한다', (name, piece) => {
+      expect(getPieceAccessibleName(piece)).toBe(name);
+    });
+
     it('NONE 타입 기물은 표시 asset 없이 null을 반환해야 한다', () => {
       expect(getPieceAsset({ type: PIECE_TYPE.NONE, color: COLOR.WHITE })).toBeNull();
+      expect(getPieceAccessibleName({ type: PIECE_TYPE.NONE, color: COLOR.WHITE })).toBeNull();
     });
   });
 });

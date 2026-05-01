@@ -38,7 +38,12 @@ export const ChessSquare = ({
       key={square}
       data-square={label}
       data-tone={tone}
+      data-selected={isSelected}
+      data-legal-move={isLegalMoveHighlighted}
+      data-last-move={isLastMove}
       aria-label={label}
+      role="button"
+      tabIndex={0}
       className={`relative flex aspect-square items-center justify-center ${squareToneClass} ${selectedClass} ${legalMoveClass} ${lastMoveClass}`}
       onClick={onClick}
     >
