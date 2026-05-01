@@ -47,6 +47,8 @@ type WinGameResult = {
   winner: Color;
 };
 
+export type History = Record<string, number>;
+
 /**
  * 현재 게임의 종료 상태를 표현합니다.
  */
@@ -61,7 +63,7 @@ export type GameResult = OngoingGameResult | DrawGameResult | WinGameResult;
  *
  * const result = getGameResult(state, history);
  */
-export const getGameResult = (state: GameState, history: Record<string, number>): GameResult => {
+export const getGameResult = (state: GameState, history: History): GameResult => {
   if (!hasAnyLegalMove(state)) {
     if (isCheck(state, state.turn)) {
       return {

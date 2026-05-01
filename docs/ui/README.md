@@ -39,7 +39,6 @@
 | `TASK-001-board-centered.svg`             | 채택 | `TASK-001` 기보 입력 화면 shell의 기준안. 보드 중심 2열 레이아웃과 모바일 스택 구조를 확인하기 위한 목업이다.                                                                              |
 | `TASK-002-standard-start-board.svg`       | 채택 | `TASK-002` 표준 시작 포지션 보드 표시 목업. 8x8 보드, 시작 기물 배치, Wikimedia Commons SVG asset 사용 방향을 확인하기 위한 기준안이다.                                                    |
 | `TASK-096-promotion-piece-selection.svg`  | 채택 | `TASK-096` 프로모션 기물 선택 UI 기준안. 퀸 후보 칸을 프로모션 도착 칸 위에 둔 세로 팝오버, 백 `Q-N-R-B`/흑 `B-R-N-Q` 후보 순서, 선택 전 보류 상태, 선택 후 착수 확정 흐름을 검토한다.     |
-| `TASK-097-game-end-status.svg`            | 예정 | `TASK-097` 착수 후 게임 종료 상태 표시 기준안. 종료 배너/패널, 보드 입력 비활성 상태, 되돌리기 후 상태 갱신 흐름을 검토한다.                                                               |
 | `TASK-098-check-status.svg`               | 채택 | `TASK-098` 체크 상태 표시 기준안. 체크받은 왕 칸을 붉은 테두리 링으로 강조하고, 상태 배지와 마지막 착수 하이라이트의 우선순위를 검토한다.                                                  |
 
 ## SVG 작성 기준

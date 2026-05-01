@@ -24,6 +24,7 @@ const mockGameStoreState = vi.hoisted(() => ({
   state: {
     gameState: null as GameState | null,
     boardState: [] as unknown as Board,
+    repetitionHistory: {} as Record<string, number>,
     applyGameState: vi.fn(),
   },
 }));
@@ -47,10 +48,17 @@ const mockMakeMoveState = vi.hoisted(() => ({
   selectPromotionPiece: vi.fn(),
 }));
 
+const mockGameResultStatus = vi.hoisted(() => ({
+  isGameOver: false,
+  resultReason: null as string | null,
+  canStartNewMove: true,
+}));
+
 vi.mock('@/entities/game/model/game-store', () => ({
   selectApplyGameState: (state: typeof mockGameStoreState.state) => state.applyGameState,
   selectBoardState: (state: typeof mockGameStoreState.state) => state.boardState,
   selectGameState: (state: typeof mockGameStoreState.state) => state.gameState,
+  selectRepetitionHistory: (state: typeof mockGameStoreState.state) => state.repetitionHistory,
   useGameStore: <T,>(selector: (state: typeof mockGameStoreState.state) => T) =>
     selector(mockGameStoreState.state),
 }));
@@ -61,6 +69,10 @@ vi.mock('@/features/legal-move-highlight/model/use-legal-move-highlight', () => 
 
 vi.mock('@/features/make-move/model/use-make-move', () => ({
   useMakeMove: () => mockMakeMoveState,
+}));
+
+vi.mock('@/features/game-result/model/use-game-result-status', () => ({
+  useGameResultStatus: () => mockGameResultStatus,
 }));
 
 vi.mock('@/widgets/chess-board/ui/chess-board', () => ({
@@ -121,6 +133,7 @@ beforeEach(() => {
 
   mockGameStoreState.state.gameState = createGameState();
   mockGameStoreState.state.boardState = mockGameStoreState.state.gameState.board;
+  mockGameStoreState.state.repetitionHistory = {};
   mockGameStoreState.state.applyGameState = mockApplyGameState;
 
   mockLegalMoveHighlight.selectedSquare = null;
@@ -133,6 +146,10 @@ beforeEach(() => {
   mockMakeMoveState.pendingPromotionMove = null;
   mockMakeMoveState.clearPendingPromotion = mockClearPendingPromotion;
   mockMakeMoveState.selectPromotionPiece = mockSelectPromotionPiece;
+
+  mockGameResultStatus.isGameOver = false;
+  mockGameResultStatus.resultReason = null;
+  mockGameResultStatus.canStartNewMove = true;
 });
 
 afterEach(() => {
@@ -168,6 +185,19 @@ describe('BoardShell', () => {
     fireEvent.click(screen.getByRole('button', { name: 'mock chess board' }));
 
     expect(mockMakeMove).toHaveBeenCalledWith(SQUARE.E4);
+    expect(mockSelectSquare).not.toHaveBeenCalled();
+  });
+
+  it('게임 종료 상태에서는 보드 클릭이 makeMove와 selectSquare로 이어지지 않아야 한다', () => {
+    mockGameResultStatus.isGameOver = true;
+    mockGameResultStatus.resultReason = 'CHECKMATE';
+    mockGameResultStatus.canStartNewMove = false;
+
+    render(<BoardShell />);
+
+    fireEvent.click(screen.getByRole('button', { name: 'mock chess board' }));
+
+    expect(mockMakeMove).not.toHaveBeenCalled();
     expect(mockSelectSquare).not.toHaveBeenCalled();
   });
 

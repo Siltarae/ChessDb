@@ -5,13 +5,21 @@
 //   SQUARE,
 //   type GameState,
 // } from '@chess-db/shared';
-import { createInitialGameState, type GameState } from '@chess-db/shared';
+import {
+  createInitialGameState,
+  positionFingerprint,
+  type GameState,
+  type History,
+} from '@chess-db/shared';
 import { create } from 'zustand';
 
 type GameStoreState = {
   gameState: GameState;
+  repetitionHistory: History;
   applyGameState: (nextGameState: GameState) => void;
 };
+
+type UpdateRepetitionHistory = (repetitionHistory: History, nextGameState: GameState) => History;
 
 // const createTestGameState = () => {
 //   const gameState = createInitialGameState();
@@ -32,14 +40,31 @@ type GameStoreState = {
 //   };
 // };
 
-export const useGameStore = create<GameStoreState>((set) => ({
-  gameState: createInitialGameState(),
-  applyGameState: (nextGameState: GameState) => {
-    set({ gameState: nextGameState });
-  },
-}));
+export const useGameStore = create<GameStoreState>((set) => {
+  const initialGameState = createInitialGameState();
+
+  return {
+    gameState: initialGameState,
+    repetitionHistory: {},
+    applyGameState: (nextGameState: GameState) => {
+      set((state) => ({
+        gameState: nextGameState,
+        repetitionHistory: updateRepetitionHistory(state.repetitionHistory, state.gameState),
+      }));
+    },
+  };
+});
+
+const updateRepetitionHistory: UpdateRepetitionHistory = (repetitionHistory, nextGameState) => {
+  const fingerprint = positionFingerprint(nextGameState);
+  return {
+    ...repetitionHistory,
+    [fingerprint]: (repetitionHistory[fingerprint] ?? 0) + 1,
+  };
+};
 
 export const selectGameState = (state: GameStoreState) => state.gameState;
 export const selectBoardState = (state: GameStoreState) => state.gameState.board;
 export const selectCurrentTurn = (state: GameStoreState) => state.gameState.turn;
 export const selectApplyGameState = (state: GameStoreState) => state.applyGameState;
+export const selectRepetitionHistory = (state: GameStoreState) => state.repetitionHistory;
