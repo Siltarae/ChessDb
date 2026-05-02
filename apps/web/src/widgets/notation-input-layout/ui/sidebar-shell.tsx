@@ -3,7 +3,7 @@ import { useGameResultStatus } from '@/features/game-result';
 import { useHistoryNavigation } from '@/features/history-navigation';
 import { groupMoveHistoryRows, useMoveHistoryStore } from '@/entities/move-history';
 import { MoveHistoryPanel } from '@/widgets/move-history';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 export function SidebarShell() {
   const gameState = useGameStore(selectGameState);
@@ -22,6 +22,31 @@ export function SidebarShell() {
   const handleSelectHalfMove = (halfMoveIndex: number) => {
     selectHalfMove(halfMoveIndex);
   };
+
+  useEffect(() => {
+    const handleHistoryNavigationKeyDown = (event: KeyboardEvent) => {
+      if (shouldIgnoreHistoryNavigationKey(event)) {
+        return;
+      }
+
+      if (event.key === 'ArrowLeft' && canUndo) {
+        event.preventDefault();
+        goToPreviousHalfMove();
+        return;
+      }
+
+      if (event.key === 'ArrowRight' && canRedo) {
+        event.preventDefault();
+        goToNextHalfMove();
+      }
+    };
+
+    window.addEventListener('keydown', handleHistoryNavigationKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleHistoryNavigationKeyDown);
+    };
+  }, [canRedo, canUndo, goToNextHalfMove, goToPreviousHalfMove]);
 
   return (
     <aside
@@ -50,3 +75,25 @@ export function SidebarShell() {
     </aside>
   );
 }
+
+const shouldIgnoreHistoryNavigationKey = (event: KeyboardEvent) => {
+  if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') {
+    return true;
+  }
+
+  if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
+    return true;
+  }
+
+  const target = event.target;
+
+  if (!(target instanceof HTMLElement)) {
+    return false;
+  }
+
+  if (target.isContentEditable) {
+    return true;
+  }
+
+  return ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName);
+};

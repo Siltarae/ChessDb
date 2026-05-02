@@ -1,12 +1,22 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import {
+  MOVE_KIND,
+  SQUARE,
+  createInitialGameState,
+  executeMove,
+  type GameState,
+  type Move,
+} from '@chess-db/shared';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { BoardShell } from './board-shell';
+import { useMoveHistoryStore } from '@/entities/move-history';
 import { NotationInputLayout } from './notation-input-layout';
 import { SidebarShell } from './sidebar-shell';
 
 afterEach(() => {
   cleanup();
+  useMoveHistoryStore.getState().clearMoveHistory();
 });
 
 describe('NotationInputLayout', () => {
@@ -82,5 +92,65 @@ describe('NotationInputLayout', () => {
       expect(scrollContainer).toBeInTheDocument();
       expect(scrollContainer).toHaveClass('min-h-0', 'flex-1', 'overflow-y-auto');
     });
+
+    it('왼쪽 방향키로 이전 반수를 선택하고 오른쪽 방향키로 다음 반수를 선택해야 한다', () => {
+      appendSampleMoves();
+      useMoveHistoryStore.getState().selectHalfMove(2);
+
+      render(<SidebarShell />);
+
+      fireEvent.keyDown(window, { key: 'ArrowLeft' });
+      expect(useMoveHistoryStore.getState().selectedHalfMoveIndex).toBe(1);
+
+      fireEvent.keyDown(window, { key: 'ArrowRight' });
+      expect(useMoveHistoryStore.getState().selectedHalfMoveIndex).toBe(2);
+    });
+
+    it('입력 필드에 포커스가 있으면 좌우 방향키로 수순을 이동하지 않아야 한다', () => {
+      appendSampleMoves();
+      useMoveHistoryStore.getState().selectHalfMove(2);
+
+      render(
+        <>
+          <input aria-label="수순 메모" />
+          <SidebarShell />
+        </>,
+      );
+
+      screen.getByRole('textbox', { name: '수순 메모' }).focus();
+      fireEvent.keyDown(screen.getByRole('textbox', { name: '수순 메모' }), { key: 'ArrowLeft' });
+
+      expect(useMoveHistoryStore.getState().selectedHalfMoveIndex).toBe(2);
+    });
   });
 });
+
+const createMove = (
+  from: Move['from'],
+  to: Move['to'],
+  kind: typeof MOVE_KIND.NORMAL | typeof MOVE_KIND.DOUBLE_PAWN_PUSH = MOVE_KIND.NORMAL,
+): Move => ({
+  from,
+  to,
+  kind,
+});
+
+const appendMove = (beforeState: GameState, move: Move, san: string) => {
+  const afterState = executeMove(beforeState, move);
+
+  useMoveHistoryStore.getState().appendMoveHistory({
+    beforeState,
+    move,
+    afterState,
+    san,
+  });
+
+  return afterState;
+};
+
+const appendSampleMoves = () => {
+  let state = createInitialGameState();
+  state = appendMove(state, createMove(SQUARE.E2, SQUARE.E4, MOVE_KIND.DOUBLE_PAWN_PUSH), 'e4');
+  state = appendMove(state, createMove(SQUARE.E7, SQUARE.E5, MOVE_KIND.DOUBLE_PAWN_PUSH), 'e5');
+  appendMove(state, createMove(SQUARE.G1, SQUARE.F3), 'Nf3');
+};
