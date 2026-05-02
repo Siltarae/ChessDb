@@ -84,11 +84,13 @@ vi.mock('@/widgets/chess-board/ui/chess-board', () => ({
     highlightSquares,
     selectedSquare,
     onSquareClick,
+    lastMove,
   }: {
     boardState: Board;
     highlightSquares: number[];
     selectedSquare: number | null;
     onSquareClick: (square: number) => void;
+    lastMove: { from: number; to: number } | null;
   }) => (
     <button
       type="button"
@@ -96,6 +98,7 @@ vi.mock('@/widgets/chess-board/ui/chess-board', () => ({
       data-piece-e4={toPieceLabel(boardState[SQUARE.E4] ?? null)}
       data-highlight-count={highlightSquares.length}
       data-selected-square={selectedSquare ?? 'none'}
+      data-last-move={lastMove === null ? 'none' : `${lastMove.from}-${lastMove.to}`}
       onClick={() => onSquareClick(SQUARE.E4)}
     >
       mock chess board
@@ -335,6 +338,8 @@ describe('BoardShell', () => {
     expect(board).toHaveAttribute('data-piece-e4', 'white pawn');
     expect(board).toHaveAttribute('data-highlight-count', '0');
     expect(board).toHaveAttribute('data-selected-square', 'none');
+    expect(board).toHaveAttribute('data-last-move', `${SQUARE.E2}-${SQUARE.E4}`);
+    expect(screen.getByRole('status', { name: '현재 턴 흑' })).toBeInTheDocument();
 
     fireEvent.click(board);
 
