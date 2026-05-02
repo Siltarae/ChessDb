@@ -1,7 +1,7 @@
 import { COLOR, type Color, type GameState, type Move } from '@chess-db/shared';
 import { create } from 'zustand';
 
-type MoveHistoryItem = {
+export type MoveHistoryItem = {
   readonly halfMoveIndex: number;
   readonly moveNumber: number;
   readonly side: Color;

@@ -1,6 +1,5 @@
 import {
   selectApplyGameState,
-  selectBoardState,
   selectGameState,
   selectRepetitionHistory,
   useGameStore,
@@ -23,7 +22,6 @@ import { useCallback, useEffect, useRef } from 'react';
 export const BoardShell = () => {
   const promotionSelectorRef = useRef<HTMLDivElement | null>(null);
   const gameState = useGameStore(selectGameState);
-  const boardState = useGameStore(selectBoardState);
   const repetitionHistory = useGameStore(selectRepetitionHistory);
   const applyGameState = useGameStore(selectApplyGameState);
 
@@ -43,8 +41,6 @@ export const BoardShell = () => {
       highlightSquares,
       clearSelection,
     });
-
-  const { checkedKingSquare } = useCheckStatus(gameState);
 
   const { isGameOver, resultReason, canStartNewMove } = useGameResultStatus(
     gameState,
@@ -68,10 +64,17 @@ export const BoardShell = () => {
   const selectedHistoryItem =
     selectedHalfMoveIndex === null ? null : historyItems[selectedHalfMoveIndex];
 
-  const displayBoardState = selectedHistoryItem?.afterState.board ?? boardState;
+  const displayGameState = selectedHistoryItem?.afterState ?? gameState;
+  const displayBoardState = displayGameState.board;
   const displayHighlightSquares = isViewingHistory ? [] : highlightSquares;
   const displaySelectedSquare = isViewingHistory ? null : selectedSquare;
-  const displayCheckedKingSquare = isViewingHistory ? null : checkedKingSquare;
+  const { checkedKingSquare: displayCheckedKingSquare } = useCheckStatus(displayGameState);
+  const displayLastMove = selectedHistoryItem
+    ? {
+        from: selectedHistoryItem.move.from,
+        to: selectedHistoryItem.move.to,
+      }
+    : lastMove;
   const isBoardInputDisabled = !canStartNewMove || isViewingHistory;
 
   const handlePromotionCancel = useCallback(() => {
@@ -128,10 +131,10 @@ export const BoardShell = () => {
     >
       <p
         role="status"
-        aria-label={`현재 턴 ${toCurrentTurnLabel(gameState.turn)}`}
+        aria-label={`현재 턴 ${toCurrentTurnLabel(displayGameState.turn)}`}
         className="sr-only"
       >
-        현재 턴: {toCurrentTurnLabel(gameState.turn)}
+        현재 턴: {toCurrentTurnLabel(displayGameState.turn)}
       </p>
       {pendingPromotionMove !== null ? (
         <div ref={promotionSelectorRef} className="absolute z-20" style={promotionPopoverStyle}>
@@ -147,7 +150,7 @@ export const BoardShell = () => {
         highlightSquares={displayHighlightSquares}
         selectedSquare={displaySelectedSquare}
         onSquareClick={handleSquareClick}
-        lastMove={lastMove}
+        lastMove={displayLastMove}
         checkedKingSquare={displayCheckedKingSquare}
       />
     </section>

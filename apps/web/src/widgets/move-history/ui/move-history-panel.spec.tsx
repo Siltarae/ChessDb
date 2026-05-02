@@ -29,19 +29,25 @@ const renderMoveHistoryPanel = ({
   rows = [],
   selectedHalfMoveIndex = null,
   gameResultStatus = ongoingGameResultStatus,
+  canUndo = false,
   onSelectHalfMove = vi.fn(),
+  onUndo = vi.fn(),
 }: {
   rows?: MoveHistoryRow[];
   selectedHalfMoveIndex?: number | null;
   gameResultStatus?: GameResultStatusView;
+  canUndo?: boolean;
   onSelectHalfMove?: (halfMoveIndex: number) => void;
+  onUndo?: () => void;
 }) =>
   render(
     <MoveHistoryPanel
       rows={rows}
       selectedHalfMoveIndex={selectedHalfMoveIndex}
       gameResultStatus={gameResultStatus}
+      canUndo={canUndo}
       onSelectHalfMove={onSelectHalfMove}
+      onUndo={onUndo}
     />,
   );
 
@@ -169,6 +175,16 @@ describe('MoveHistoryPanel', () => {
     fireEvent.click(screen.getByRole('button', { name: 'e4' }));
 
     expect(onSelectHalfMove).toHaveBeenCalledWith(0);
+  });
+
+  it('되돌리기 가능 상태에서 보조 액션을 클릭하면 onUndo를 호출해야 한다', () => {
+    const onUndo = vi.fn();
+
+    renderMoveHistoryPanel({ canUndo: true, onUndo });
+
+    fireEvent.click(screen.getByRole('button', { name: '↶' }));
+
+    expect(onUndo).toHaveBeenCalledOnce();
   });
 
   it('흑 수가 없는 마지막 행에는 클릭 가능한 흑 셀을 만들지 않아야 한다', () => {

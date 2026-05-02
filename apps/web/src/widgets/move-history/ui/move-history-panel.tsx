@@ -5,14 +5,18 @@ type MoveHistoryPanelProps = {
   rows: MoveHistoryRow[];
   selectedHalfMoveIndex: number | null;
   gameResultStatus: GameResultStatusView;
+  canUndo: boolean;
   onSelectHalfMove: (halfMoveIndex: number) => void;
+  onUndo: () => void;
 };
 
 export const MoveHistoryPanel = ({
   rows,
   selectedHalfMoveIndex,
   gameResultStatus,
+  canUndo,
   onSelectHalfMove,
+  onUndo,
 }: MoveHistoryPanelProps) => {
   const hasMoves = rows.length > 0;
   const latestHalfMoveIndex = getLatestHalfMoveIndex(rows);
@@ -25,7 +29,12 @@ export const MoveHistoryPanel = ({
         </div>
 
         <div aria-label="수순 목록 보조 액션" className="flex items-center gap-2">
-          <button type="button" className="size-7 rounded-md border bg-background text-sm" disabled>
+          <button
+            type="button"
+            className="size-7 rounded-md border bg-background text-sm"
+            disabled={!canUndo}
+            onClick={() => onUndo()}
+          >
             ↶
           </button>
           <button type="button" className="size-7 rounded-md border bg-muted text-sm" disabled>
@@ -142,8 +151,7 @@ const MoveHistoryCell = ({
       data-selected={isSelected}
       className={[
         'min-h-8 rounded-md border px-3 text-left text-sm font-medium',
-        isLastMove ? 'border-emerald-500 bg-emerald-50' : 'bg-background hover:bg-muted',
-        isSelected && !isLastMove ? 'ring-2 ring-emerald-200' : '',
+        isSelected ? 'border-emerald-500 bg-emerald-50' : 'bg-background hover:bg-muted',
       ].join(' ')}
       onClick={() => onSelectHalfMove(halfMoveIndex)}
     >

@@ -4,6 +4,7 @@ import {
   useGameStore,
 } from '@/entities/game/model/game-store';
 import { useGameResultStatus } from '@/features/game-result/model/use-game-result-status';
+import { useHistoryNavigation } from '@/features/history-navigation/model/use-history-navigation';
 import {
   groupMoveHistoryRows,
   useMoveHistoryStore,
@@ -17,6 +18,11 @@ export function SidebarShell() {
 
   const { historyItems, selectedHalfMoveIndex, selectHalfMove } = useMoveHistoryStore();
   const gameResultStatus = useGameResultStatus(gameState, repetitionHistory);
+  const { canUndo, goToPreviousHalfMove } = useHistoryNavigation({
+    historyItems,
+    selectedHalfMoveIndex,
+    selectHalfMove,
+  });
 
   const rows = useMemo(() => groupMoveHistoryRows(historyItems), [historyItems]);
 
@@ -40,7 +46,9 @@ export function SidebarShell() {
             rows={rows}
             selectedHalfMoveIndex={selectedHalfMoveIndex}
             gameResultStatus={gameResultStatus}
+            canUndo={canUndo}
             onSelectHalfMove={handleSelectHalfMove}
+            onUndo={goToPreviousHalfMove}
           />
         </div>
       </div>
