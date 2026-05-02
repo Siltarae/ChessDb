@@ -10,13 +10,25 @@ type DerivePreviousHalfMoveIndexParams = {
   readonly currentHalfMoveIndex: number | null;
 };
 
+type DeriveNextHalfMoveIndexParams = {
+  readonly historyLength: number;
+  readonly selectedHalfMoveIndex: number | null;
+};
+
 type CanUndoParams = {
   readonly currentHalfMoveIndex: number | null;
 };
 
+type CanRedoParams = {
+  readonly historyLength: number;
+  readonly selectedHalfMoveIndex: number | null;
+};
+
 type UseHistoryNavigationResult = {
   readonly canUndo: boolean;
+  readonly canRedo: boolean;
   readonly goToPreviousHalfMove: () => void;
+  readonly goToNextHalfMove: () => void;
 };
 
 type UseHistoryNavigationParams = {
@@ -38,6 +50,7 @@ export const useHistoryNavigation = ({
   });
 
   const canUndo = deriveCanUndo({ currentHalfMoveIndex });
+  const canRedo = deriveCanRedo({ historyLength, selectedHalfMoveIndex });
 
   const goToPreviousHalfMove = useCallback(() => {
     if (!canUndo) {
@@ -53,11 +66,32 @@ export const useHistoryNavigation = ({
     selectHalfMove(previousHalfMoveIndex);
   }, [canUndo, currentHalfMoveIndex, selectHalfMove]);
 
-  return { canUndo, goToPreviousHalfMove };
+  const goToNextHalfMove = useCallback(() => {
+    if (!canRedo) {
+      return;
+    }
+
+    const nextHalfMoveIndex = deriveNextHalfMoveIndex({
+      historyLength,
+      selectedHalfMoveIndex,
+    });
+
+    if (nextHalfMoveIndex === null) {
+      return;
+    }
+
+    selectHalfMove(nextHalfMoveIndex);
+  }, [canRedo, historyLength, selectedHalfMoveIndex, selectHalfMove]);
+
+  return { canUndo, canRedo, goToPreviousHalfMove, goToNextHalfMove };
 };
 
 const deriveCanUndo = ({ currentHalfMoveIndex }: CanUndoParams): boolean => {
   return derivePreviousHalfMoveIndex({ currentHalfMoveIndex }) !== null;
+};
+
+const deriveCanRedo = ({ historyLength, selectedHalfMoveIndex }: CanRedoParams): boolean => {
+  return deriveNextHalfMoveIndex({ historyLength, selectedHalfMoveIndex }) !== null;
 };
 
 const deriveCurrentHalfMoveIndex = ({
@@ -87,4 +121,19 @@ const derivePreviousHalfMoveIndex = ({
   }
 
   return currentHalfMoveIndex - 1;
+};
+
+const deriveNextHalfMoveIndex = ({
+  historyLength,
+  selectedHalfMoveIndex,
+}: DeriveNextHalfMoveIndexParams) => {
+  if (historyLength === 0 || selectedHalfMoveIndex === null) {
+    return null;
+  }
+
+  if (selectedHalfMoveIndex >= historyLength - 1) {
+    return null;
+  }
+
+  return selectedHalfMoveIndex + 1;
 };

@@ -6,8 +6,10 @@ type MoveHistoryPanelProps = {
   selectedHalfMoveIndex: number | null;
   gameResultStatus: GameResultStatusView;
   canUndo: boolean;
+  canRedo: boolean;
   onSelectHalfMove: (halfMoveIndex: number) => void;
   onUndo: () => void;
+  onRedo: () => void;
 };
 
 export const MoveHistoryPanel = ({
@@ -15,8 +17,10 @@ export const MoveHistoryPanel = ({
   selectedHalfMoveIndex,
   gameResultStatus,
   canUndo,
+  canRedo,
   onSelectHalfMove,
   onUndo,
+  onRedo,
 }: MoveHistoryPanelProps) => {
   const hasMoves = rows.length > 0;
   const latestHalfMoveIndex = getLatestHalfMoveIndex(rows);
@@ -37,7 +41,12 @@ export const MoveHistoryPanel = ({
           >
             ↶
           </button>
-          <button type="button" className="size-7 rounded-md border bg-muted text-sm" disabled>
+          <button
+            type="button"
+            className="size-7 rounded-md border bg-background text-sm"
+            disabled={!canRedo}
+            onClick={() => onRedo()}
+          >
             ↷
           </button>
         </div>

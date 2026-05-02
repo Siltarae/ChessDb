@@ -173,4 +173,72 @@ describe('useHistoryNavigation', () => {
     expect(historyItems).toEqual(originalHistoryItems);
     expect(historyItems.at(-1)?.san).toBe('Nf3');
   });
+
+  describe('redo', () => {
+    it('다음 반수가 있을 때만 canRedo가 true다', () => {
+      const selectHalfMove = vi.fn();
+      const historyItems = createHistoryItems();
+
+      const { result, rerender } = renderHook(
+        ({ selectedHalfMoveIndex }: { selectedHalfMoveIndex: number | null }) =>
+          useHistoryNavigation({
+            historyItems,
+            selectedHalfMoveIndex,
+            selectHalfMove,
+          }),
+        {
+          initialProps: {
+            selectedHalfMoveIndex: 1,
+          } as { selectedHalfMoveIndex: number | null },
+        },
+      );
+
+      expect(result.current.canRedo).toBe(true);
+
+      rerender({ selectedHalfMoveIndex: 2 });
+      expect(result.current.canRedo).toBe(false);
+
+      rerender({ selectedHalfMoveIndex: null });
+      expect(result.current.canRedo).toBe(false);
+    });
+
+    it('goToNextHalfMove 호출 시 다음 반수 인덱스를 선택해야 한다', () => {
+      const selectHalfMove = vi.fn();
+      const historyItems = createHistoryItems();
+      const { result } = renderHook(() =>
+        useHistoryNavigation({
+          historyItems,
+          selectedHalfMoveIndex: 1,
+          selectHalfMove,
+        }),
+      );
+
+      act(() => {
+        result.current.goToNextHalfMove();
+      });
+
+      expect(selectHalfMove).toHaveBeenCalledOnce();
+      expect(selectHalfMove).toHaveBeenCalledWith(2);
+    });
+
+    it('다음 반수가 없으면 goToNextHalfMove 호출 시 선택 상태를 바꾸지 않아야 한다', () => {
+      const selectHalfMove = vi.fn();
+      const historyItems = createHistoryItems();
+      const { result } = renderHook(() =>
+        useHistoryNavigation({
+          historyItems,
+          selectedHalfMoveIndex: null,
+          selectHalfMove,
+        }),
+      );
+
+      expect(result.current.canRedo).toBe(false);
+
+      act(() => {
+        result.current.goToNextHalfMove();
+      });
+
+      expect(selectHalfMove).not.toHaveBeenCalled();
+    });
+  });
 });
