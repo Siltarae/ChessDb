@@ -46,12 +46,10 @@ test.describe('기보 입력 핵심 흐름 E2E 스모크', () => {
     await move(page, 'b8', 'c6');
 
     await expect(moveHistoryPanel.getByText('2.')).toBeVisible();
-    await expect(moveHistoryPanel.locator('button:not([disabled])')).toHaveText([
-      'e4',
-      'e5',
-      'Nf3',
-      'Nc6',
-    ]);
+    await expect(moveHistoryPanel.getByRole('button', { name: 'e4', exact: true })).toBeVisible();
+    await expect(moveHistoryPanel.getByRole('button', { name: 'e5', exact: true })).toBeVisible();
+    await expect(moveHistoryPanel.getByRole('button', { name: 'Nf3', exact: true })).toBeVisible();
+    await expect(moveHistoryPanel.getByRole('button', { name: 'Nc6', exact: true })).toBeVisible();
     await expect(
       moveHistoryPanel.getByRole('button', { name: 'Nc6', exact: true }),
     ).toHaveAttribute('aria-current', 'step');
@@ -65,6 +63,40 @@ test.describe('기보 입력 핵심 흐름 E2E 스모크', () => {
     await expect(
       moveHistoryPanel.getByRole('button', { name: 'Nc6', exact: true }),
     ).toHaveAttribute('aria-current', 'step');
+  });
+
+  test('좌우 방향키로 수순 표시 시점을 되돌리고 다시 진행할 수 있다', async ({ page }) => {
+    await page.goto('/');
+
+    const moveHistoryPanel = page.getByRole('region', { name: '수순 목록' });
+
+    await move(page, 'e2', 'e4');
+    await move(page, 'e7', 'e5');
+    await move(page, 'g1', 'f3');
+
+    await expect(
+      moveHistoryPanel.getByRole('button', { name: 'Nf3', exact: true }),
+    ).toHaveAttribute('aria-current', 'step');
+    await expect(page.getByRole('status', { name: '현재 턴 흑' })).toBeAttached();
+
+    await page.keyboard.press('ArrowLeft');
+
+    await expect(moveHistoryPanel.getByRole('button', { name: 'e5', exact: true })).toHaveAttribute(
+      'data-selected',
+      'true',
+    );
+    await expect(pieceOn(square(page, 'g1'), 'white knight')).toBeVisible();
+    await expect(pieceOn(square(page, 'f3'), 'white knight')).toHaveCount(0);
+    await expect(page.getByRole('status', { name: '현재 턴 백' })).toBeAttached();
+
+    await page.keyboard.press('ArrowRight');
+
+    await expect(
+      moveHistoryPanel.getByRole('button', { name: 'Nf3', exact: true }),
+    ).toHaveAttribute('data-selected', 'true');
+    await expect(pieceOn(square(page, 'g1'), 'white knight')).toHaveCount(0);
+    await expect(pieceOn(square(page, 'f3'), 'white knight')).toBeVisible();
+    await expect(page.getByRole('status', { name: '현재 턴 흑' })).toBeAttached();
   });
 
   test('불법 칸을 클릭하면 보드 상태와 현재 턴이 유지된다', async ({ page }) => {
@@ -175,7 +207,7 @@ test.describe('기보 입력 핵심 흐름 E2E 스모크', () => {
 
     await expect(page.getByRole('dialog', { name: '프로모션 기물 선택' })).toBeVisible();
 
-    await page.getByRole('complementary', { name: '기보 입력 사이드 패널' }).click();
+    await square(page, 'e1').click();
 
     await expect(page.getByRole('dialog', { name: '프로모션 기물 선택' })).toHaveCount(0);
     await expect(pieceOn(square(page, 'b7'), 'white pawn')).toBeVisible();
