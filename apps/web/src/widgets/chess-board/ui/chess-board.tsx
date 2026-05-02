@@ -1,4 +1,4 @@
-import type { LastMove } from '@/entities/game/model/game-view-state';
+import type { LastMove } from '@/entities/game';
 import type { Board, Square } from '@chess-db/shared';
 import { DISPLAY_SQUARES, getSquareTone, toSquareLabel } from '../model/board-coordinate';
 import { ChessSquare } from './chess-square';

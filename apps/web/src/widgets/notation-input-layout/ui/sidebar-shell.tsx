@@ -2,14 +2,14 @@ import {
   selectGameState,
   selectRepetitionHistory,
   useGameStore,
-} from '@/entities/game/model/game-store';
-import { useGameResultStatus } from '@/features/game-result/model/use-game-result-status';
-import { useHistoryNavigation } from '@/features/history-navigation/model/use-history-navigation';
+} from '@/entities/game';
+import { useGameResultStatus } from '@/features/game-result';
+import { useHistoryNavigation } from '@/features/history-navigation';
 import {
   groupMoveHistoryRows,
   useMoveHistoryStore,
-} from '@/features/move-history/model/move-history-store';
-import { MoveHistoryPanel } from '@/widgets/move-history/ui/move-history-panel';
+} from '@/entities/move-history';
+import { MoveHistoryPanel } from '@/widgets/move-history';
 import { useMemo } from 'react';
 
 export function SidebarShell() {

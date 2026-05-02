@@ -1,5 +1,5 @@
-import type { LastMove } from '@/entities/game/model/game-view-state';
-import type { AppendMoveHistoryInput } from '@/features/move-history/model/move-history-store';
+import type { LastMove } from '@/entities/game';
+import type { AppendMoveHistoryInput } from '@/entities/move-history';
 import {
   convertToSan,
   executeMove,

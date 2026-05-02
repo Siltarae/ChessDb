@@ -2,12 +2,12 @@ import { COLOR, PIECE_TYPE, SQUARE, createInitialGameState } from '@chess-db/sha
 import { cleanup, fireEvent, render } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import blackKing from '../assets/pieces/black-king.svg';
-import blackQueen from '../assets/pieces/black-queen.svg';
-import whiteKing from '../assets/pieces/white-king.svg';
-import whiteRook from '../assets/pieces/white-rook.svg';
+import blackKing from '@/entities/piece/assets/pieces/black-king.svg';
+import blackQueen from '@/entities/piece/assets/pieces/black-queen.svg';
+import { ChessPiece } from '@/entities/piece';
+import whiteKing from '@/entities/piece/assets/pieces/white-king.svg';
+import whiteRook from '@/entities/piece/assets/pieces/white-rook.svg';
 import { ChessBoard } from './chess-board';
-import { ChessPiece } from './chess-piece';
 
 afterEach(() => {
   cleanup();

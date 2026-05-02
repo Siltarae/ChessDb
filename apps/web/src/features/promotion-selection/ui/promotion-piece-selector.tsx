@@ -1,5 +1,5 @@
 import { cn } from '@/shared/lib/utils';
-import { ChessPiece } from '@/widgets/chess-board/ui/chess-piece';
+import { ChessPiece } from '@/entities/piece';
 import { COLOR, PIECE_TYPE, type Color, type PromotionPieceType } from '@chess-db/shared';
 
 export type PromotionCandidate = {

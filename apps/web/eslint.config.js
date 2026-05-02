@@ -79,4 +79,59 @@ export default defineConfig([
       ],
     },
   },
+  {
+    files: ['src/entities/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@/features/**', '@/widgets/**', '@/pages/**', '@/app/**'],
+              message: 'entities 레이어는 상위 FSD 레이어를 import할 수 없습니다.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/features/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@/features/**', '@/widgets/**', '@/pages/**', '@/app/**'],
+              message: 'features 레이어는 다른 feature slice나 상위 FSD 레이어를 import하지 마세요.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['src/widgets/**/*.{ts,tsx}', 'src/pages/**/*.{ts,tsx}', 'src/app/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: [
+                '@/entities/*/model/**',
+                '@/entities/*/ui/**',
+                '@/features/*/model/**',
+                '@/features/*/ui/**',
+                '@/widgets/*/model/**',
+                '@/widgets/*/ui/**',
+              ],
+              message: '다른 FSD slice의 내부 세그먼트 대신 public API(index.ts)를 import하세요.',
+            },
+          ],
+        },
+      ],
+    },
+  },
 ]);

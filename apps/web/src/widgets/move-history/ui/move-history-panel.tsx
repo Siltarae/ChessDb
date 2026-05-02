@@ -1,5 +1,5 @@
-import type { GameResultStatusView } from '@/features/game-result/model/use-game-result-status';
-import type { MoveHistoryRow } from '@/features/move-history/model/move-history-store';
+import type { MoveHistoryRow } from '@/entities/move-history';
+import type { GameResultStatusView } from '@/features/game-result';
 
 type MoveHistoryPanelProps = {
   rows: MoveHistoryRow[];
