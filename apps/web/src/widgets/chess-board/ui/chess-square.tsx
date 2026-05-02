@@ -1,5 +1,5 @@
 import type { Piece, Square } from '@chess-db/shared';
-import { ChessPiece } from './chess-piece';
+import { ChessPiece } from '@/entities/piece';
 
 type ChessSquareProps = {
   square: Square;

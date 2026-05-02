@@ -1,4 +1,4 @@
-import type { MoveHistoryItem } from '@/features/move-history/model/move-history-store';
+import type { MoveHistoryItem } from '@/entities/move-history';
 import { useCallback } from 'react';
 
 type DeriveCurrentHalfMoveIndexParams = {

@@ -14,7 +14,7 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { BoardShell } from './board-shell';
-import { useMoveHistoryStore } from '@/features/move-history/model/move-history-store';
+import { useMoveHistoryStore } from '@/entities/move-history';
 
 const mockApplyGameState = vi.fn();
 const mockSelectSquare = vi.fn();
@@ -57,7 +57,7 @@ const mockGameResultStatus = vi.hoisted(() => ({
   canStartNewMove: true,
 }));
 
-vi.mock('@/entities/game/model/game-store', () => ({
+vi.mock('@/entities/game', () => ({
   selectApplyGameState: (state: typeof mockGameStoreState.state) => state.applyGameState,
   selectBoardState: (state: typeof mockGameStoreState.state) => state.boardState,
   selectGameState: (state: typeof mockGameStoreState.state) => state.gameState,
@@ -66,19 +66,19 @@ vi.mock('@/entities/game/model/game-store', () => ({
     selector(mockGameStoreState.state),
 }));
 
-vi.mock('@/features/legal-move-highlight/model/use-legal-move-highlight', () => ({
+vi.mock('@/features/legal-move-highlight', () => ({
   useLegalMoveHighlight: () => mockLegalMoveHighlight,
 }));
 
-vi.mock('@/features/make-move/model/use-make-move', () => ({
+vi.mock('@/features/make-move', () => ({
   useMakeMove: () => mockMakeMoveState,
 }));
 
-vi.mock('@/features/game-result/model/use-game-result-status', () => ({
+vi.mock('@/features/game-result', () => ({
   useGameResultStatus: () => mockGameResultStatus,
 }));
 
-vi.mock('@/widgets/chess-board/ui/chess-board', () => ({
+vi.mock('@/widgets/chess-board', () => ({
   ChessBoard: ({
     boardState,
     highlightSquares,

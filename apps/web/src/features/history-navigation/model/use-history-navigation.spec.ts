@@ -9,7 +9,7 @@ import {
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import type { MoveHistoryItem } from '@/features/move-history/model/move-history-store';
+import type { MoveHistoryItem } from '@/entities/move-history';
 import { useHistoryNavigation } from './use-history-navigation';
 
 const createMove = (

@@ -3,19 +3,19 @@ import {
   selectGameState,
   selectRepetitionHistory,
   useGameStore,
-} from '@/entities/game/model/game-store';
-import { useCheckStatus } from '@/features/check-status/model/use-check-status';
-import { useGameResultStatus } from '@/features/game-result/model/use-game-result-status';
-import { useLegalMoveHighlight } from '@/features/legal-move-highlight/model/use-legal-move-highlight';
-import { useMakeMove } from '@/features/make-move/model/use-make-move';
+} from '@/entities/game';
+import { useCheckStatus } from '@/features/check-status';
+import { useGameResultStatus } from '@/features/game-result';
+import { useLegalMoveHighlight } from '@/features/legal-move-highlight';
+import { useMakeMove } from '@/features/make-move';
 import {
   selectAppendMoveHistory,
   selectMoveHistoryItems,
   selectSelectedHalfMoveIndex,
   useMoveHistoryStore,
-} from '@/features/move-history/model/move-history-store';
-import { PromotionPieceSelector } from '@/features/promotion-selection/ui/promotion-piece-selector';
-import { ChessBoard } from '@/widgets/chess-board/ui/chess-board';
+} from '@/entities/move-history';
+import { PromotionPieceSelector } from '@/features/promotion-selection';
+import { ChessBoard } from '@/widgets/chess-board';
 import { COLOR, type Color, type Square } from '@chess-db/shared';
 import { useCallback, useEffect, useRef } from 'react';
 

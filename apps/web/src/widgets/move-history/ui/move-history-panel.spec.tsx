@@ -11,8 +11,8 @@ import {
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import type { MoveHistoryRow } from '@/features/move-history/model/move-history-store';
-import type { GameResultStatusView } from '@/features/game-result/model/use-game-result-status';
+import type { MoveHistoryRow } from '@/entities/move-history';
+import type { GameResultStatusView } from '@/features/game-result';
 import { MoveHistoryPanel } from './move-history-panel';
 
 const ongoingGameResultStatus: GameResultStatusView = {
