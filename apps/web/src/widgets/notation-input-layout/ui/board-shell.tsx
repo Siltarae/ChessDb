@@ -4,19 +4,20 @@ import {
   selectRepetitionHistory,
   useGameStore,
 } from '@/entities/game';
-import { useCheckStatus } from '@/features/check-status';
-import { useGameResultStatus } from '@/features/game-result';
-import { useLegalMoveHighlight } from '@/features/legal-move-highlight';
-import { useMakeMove } from '@/features/make-move';
 import {
   selectAppendMoveHistory,
   selectMoveHistoryItems,
   selectSelectedHalfMoveIndex,
   useMoveHistoryStore,
 } from '@/entities/move-history';
+import { useCheckStatus } from '@/features/check-status';
+import { useGameResultStatus } from '@/features/game-result';
+import { useLegalMoveHighlight } from '@/features/legal-move-highlight';
+import { useBoardDndMove, useMakeMove } from '@/features/make-move';
 import { PromotionPieceSelector } from '@/features/promotion-selection';
 import { ChessBoard } from '@/widgets/chess-board';
 import { COLOR, type Color, type Square } from '@chess-db/shared';
+import { DragDropProvider } from '@dnd-kit/react';
 import { useCallback, useEffect, useRef } from 'react';
 
 export const BoardShell = () => {
@@ -76,6 +77,17 @@ export const BoardShell = () => {
       }
     : lastMove;
   const isBoardInputDisabled = !canStartNewMove || isViewingHistory;
+
+  const { handleDragStart, handleDragEnd, handleDragOver } = useBoardDndMove({
+    boardState: displayBoardState,
+    turn: displayGameState.turn,
+    isBoardInputDisabled,
+    pendingPromotionMoveExists: pendingPromotionMove !== null,
+    highlightSquares: displayHighlightSquares,
+    selectSquare,
+    clearSelection,
+    makeMove,
+  });
 
   const handlePromotionCancel = useCallback(() => {
     clearPendingPromotion();
@@ -145,14 +157,20 @@ export const BoardShell = () => {
           />
         </div>
       ) : null}
-      <ChessBoard
-        boardState={displayBoardState}
-        highlightSquares={displayHighlightSquares}
-        selectedSquare={displaySelectedSquare}
-        onSquareClick={handleSquareClick}
-        lastMove={displayLastMove}
-        checkedKingSquare={displayCheckedKingSquare}
-      />
+      <DragDropProvider
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDragEnd={handleDragEnd}
+      >
+        <ChessBoard
+          boardState={displayBoardState}
+          highlightSquares={displayHighlightSquares}
+          selectedSquare={displaySelectedSquare}
+          onSquareClick={handleSquareClick}
+          lastMove={displayLastMove}
+          checkedKingSquare={displayCheckedKingSquare}
+        />
+      </DragDropProvider>
     </section>
   );
 };

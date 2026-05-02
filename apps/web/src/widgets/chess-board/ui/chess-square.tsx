@@ -1,5 +1,7 @@
-import type { Piece, Square } from '@chess-db/shared';
 import { ChessPiece } from '@/entities/piece';
+import { toDraggablePieceId, toDroppableSquareId } from '@/features/make-move';
+import type { Piece, Square } from '@chess-db/shared';
+import { useDraggable, useDroppable } from '@dnd-kit/react';
 
 type ChessSquareProps = {
   square: Square;
@@ -24,6 +26,11 @@ export const ChessSquare = ({
   isCheckedKingSquare,
   onClick,
 }: ChessSquareProps): React.ReactNode => {
+  const { ref: droppableRef } = useDroppable({
+    id: toDroppableSquareId(square),
+    data: { targetSquare: square },
+  });
+
   const squareToneClass = tone === 'dark' ? 'bg-[#8ca07c]' : 'bg-[#eef0df]';
   const selectedClass = isSelected ? 'bg-square-selected' : '';
   const hasPiece = piece !== null;
@@ -39,6 +46,7 @@ export const ChessSquare = ({
 
   return (
     <div
+      ref={droppableRef}
       key={square}
       data-square={label}
       data-tone={tone}
@@ -52,7 +60,20 @@ export const ChessSquare = ({
       className={`relative flex aspect-square items-center justify-center ${squareToneClass} ${selectedClass} ${legalMoveClass} ${lastMoveClass} ${checkClass}`}
       onClick={onClick}
     >
-      {hasPiece ? <ChessPiece piece={piece} /> : null}
+      {hasPiece ? <DraggablePiece square={square} piece={piece} /> : null}
+    </div>
+  );
+};
+
+const DraggablePiece = ({ square, piece }: { square: Square; piece: Piece }) => {
+  const { ref: draggableRef } = useDraggable({
+    id: toDraggablePieceId(square),
+    data: { sourceSquare: square, pieceColor: piece.color },
+  });
+
+  return (
+    <div ref={draggableRef} className="size-full">
+      <ChessPiece piece={piece} />
     </div>
   );
 };

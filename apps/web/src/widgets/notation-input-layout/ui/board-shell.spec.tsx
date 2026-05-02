@@ -51,6 +51,14 @@ const mockMakeMoveState = vi.hoisted(() => ({
   selectPromotionPiece: vi.fn(),
 }));
 
+const mockBoardDndMove = vi.hoisted(() => ({
+  activeDragSquare: null,
+  dragOverSquare: null,
+  handleDragStart: vi.fn(),
+  handleDragOver: vi.fn(),
+  handleDragEnd: vi.fn(),
+}));
+
 const mockGameResultStatus = vi.hoisted(() => ({
   isGameOver: false,
   resultReason: null as string | null,
@@ -72,6 +80,7 @@ vi.mock('@/features/legal-move-highlight', () => ({
 
 vi.mock('@/features/make-move', () => ({
   useMakeMove: () => mockMakeMoveState,
+  useBoardDndMove: () => mockBoardDndMove,
 }));
 
 vi.mock('@/features/game-result', () => ({
