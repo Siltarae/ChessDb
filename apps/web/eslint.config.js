@@ -104,7 +104,8 @@ export default defineConfig([
           patterns: [
             {
               group: ['@/features/**', '@/widgets/**', '@/pages/**', '@/app/**'],
-              message: 'features 레이어는 다른 feature slice나 상위 FSD 레이어를 import하지 마세요.',
+              message:
+                'features 레이어는 다른 feature slice나 상위 FSD 레이어를 import하지 마세요.',
             },
           ],
         },
