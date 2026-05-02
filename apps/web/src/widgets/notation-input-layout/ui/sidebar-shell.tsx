@@ -1,14 +1,7 @@
-import {
-  selectGameState,
-  selectRepetitionHistory,
-  useGameStore,
-} from '@/entities/game';
+import { selectGameState, selectRepetitionHistory, useGameStore } from '@/entities/game';
 import { useGameResultStatus } from '@/features/game-result';
 import { useHistoryNavigation } from '@/features/history-navigation';
-import {
-  groupMoveHistoryRows,
-  useMoveHistoryStore,
-} from '@/entities/move-history';
+import { groupMoveHistoryRows, useMoveHistoryStore } from '@/entities/move-history';
 import { MoveHistoryPanel } from '@/widgets/move-history';
 import { useMemo } from 'react';
 
@@ -18,7 +11,7 @@ export function SidebarShell() {
 
   const { historyItems, selectedHalfMoveIndex, selectHalfMove } = useMoveHistoryStore();
   const gameResultStatus = useGameResultStatus(gameState, repetitionHistory);
-  const { canUndo, goToPreviousHalfMove } = useHistoryNavigation({
+  const { canUndo, canRedo, goToPreviousHalfMove, goToNextHalfMove } = useHistoryNavigation({
     historyItems,
     selectedHalfMoveIndex,
     selectHalfMove,
@@ -47,8 +40,10 @@ export function SidebarShell() {
             selectedHalfMoveIndex={selectedHalfMoveIndex}
             gameResultStatus={gameResultStatus}
             canUndo={canUndo}
+            canRedo={canRedo}
             onSelectHalfMove={handleSelectHalfMove}
             onUndo={goToPreviousHalfMove}
+            onRedo={goToNextHalfMove}
           />
         </div>
       </div>

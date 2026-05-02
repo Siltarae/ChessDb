@@ -30,15 +30,19 @@ const renderMoveHistoryPanel = ({
   selectedHalfMoveIndex = null,
   gameResultStatus = ongoingGameResultStatus,
   canUndo = false,
+  canRedo = false,
   onSelectHalfMove = vi.fn(),
   onUndo = vi.fn(),
+  onRedo = vi.fn(),
 }: {
   rows?: MoveHistoryRow[];
   selectedHalfMoveIndex?: number | null;
   gameResultStatus?: GameResultStatusView;
   canUndo?: boolean;
+  canRedo?: boolean;
   onSelectHalfMove?: (halfMoveIndex: number) => void;
   onUndo?: () => void;
+  onRedo?: () => void;
 }) =>
   render(
     <MoveHistoryPanel
@@ -46,8 +50,10 @@ const renderMoveHistoryPanel = ({
       selectedHalfMoveIndex={selectedHalfMoveIndex}
       gameResultStatus={gameResultStatus}
       canUndo={canUndo}
+      canRedo={canRedo}
       onSelectHalfMove={onSelectHalfMove}
       onUndo={onUndo}
+      onRedo={onRedo}
     />,
   );
 
@@ -185,6 +191,26 @@ describe('MoveHistoryPanel', () => {
     fireEvent.click(screen.getByRole('button', { name: '↶' }));
 
     expect(onUndo).toHaveBeenCalledOnce();
+  });
+
+  it('다시하기 가능 상태에서 보조 액션을 클릭하면 onRedo를 호출해야 한다', () => {
+    const onRedo = vi.fn();
+
+    renderMoveHistoryPanel({ canRedo: true, onRedo });
+
+    fireEvent.click(screen.getByRole('button', { name: '↷' }));
+
+    expect(onRedo).toHaveBeenCalledOnce();
+  });
+
+  it('다시하기 불가능 상태에서는 onRedo를 호출하지 않아야 한다', () => {
+    const onRedo = vi.fn();
+
+    renderMoveHistoryPanel({ canRedo: false, onRedo });
+
+    fireEvent.click(screen.getByRole('button', { name: '↷' }));
+
+    expect(onRedo).not.toHaveBeenCalled();
   });
 
   it('흑 수가 없는 마지막 행에는 클릭 가능한 흑 셀을 만들지 않아야 한다', () => {
