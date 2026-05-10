@@ -81,6 +81,26 @@ describe('ChessBoard', () => {
       expect(getSquare(container, 'h1')).toHaveAttribute('data-tone', 'light');
     });
 
+    it('백 기준에서는 아래 행에 file, 오른쪽 열에 rank 라벨을 표시해야 한다', () => {
+      const { container } = renderChessBoard();
+
+      expect(getSquare(container, 'a1')).toHaveTextContent('a');
+      expect(getSquare(container, 'h1')).toHaveTextContent('h');
+      expect(getSquare(container, 'h1')).toHaveTextContent('1');
+      expect(getSquare(container, 'h8')).toHaveTextContent('8');
+      expect(getSquare(container, 'a8')).not.toHaveTextContent('a');
+    });
+
+    it('흑 기준에서는 뒤집힌 아래 행과 오른쪽 열에 맞춰 좌표 라벨을 표시해야 한다', () => {
+      const { container } = renderChessBoard({ orientation: 'black' });
+
+      expect(getSquare(container, 'h8')).toHaveTextContent('h');
+      expect(getSquare(container, 'a8')).toHaveTextContent('a');
+      expect(getSquare(container, 'a1')).toHaveTextContent('1');
+      expect(getSquare(container, 'a8')).toHaveTextContent('8');
+      expect(getSquare(container, 'h1')).not.toHaveTextContent('h');
+    });
+
     it('주요 시작 위치에 맞는 SVG 기물을 표시해야 한다', () => {
       const { container } = renderChessBoard();
 
