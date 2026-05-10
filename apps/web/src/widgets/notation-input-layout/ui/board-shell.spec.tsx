@@ -315,6 +315,35 @@ describe('BoardShell', () => {
     });
   });
 
+  it('흑 방향 보드에서는 프로모션 팝오버 좌표를 반대로 배치해야 한다', () => {
+    setPendingPromotionMove(COLOR.BLACK);
+
+    render(<BoardShell orientation="black" />);
+
+    const popover = screen.getByRole('dialog', { name: '프로모션 기물 선택' }).parentElement;
+
+    expect(popover).toHaveStyle({
+      left: '0%',
+      top: '0%',
+      width: '12.5%',
+    });
+  });
+
+  it('현재 턴의 왕이 체크 상태이면 status에 체크 상태를 함께 노출해야 한다', () => {
+    const board = Array.from({ length: 64 }, () => null) as (Piece | null)[];
+    board[SQUARE.E1] = { type: PIECE_TYPE.KING, color: COLOR.WHITE };
+    board[SQUARE.A8] = { type: PIECE_TYPE.KING, color: COLOR.BLACK };
+    board[SQUARE.E8] = { type: PIECE_TYPE.ROOK, color: COLOR.BLACK };
+    mockGameStoreState.state.gameState = {
+      ...createGameState(COLOR.WHITE),
+      board: board as Board,
+    };
+
+    render(<BoardShell />);
+
+    expect(screen.getByRole('status', { name: '현재 턴 백, 체크 상태' })).toBeInTheDocument();
+  });
+
   it('과거 수순을 선택하면 해당 반수의 afterState 보드를 표시하고 새 입력을 막아야 한다', () => {
     const beforeState = createGameState();
     const move: Move = {

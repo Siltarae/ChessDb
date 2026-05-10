@@ -164,6 +164,8 @@ const toPieceKey = (piece: Piece | null): string => {
 const hasInsufficientMaterial = (state: GameState): boolean => {
   let knightCount = 0;
   let bishopCount = 0;
+  let whiteKnightCount = 0;
+  let blackKnightCount = 0;
   const bishopSquareColors = new Set<number>();
 
   for (let i = 0; i < 64; i++) {
@@ -183,9 +185,14 @@ const hasInsufficientMaterial = (state: GameState): boolean => {
 
     if (piece.type === PIECE_TYPE.KNIGHT) {
       knightCount += 1;
+      if (piece.color === COLOR.WHITE) {
+        whiteKnightCount += 1;
+      } else {
+        blackKnightCount += 1;
+      }
 
       if (knightCount >= 2) {
-        return false;
+        continue;
       }
 
       if (bishopCount > 0) {
@@ -201,6 +208,18 @@ const hasInsufficientMaterial = (state: GameState): boolean => {
         return false;
       }
     }
+  }
+
+  if (
+    bishopCount === 0 &&
+    knightCount === 2 &&
+    (whiteKnightCount === 2 || blackKnightCount === 2)
+  ) {
+    return true;
+  }
+
+  if (knightCount >= 2) {
+    return false;
   }
 
   return bishopSquareColors.size <= 1;

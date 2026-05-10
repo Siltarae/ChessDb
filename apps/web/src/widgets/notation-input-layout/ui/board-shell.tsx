@@ -60,7 +60,7 @@ export const BoardShell = ({ orientation = 'white' }: BoardShellProps) => {
   const promotionPopoverStyle =
     pendingPromotionMove === null
       ? undefined
-      : getPromotionPopoverStyle(pendingPromotionMove.to, gameState.turn);
+      : getPromotionPopoverStyle(pendingPromotionMove.to, gameState.turn, orientation);
 
   const latestHalfMoveIndex = historyItems.length > 0 ? historyItems.length - 1 : null;
   const isViewingHistory =
@@ -74,6 +74,10 @@ export const BoardShell = ({ orientation = 'white' }: BoardShellProps) => {
   const displayHighlightSquares = isViewingHistory ? [] : highlightSquares;
   const displaySelectedSquare = isViewingHistory ? null : selectedSquare;
   const { checkedKingSquare: displayCheckedKingSquare } = useCheckStatus(displayGameState);
+  const currentTurnStatusLabel = toCurrentTurnStatusLabel(
+    displayGameState.turn,
+    displayCheckedKingSquare !== null,
+  );
   const displayLastMove = selectedHistoryItem
     ? {
         from: selectedHistoryItem.move.from,
@@ -145,12 +149,8 @@ export const BoardShell = ({ orientation = 'white' }: BoardShellProps) => {
       aria-label="기보 입력 보드 영역"
       className="relative flex aspect-square w-full max-w-180 items-center justify-center rounded-md border bg-muted text-sm text-muted-foreground"
     >
-      <p
-        role="status"
-        aria-label={`현재 턴 ${toCurrentTurnLabel(displayGameState.turn)}`}
-        className="sr-only"
-      >
-        현재 턴: {toCurrentTurnLabel(displayGameState.turn)}
+      <p role="status" aria-label={currentTurnStatusLabel} className="sr-only">
+        {currentTurnStatusLabel}
       </p>
       {pendingPromotionMove !== null ? (
         <div ref={promotionSelectorRef} className="absolute z-20" style={promotionPopoverStyle}>
@@ -184,15 +184,35 @@ const toCurrentTurnLabel = (turn: Color) => {
   return turn === COLOR.WHITE ? '백' : '흑';
 };
 
-const getPromotionPopoverStyle = (targetSquare: Square, side: Color): React.CSSProperties => {
+const toCurrentTurnStatusLabel = (turn: Color, isInCheck: boolean) => {
+  const turnLabel = `현재 턴 ${toCurrentTurnLabel(turn)}`;
+
+  return isInCheck ? `${turnLabel}, 체크 상태` : turnLabel;
+};
+
+const getPromotionPopoverStyle = (
+  targetSquare: Square,
+  side: Color,
+  orientation: BoardOrientation,
+): React.CSSProperties => {
   const fileIndex = targetSquare % 8;
   const rankIndex = Math.floor(targetSquare / 8);
   const displayRowIndex = 7 - rankIndex;
   const topRowIndex = side === COLOR.WHITE ? displayRowIndex : displayRowIndex - 3;
+  const leftPercent = (fileIndex / 8) * 100;
+  const topPercent = (topRowIndex / 8) * 100;
+
+  if (orientation === 'black') {
+    return {
+      left: `${100 - leftPercent - 12.5}%`,
+      top: `${100 - topPercent - 50}%`,
+      width: '12.5%',
+    };
+  }
 
   return {
-    left: `${(fileIndex / 8) * 100}%`,
-    top: `${(topRowIndex / 8) * 100}%`,
+    left: `${leftPercent}%`,
+    top: `${topPercent}%`,
     width: '12.5%',
   };
 };
