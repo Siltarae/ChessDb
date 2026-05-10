@@ -14,6 +14,11 @@ import { useMoveHistoryStore } from '@/entities/move-history';
 import { NotationInputLayout } from './notation-input-layout';
 import { SidebarShell } from './sidebar-shell';
 
+const sidebarShellProps: React.ComponentProps<typeof SidebarShell> = {
+  boardOrientation: 'white',
+  onToggleBoardOrientation: () => {},
+};
+
 afterEach(() => {
   cleanup();
   useMoveHistoryStore.getState().clearMoveHistory();
@@ -41,7 +46,12 @@ describe('NotationInputLayout', () => {
 
   describe('모바일 폭의 기본 배치를 확인할 때', () => {
     it('세로 스택 레이아웃을 렌더링해야 한다', () => {
-      render(<NotationInputLayout boardSlot={<BoardShell />} sidebarSlot={<SidebarShell />} />);
+      render(
+        <NotationInputLayout
+          boardSlot={<BoardShell />}
+          sidebarSlot={<SidebarShell {...sidebarShellProps} />}
+        />,
+      );
 
       const layoutContainer = screen.getByRole('main').firstElementChild;
 
@@ -53,7 +63,12 @@ describe('NotationInputLayout', () => {
 
   describe('데스크탑 폭의 전환 배치를 확인할 때', () => {
     it('2열 레이아웃을 렌더링해야 한다', () => {
-      render(<NotationInputLayout boardSlot={<BoardShell />} sidebarSlot={<SidebarShell />} />);
+      render(
+        <NotationInputLayout
+          boardSlot={<BoardShell />}
+          sidebarSlot={<SidebarShell {...sidebarShellProps} />}
+        />,
+      );
 
       const layoutContainer = screen.getByRole('main').firstElementChild;
 
@@ -83,7 +98,7 @@ describe('NotationInputLayout', () => {
 
   describe('사이드 패널 shell을 렌더링할 때', () => {
     it('독립 스크롤 영역을 가져야 한다', () => {
-      render(<SidebarShell />);
+      render(<SidebarShell {...sidebarShellProps} />);
 
       const sidebar = screen.getByRole('complementary', { name: '기보 입력 사이드 패널' });
       expect(sidebar).toHaveClass('flex', 'h-full', 'min-h-80', 'flex-col');
@@ -97,7 +112,7 @@ describe('NotationInputLayout', () => {
       appendSampleMoves();
       useMoveHistoryStore.getState().selectHalfMove(2);
 
-      render(<SidebarShell />);
+      render(<SidebarShell {...sidebarShellProps} />);
 
       fireEvent.keyDown(window, { key: 'ArrowLeft' });
       expect(useMoveHistoryStore.getState().selectedHalfMoveIndex).toBe(1);
@@ -113,7 +128,7 @@ describe('NotationInputLayout', () => {
       render(
         <>
           <input aria-label="수순 메모" />
-          <SidebarShell />
+          <SidebarShell {...sidebarShellProps} />
         </>,
       );
 

@@ -29,6 +29,7 @@ const renderChessBoard = (props: Partial<React.ComponentProps<typeof ChessBoard>
   return render(
     <ChessBoard
       boardState={boardState}
+      orientation={props.orientation}
       highlightSquares={props.highlightSquares ?? []}
       selectedSquare={props.selectedSquare ?? null}
       onSquareClick={props.onSquareClick ?? (() => {})}
@@ -58,6 +59,19 @@ describe('ChessBoard', () => {
       expect(squares[7]).toBe('h8');
       expect(squares[56]).toBe('a1');
       expect(squares[63]).toBe('h1');
+    });
+
+    it('흑 기준으로는 위쪽 h1부터 아래쪽 a8까지 칸을 배치해야 한다', () => {
+      const { container } = renderChessBoard({ orientation: 'black' });
+
+      const squares = Array.from(container.querySelectorAll('[data-square]')).map((square) =>
+        square.getAttribute('data-square'),
+      );
+
+      expect(squares[0]).toBe('h1');
+      expect(squares[7]).toBe('a1');
+      expect(squares[56]).toBe('h8');
+      expect(squares[63]).toBe('a8');
     });
 
     it('a1은 어두운 칸이고 h1은 밝은 칸이어야 한다', () => {
@@ -105,6 +119,20 @@ describe('ChessBoard', () => {
       fireEvent.click(getSquare(container, 'g1'));
 
       expect(onSquareClick).toHaveBeenCalledWith(SQUARE.G1);
+    });
+
+    it('흑 기준 첫 화면 칸 클릭 시 실제 h1 Square 값을 상위 콜백으로 전달해야 한다', () => {
+      const onSquareClick = vi.fn();
+      const { container } = renderChessBoard({ orientation: 'black', onSquareClick });
+
+      const firstSquare = container.querySelector('[data-square]');
+      if (!(firstSquare instanceof HTMLElement)) {
+        throw new Error('첫 번째 보드 칸을 찾을 수 없습니다.');
+      }
+
+      fireEvent.click(firstSquare);
+
+      expect(onSquareClick).toHaveBeenCalledWith(SQUARE.H1);
     });
 
     it('마지막 착수의 출발 칸과 도착 칸에 last move class를 적용해야 한다', () => {

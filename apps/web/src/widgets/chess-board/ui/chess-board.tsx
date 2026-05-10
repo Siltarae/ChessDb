@@ -1,10 +1,16 @@
 import type { LastMove } from '@/entities/game';
 import type { Board, Square } from '@chess-db/shared';
-import { DISPLAY_SQUARES, getSquareTone, toSquareLabel } from '../model/board-coordinate';
+import {
+  getDisplaySquares,
+  getSquareTone,
+  toSquareLabel,
+  type BoardOrientation,
+} from '../model/board-coordinate';
 import { ChessSquare } from './chess-square';
 
 type ChessBoardProps = {
   boardState: Board;
+  orientation?: BoardOrientation;
   highlightSquares: Square[];
   selectedSquare: Square | null;
   onSquareClick: (square: Square) => void;
@@ -14,15 +20,18 @@ type ChessBoardProps = {
 
 export const ChessBoard = ({
   boardState,
+  orientation = 'white',
   highlightSquares,
   selectedSquare,
   onSquareClick,
   lastMove,
   checkedKingSquare,
 }: ChessBoardProps): React.ReactNode => {
+  const displaySquares = getDisplaySquares(orientation);
+
   return (
     <div className="grid aspect-square  w-full  grid-cols-8">
-      {DISPLAY_SQUARES.map((displaySquare) => {
+      {displaySquares.map((displaySquare) => {
         const piece = boardState[displaySquare] ?? null;
         const label = toSquareLabel(displaySquare);
         const tone = getSquareTone(displaySquare);

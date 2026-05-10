@@ -65,6 +65,29 @@ test.describe('기보 입력 핵심 흐름 E2E 스모크', () => {
     ).toHaveAttribute('aria-current', 'step');
   });
 
+  test('보드 시점 전환 버튼을 누르면 흑 기준으로 보드 칸 순서가 바뀌고 착수는 실제 좌표로 동작한다', async ({
+    page,
+  }) => {
+    await page.goto('/');
+
+    const board = page.getByRole('region', { name: '기보 입력 보드 영역' });
+    const squares = board.locator('[data-square]');
+
+    await expect(squares.first()).toHaveAttribute('data-square', 'a8');
+    await expect(squares.nth(63)).toHaveAttribute('data-square', 'h1');
+
+    await page.getByRole('button', { name: '보드 시점 전환' }).click();
+
+    await expect(squares.first()).toHaveAttribute('data-square', 'h1');
+    await expect(squares.nth(63)).toHaveAttribute('data-square', 'a8');
+
+    await move(page, 'e2', 'e4');
+
+    await expect(pieceOn(square(page, 'e2'), 'white pawn')).toHaveCount(0);
+    await expect(pieceOn(square(page, 'e4'), 'white pawn')).toBeVisible();
+    await expect(page.getByRole('status', { name: '현재 턴 흑' })).toBeAttached();
+  });
+
   test('좌우 방향키로 수순 표시 시점을 되돌리고 다시 진행할 수 있다', async ({ page }) => {
     await page.goto('/');
 

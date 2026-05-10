@@ -90,12 +90,14 @@ vi.mock('@/features/game-result', () => ({
 vi.mock('@/widgets/chess-board', () => ({
   ChessBoard: ({
     boardState,
+    orientation,
     highlightSquares,
     selectedSquare,
     onSquareClick,
     lastMove,
   }: {
     boardState: Board;
+    orientation?: 'white' | 'black';
     highlightSquares: number[];
     selectedSquare: number | null;
     onSquareClick: (square: number) => void;
@@ -108,6 +110,7 @@ vi.mock('@/widgets/chess-board', () => ({
       data-highlight-count={highlightSquares.length}
       data-selected-square={selectedSquare ?? 'none'}
       data-last-move={lastMove === null ? 'none' : `${lastMove.from}-${lastMove.to}`}
+      data-orientation={orientation ?? 'white'}
       onClick={() => onSquareClick(SQUARE.E4)}
     >
       mock chess board
@@ -199,6 +202,15 @@ describe('BoardShell', () => {
     expect(screen.getByRole('status', { name: '현재 턴 백' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'mock chess board' })).toBeInTheDocument();
     expect(screen.queryByRole('dialog', { name: '프로모션 기물 선택' })).not.toBeInTheDocument();
+  });
+
+  it('전달받은 보드 시점을 ChessBoard로 넘겨야 한다', () => {
+    render(<BoardShell orientation="black" />);
+
+    expect(screen.getByRole('button', { name: 'mock chess board' })).toHaveAttribute(
+      'data-orientation',
+      'black',
+    );
   });
 
   it('일반 보드 클릭은 makeMove 실패 시 selectSquare로 이어져야 한다', () => {
