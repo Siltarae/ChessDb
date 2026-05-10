@@ -33,6 +33,7 @@ export const useGameResultStatus: UseGameResultStatus = (
   const isDraw =
     isGameOver &&
     (gameResult.reason === REASON.STALEMATE ||
+      gameResult.reason === REASON.FIFTY_MOVE ||
       gameResult.reason === REASON.THREEFOLD_REPETITION ||
       gameResult.reason === REASON.INSUFFICIENT_MATERIAL);
 

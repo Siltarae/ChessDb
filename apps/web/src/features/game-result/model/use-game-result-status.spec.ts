@@ -101,4 +101,21 @@ describe('useGameResultStatus', () => {
     expect(resultStatus.resultReason).toBeNull();
     expect(resultStatus.canStartNewMove).toBe(true);
   });
+
+  it('50수 규칙 종료 상태이면 무승부로 분류해야 한다', () => {
+    const state = createRepetitionState();
+    const resultStatus = useGameResultStatus(
+      {
+        ...state,
+        halfmoveClock: 100,
+      },
+      {},
+    );
+
+    expect(resultStatus.gameResult).toEqual({
+      status: GAME_RESULT_STATUS.FINISHED,
+      reason: REASON.FIFTY_MOVE,
+    });
+    expect(resultStatus.isDraw).toBe(true);
+  });
 });
