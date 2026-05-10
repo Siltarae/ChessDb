@@ -8,6 +8,8 @@ type ChessSquareProps = {
   label: string;
   tone: 'light' | 'dark';
   piece: Piece | null;
+  fileLabel: string | null;
+  rankLabel: string | null;
   isLegalMoveHighlighted: boolean;
   isSelected: boolean;
   isLastMove: boolean;
@@ -20,6 +22,8 @@ export const ChessSquare = ({
   label,
   tone,
   piece,
+  fileLabel,
+  rankLabel,
   isLegalMoveHighlighted,
   isSelected,
   isLastMove,
@@ -43,6 +47,7 @@ export const ChessSquare = ({
     : '';
 
   const checkClass = isCheckedKingSquare ? 'bg-square-checked-king' : '';
+  const coordinateLabelClass = tone === 'dark' ? 'text-[#eef0df]' : 'text-[#3f4a38]';
 
   return (
     <div
@@ -60,6 +65,22 @@ export const ChessSquare = ({
       className={`relative flex aspect-square items-center justify-center ${squareToneClass} ${selectedClass} ${legalMoveClass} ${lastMoveClass} ${checkClass}`}
       onClick={onClick}
     >
+      {rankLabel !== null ? (
+        <span
+          aria-hidden="true"
+          className={`pointer-events-none absolute right-1 top-1 text-[10px] font-semibold leading-none ${coordinateLabelClass}`}
+        >
+          {rankLabel}
+        </span>
+      ) : null}
+      {fileLabel !== null ? (
+        <span
+          aria-hidden="true"
+          className={`pointer-events-none absolute bottom-1 left-1 text-[10px] font-semibold leading-none ${coordinateLabelClass}`}
+        >
+          {fileLabel}
+        </span>
+      ) : null}
       {hasPiece ? <DraggablePiece square={square} piece={piece} /> : null}
     </div>
   );

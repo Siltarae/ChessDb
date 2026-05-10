@@ -31,10 +31,14 @@ export const ChessBoard = ({
 
   return (
     <div className="grid aspect-square  w-full  grid-cols-8">
-      {displaySquares.map((displaySquare) => {
+      {displaySquares.map((displaySquare, displayIndex) => {
         const piece = boardState[displaySquare] ?? null;
         const label = toSquareLabel(displaySquare);
         const tone = getSquareTone(displaySquare);
+        const isBottomRow = displayIndex >= 56;
+        const isRightColumn = displayIndex % 8 === 7;
+        const fileLabel = label.charAt(0);
+        const rankLabel = label.charAt(1);
 
         const isLegalMoveHighlighted = highlightSquares.includes(displaySquare);
         const isSelected = selectedSquare === displaySquare;
@@ -48,6 +52,8 @@ export const ChessBoard = ({
             label={label}
             tone={tone}
             piece={piece}
+            fileLabel={isBottomRow ? fileLabel : null}
+            rankLabel={isRightColumn ? rankLabel : null}
             isLegalMoveHighlighted={isLegalMoveHighlighted}
             isSelected={isSelected}
             isLastMove={isLastMove}
