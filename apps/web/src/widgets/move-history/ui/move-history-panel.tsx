@@ -1,5 +1,7 @@
 import type { MoveHistoryRow } from '@/entities/move-history';
 import type { GameResultStatusView } from '@/features/game-result';
+import type { BoardOrientation } from '@/widgets/chess-board';
+import { RotateCwSquare } from 'lucide-react';
 
 type MoveHistoryPanelProps = {
   rows: MoveHistoryRow[];
@@ -7,6 +9,8 @@ type MoveHistoryPanelProps = {
   gameResultStatus: GameResultStatusView;
   canUndo: boolean;
   canRedo: boolean;
+  boardOrientation: BoardOrientation;
+  onToggleBoardOrientation: () => void;
   onSelectHalfMove: (halfMoveIndex: number) => void;
   onUndo: () => void;
   onRedo: () => void;
@@ -18,6 +22,8 @@ export const MoveHistoryPanel = ({
   gameResultStatus,
   canUndo,
   canRedo,
+  boardOrientation,
+  onToggleBoardOrientation,
   onSelectHalfMove,
   onUndo,
   onRedo,
@@ -33,6 +39,16 @@ export const MoveHistoryPanel = ({
         </div>
 
         <div aria-label="수순 목록 보조 액션" className="flex items-center gap-2">
+          <button
+            type="button"
+            aria-label="보드 시점 전환"
+            aria-pressed={boardOrientation === 'black'}
+            title="보드 시점 전환"
+            className="flex size-7 items-center justify-center rounded-md border bg-background text-sm"
+            onClick={() => onToggleBoardOrientation()}
+          >
+            <RotateCwSquare aria-hidden="true" className="size-4" />
+          </button>
           <button
             type="button"
             className="size-7 rounded-md border bg-background text-sm"

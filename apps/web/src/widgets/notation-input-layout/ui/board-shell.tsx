@@ -15,12 +15,16 @@ import { useGameResultStatus } from '@/features/game-result';
 import { useLegalMoveHighlight } from '@/features/legal-move-highlight';
 import { useBoardDndMove, useMakeMove } from '@/features/make-move';
 import { PromotionPieceSelector } from '@/features/promotion-selection';
-import { ChessBoard } from '@/widgets/chess-board';
+import { ChessBoard, type BoardOrientation } from '@/widgets/chess-board';
 import { COLOR, type Color, type Square } from '@chess-db/shared';
 import { DragDropProvider } from '@dnd-kit/react';
 import { useCallback, useEffect, useRef } from 'react';
 
-export const BoardShell = () => {
+type BoardShellProps = {
+  orientation?: BoardOrientation;
+};
+
+export const BoardShell = ({ orientation = 'white' }: BoardShellProps) => {
   const promotionSelectorRef = useRef<HTMLDivElement | null>(null);
   const gameState = useGameStore(selectGameState);
   const repetitionHistory = useGameStore(selectRepetitionHistory);
@@ -164,6 +168,7 @@ export const BoardShell = () => {
       >
         <ChessBoard
           boardState={displayBoardState}
+          orientation={orientation}
           highlightSquares={displayHighlightSquares}
           selectedSquare={displaySelectedSquare}
           onSquareClick={handleSquareClick}

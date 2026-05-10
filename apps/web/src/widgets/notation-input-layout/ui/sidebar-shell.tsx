@@ -3,9 +3,15 @@ import { useGameResultStatus } from '@/features/game-result';
 import { useHistoryNavigation } from '@/features/history-navigation';
 import { groupMoveHistoryRows, useMoveHistoryStore } from '@/entities/move-history';
 import { MoveHistoryPanel } from '@/widgets/move-history';
+import type { BoardOrientation } from '@/widgets/chess-board';
 import { useEffect, useMemo } from 'react';
 
-export function SidebarShell() {
+type SidebarShellProps = {
+  boardOrientation: BoardOrientation;
+  onToggleBoardOrientation: () => void;
+};
+
+export function SidebarShell({ boardOrientation, onToggleBoardOrientation }: SidebarShellProps) {
   const gameState = useGameStore(selectGameState);
   const repetitionHistory = useGameStore(selectRepetitionHistory);
 
@@ -66,6 +72,8 @@ export function SidebarShell() {
             gameResultStatus={gameResultStatus}
             canUndo={canUndo}
             canRedo={canRedo}
+            boardOrientation={boardOrientation}
+            onToggleBoardOrientation={onToggleBoardOrientation}
             onSelectHalfMove={handleSelectHalfMove}
             onUndo={goToPreviousHalfMove}
             onRedo={goToNextHalfMove}

@@ -41,6 +41,7 @@
 - [TASK-096 프로모션 기물 선택 UI](../tasks/TASK-096.md)
 - [TASK-098 체크 상태 표시](../tasks/TASK-098.md)
 - [TASK-097 착수 후 게임 종료 상태 감지 및 입력 차단](../tasks/TASK-097.md)
+- [TASK-101 기보 입력 보드 시점 토글](../tasks/TASK-101.md)
 - [TASK-062 기물 이동의 SAN(Standard Algebraic Notation) 표기 변환 로직](../tasks/TASK-062.md)
 - [TASK-017 수순 목록 기록](../tasks/TASK-017.md)
 - [TASK-018 되돌리기](../tasks/TASK-018.md)
@@ -53,3 +54,4 @@
 - 프로모션 선택, 체크 상태, 게임 종료 상태처럼 화면 상태가 필요한 Task는 구현 전에 `docs/ui/TASK-xxx-*.svg` 스케치를 먼저 작성하고 합의한다.
 - `TASK-016` 완료 기준에는 E2E를 포함하지 않고, 브라우저 수준 검증은 `TASK-099`, `TASK-100`에서 별도 Task로 다룬다.
 - 드래그앤드랍 착수 입력은 새 Task 문서를 만들지 않고 `FEATURE-002`의 추가 입력 방식으로 관리하며, 세부 구현 체크포인트는 `checkpoint.md`에 둔다.
+- 보드 시점 토글은 수순 목록 헤더의 보조 액션 영역에 아이콘 버튼으로 배치하며, 실제 게임 상태와 수순은 변경하지 않는다.

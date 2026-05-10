@@ -1,5 +1,7 @@
 import { type Square } from '@chess-db/shared';
 
+export type BoardOrientation = 'white' | 'black';
+
 const createDisplaySquares = () => {
   const displaySquares = [] as Square[];
   for (let rank = 7; rank >= 0; rank--) {
@@ -13,7 +15,15 @@ const createDisplaySquares = () => {
 
 const calculateSquare = (rank: number, file: number): Square => (rank * 8 + file) as Square;
 
-export const DISPLAY_SQUARES = createDisplaySquares();
+export const WHITE_ORIENTATION_DISPLAY_SQUARES = createDisplaySquares();
+export const BLACK_ORIENTATION_DISPLAY_SQUARES = [...WHITE_ORIENTATION_DISPLAY_SQUARES].reverse();
+export const DISPLAY_SQUARES = WHITE_ORIENTATION_DISPLAY_SQUARES;
+
+export const getDisplaySquares = (orientation: BoardOrientation): readonly Square[] => {
+  return orientation === 'white'
+    ? WHITE_ORIENTATION_DISPLAY_SQUARES
+    : BLACK_ORIENTATION_DISPLAY_SQUARES;
+};
 
 export const toSquareLabel = (square: Square) => {
   const rank = Math.floor(square / 8) + 1;

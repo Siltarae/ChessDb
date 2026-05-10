@@ -31,6 +31,8 @@ const renderMoveHistoryPanel = ({
   gameResultStatus = ongoingGameResultStatus,
   canUndo = false,
   canRedo = false,
+  boardOrientation = 'white',
+  onToggleBoardOrientation = vi.fn(),
   onSelectHalfMove = vi.fn(),
   onUndo = vi.fn(),
   onRedo = vi.fn(),
@@ -40,6 +42,8 @@ const renderMoveHistoryPanel = ({
   gameResultStatus?: GameResultStatusView;
   canUndo?: boolean;
   canRedo?: boolean;
+  boardOrientation?: React.ComponentProps<typeof MoveHistoryPanel>['boardOrientation'];
+  onToggleBoardOrientation?: () => void;
   onSelectHalfMove?: (halfMoveIndex: number) => void;
   onUndo?: () => void;
   onRedo?: () => void;
@@ -51,6 +55,8 @@ const renderMoveHistoryPanel = ({
       gameResultStatus={gameResultStatus}
       canUndo={canUndo}
       canRedo={canRedo}
+      boardOrientation={boardOrientation}
+      onToggleBoardOrientation={onToggleBoardOrientation}
       onSelectHalfMove={onSelectHalfMove}
       onUndo={onUndo}
       onRedo={onRedo}
@@ -97,6 +103,31 @@ describe('MoveHistoryPanel', () => {
 
     expect(screen.getByRole('region', { name: '수순 목록' })).toBeInTheDocument();
     expect(screen.getByText('아직 기록된 수가 없습니다.')).toBeInTheDocument();
+  });
+
+  it('수순 목록 헤더에 보드 시점 전환 아이콘 버튼을 표시해야 한다', () => {
+    renderMoveHistoryPanel({});
+
+    expect(screen.getByRole('button', { name: '보드 시점 전환' })).toBeInTheDocument();
+  });
+
+  it('보드 시점 전환 아이콘 버튼을 클릭하면 onToggleBoardOrientation을 호출해야 한다', () => {
+    const onToggleBoardOrientation = vi.fn();
+
+    renderMoveHistoryPanel({ onToggleBoardOrientation });
+
+    fireEvent.click(screen.getByRole('button', { name: '보드 시점 전환' }));
+
+    expect(onToggleBoardOrientation).toHaveBeenCalledOnce();
+  });
+
+  it('흑 기준 시점에서는 보드 시점 전환 버튼이 눌린 상태여야 한다', () => {
+    renderMoveHistoryPanel({ boardOrientation: 'black' });
+
+    expect(screen.getByRole('button', { name: '보드 시점 전환' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
   });
 
   it('백과 흑 수순을 한 행에 표시하고 마지막 반수 셀을 강조해야 한다', () => {
@@ -232,7 +263,7 @@ describe('MoveHistoryPanel', () => {
     renderMoveHistoryPanel({ rows, selectedHalfMoveIndex: 0 });
 
     expect(screen.getByRole('button', { name: 'e4' })).toBeInTheDocument();
-    expect(screen.getAllByRole('button')).toHaveLength(3);
+    expect(screen.getAllByRole('button')).toHaveLength(4);
   });
 
   it('백 승리 종료 상태이면 결과와 종료 사유를 표시해야 한다', () => {
