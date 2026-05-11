@@ -1,0 +1,63 @@
+Project chess_db_feature_003_game_record {
+  database_type: 'PostgreSQL'
+  Note: '''
+    FEATURE-003 정식 기보 영속 모델.
+    초안 저장, 저장소, soft delete, 비표준 시작 포지션, gameStateAfter는 이번 범위에서 제외한다.
+  '''
+}
+
+Enum game_result {
+  ONGOING
+  WHITE_WIN
+  BLACK_WIN
+  DRAW
+}
+
+Enum game_termination_reason {
+  CHECKMATE
+  STALEMATE
+  FIFTY_MOVE
+  THREEFOLD_REPETITION
+  INSUFFICIENT_MATERIAL
+  RESIGNATION
+  AGREEMENT
+  OTHER
+}
+
+Enum move_annotation {
+  BRILLIANT
+  GOOD
+  INTERESTING
+  DUBIOUS
+  MISTAKE
+  BLUNDER
+}
+
+Table games {
+  id uuid [pk]
+  result game_result [not null]
+  termination_reason game_termination_reason [null, note: 'result가 ONGOING이면 null']
+  played_at date [null, note: '사용자가 대국 날짜를 비울 수 있다']
+  created_at timestamptz [not null]
+  updated_at timestamptz [not null]
+
+  Note: '정식 저장된 한 판 전체에 붙는 정보'
+}
+
+Table game_moves {
+  id uuid [pk]
+  game_id uuid [not null, ref: > games.id]
+  half_move_index int [not null, note: '기보 안의 반수 순서. 엔진 halfmoveClock과 다르다']
+  san varchar [not null]
+  move jsonb [not null, note: '엔진 Move를 DB/API 경계용 문자열 표현으로 직렬화한 값']
+  comment text [null]
+  annotation move_annotation [null]
+  created_at timestamptz [not null]
+  updated_at timestamptz [not null]
+
+  indexes {
+    (game_id, half_move_index) [unique]
+  }
+
+  Note: '정식 저장된 기보의 반수별 수순, 코멘트, 평가 기호'
+}
