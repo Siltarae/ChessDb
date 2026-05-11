@@ -76,17 +76,17 @@ Game 1 ── N GameMove
 
 정식 저장된 기보의 반수별 수순 정보다.
 
-| 필드            | 타입             | 필수   | 설명                                           |
-| --------------- | ---------------- | ------ | ---------------------------------------------- |
-| `id`            | `uuid`           | 예     | 반수 기록 고유 ID                              |
-| `gameId`        | `uuid`           | 예     | 소속 `Game` ID                                 |
-| `halfMoveIndex` | `int`            | 예     | 기보 안에서 몇 번째 반수인지 나타내는 순서     |
-| `san`           | `string`         | 예     | 표준 대수 표기법 문자열                        |
-| `move`          | `jsonb`          | 예     | 엔진 `Move`를 저장 경계용 표현으로 직렬화한 값 |
-| `comment`       | `text`           | 아니오 | 반수별 사용자 코멘트                           |
-| `annotation`    | `MoveAnnotation` | 아니오 | 반수별 착수 평가 기호의 의미 코드              |
-| `createdAt`     | `datetime`       | 예     | 반수 기록 생성 시각                            |
-| `updatedAt`     | `datetime`       | 예     | 반수 기록 마지막 수정 시각                     |
+| 필드            | 타입             | 필수   | 설명                                       |
+| --------------- | ---------------- | ------ | ------------------------------------------ |
+| `id`            | `uuid`           | 예     | 반수 기록 고유 ID                          |
+| `gameId`        | `uuid`           | 예     | 소속 `Game` ID                             |
+| `halfMoveIndex` | `int`            | 예     | 기보 안에서 몇 번째 반수인지 나타내는 순서 |
+| `san`           | `string`         | 예     | 표준 대수 표기법 문자열                    |
+| `move`          | `jsonb`          | 예     | 엔진 `Move` 구조를 그대로 저장한 JSON 값   |
+| `comment`       | `text`           | 아니오 | 반수별 사용자 코멘트                       |
+| `annotation`    | `MoveAnnotation` | 아니오 | 반수별 착수 평가 기호의 의미 코드          |
+| `createdAt`     | `datetime`       | 예     | 반수 기록 생성 시각                        |
+| `updatedAt`     | `datetime`       | 예     | 반수 기록 마지막 수정 시각                 |
 
 ### halfMoveIndex
 
@@ -96,8 +96,8 @@ Game 1 ── N GameMove
 
 ### move
 
-- 내부 엔진은 기존 숫자 상수 기반 `Move` 타입을 유지한다.
-- DB/API 경계에서는 mapper를 통해 사람이 읽기 쉬운 문자열 표현으로 변환한다.
+- 내부 엔진의 기존 숫자 상수 기반 `Move` 타입을 저장 계약에서도 재사용한다.
+- 기보 복원 시 별도 mapper 없이 저장된 `move`를 `executeMove`에 전달할 수 있게 한다.
 - 보드 복원은 표준 시작 포지션에서 `halfMoveIndex` 순서대로 `move`를 재생한다.
 - 이번 ERD에서는 `gameStateAfter`를 저장하지 않는다.
 
@@ -105,11 +105,9 @@ Game 1 ── N GameMove
 
 ```json
 {
-  "from": "e2",
-  "to": "e4",
-  "kind": "DOUBLE_PAWN_PUSH",
-  "promotion": null,
-  "capturedSquare": null
+  "from": 12,
+  "to": 28,
+  "kind": 1
 }
 ```
 
@@ -139,5 +137,5 @@ DB/API에서는 의미 코드를 저장하고, UI에서 기호로 표시한다.
 ## 구현 메모
 
 - Prisma 실제 모델명과 컬럼명은 후속 `TASK-089`, `TASK-095`에서 확정한다.
-- shared Zod 스키마는 이 ERD의 의미를 따르되, 내부 엔진 타입과 DB/API 표현 사이 mapper 책임을 분리한다.
+- shared Zod 스키마는 이 ERD의 의미를 따르되, `GameMove.move`는 내부 엔진 `Move` 타입을 재사용한다.
 - `GameMove.move`를 JSON으로 시작하되, 후속 통계/검색 요구가 강해지면 필요한 컬럼을 migration으로 분리한다.

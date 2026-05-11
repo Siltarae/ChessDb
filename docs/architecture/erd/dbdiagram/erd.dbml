@@ -49,7 +49,7 @@ Table game_moves {
   game_id uuid [not null, ref: > games.id]
   half_move_index int [not null, note: '기보 안의 반수 순서. 엔진 halfmoveClock과 다르다']
   san varchar [not null]
-  move jsonb [not null, note: '엔진 Move를 DB/API 경계용 문자열 표현으로 직렬화한 값']
+  move jsonb [not null, note: '엔진 Move 구조를 그대로 저장한 JSON 값']
   comment text [null]
   annotation move_annotation [null]
   created_at timestamptz [not null]
