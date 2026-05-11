@@ -2,7 +2,7 @@
 
 **작업 상태**: 대기 중  
 **선행 작업**: `[TASK-060]` (Move 실행), `[TASK-062]` (SAN 변환)  
-**후속 작업**: `[TASK-088]` (DB 초기화), `[TASK-020]` (기보 저장 UI)  
+**후속 작업**: `[TASK-088]` (API 초기화), `[TASK-020]` (기보 저장 UI)  
 **연관 설계**: `[../architecture/project-rules.md]`, `[../architecture/directory-structure.md]`
 
 ---

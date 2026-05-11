@@ -1,7 +1,7 @@
 # 📋 개별 작업 지침서: apps/api PostgreSQL + Prisma 초기 설정 (TASK-089)
 
 **작업 상태**: 대기 중  
-**선행 작업**: `[TASK-088]` (API 초기화)  
+**선행 작업**: `[TASK-088]` (API 초기화), `[TASK-093]` (API 테스트 환경 구성)  
 **후속 작업**: `[TASK-094]` (환경 변수 검증)  
 **연관 설계**: `[../architecture/tech-stack.md]`
 
@@ -23,8 +23,9 @@
 
 - **이번 작업의 최소 결과물**:
   - `apps/api/prisma/schema.prisma`
-  - `apps/api/docker-compose.yml`
-  - `apps/api/src/prisma/prisma.service.ts`
+  - `docker-compose.yml`
+  - `apps/api/src/core/database/prisma.service.ts`
+  - `apps/api/src/core/database/prisma.module.ts`
 - **성공 기준 (AC)**:
   - `docker-compose up` 명령으로 DB 서버가 정상 구동된다.
   - `schema.prisma` 파일에 초기 데이터 모델 골격이 작성되었다.
@@ -34,8 +35,9 @@
 
 - **신규 생성**:
   - `apps/api/prisma/schema.prisma`
-  - `apps/api/docker-compose.yml`
-  - `apps/api/src/prisma/prisma.service.ts`
+  - `docker-compose.yml`
+  - `apps/api/src/core/database/prisma.service.ts`
+  - `apps/api/src/core/database/prisma.module.ts`
 - **수정 대상**:
   - `apps/api/package.json`
   - `apps/api/src/app.module.ts`
@@ -51,7 +53,11 @@
 
 ## 🛠️ 3. 상세 기술 사양
 
-- **Docker Compose**: `postgres:16-alpine` 이미지 사용, 환경 변수(USER, PASSWORD, DB) 설정.
+- **Docker Compose**:
+  - 프로젝트 루트 `docker-compose.yml`에 작성한다.
+  - 로컬 개발 환경 전체의 진입점이므로 `apps/api` 내부에 두지 않는다.
+  - `postgres:16-alpine` 이미지 사용, 환경 변수(USER, PASSWORD, DB) 설정.
+  - 서비스명과 볼륨명은 프로젝트 범위를 드러내도록 작성한다. 예: `postgres`, `chess-db-postgres-data`.
 - **Prisma 설정**:
   - `datasource db { provider = "postgresql", url = env("DATABASE_URL") }`
   - `generator client { provider = "prisma-client-js" }`

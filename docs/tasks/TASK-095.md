@@ -20,10 +20,11 @@
 
 - **최종 상태**: 프론트엔드가 `GameRecord` 기반 payload를 보내면 서버가 검증 후 DB에 정식 기보를 저장하고 ID를 반환합니다.
 - **이번 작업의 최소 결과물**:
-  - `apps/api/src/games/games.controller.ts`
-  - `apps/api/src/games/games.service.ts`
-  - `apps/api/src/games/games.module.ts`
-  - `apps/api/src/games/games.controller.spec.ts`
+  - `apps/api/src/modules/games/games.controller.ts`
+  - `apps/api/src/modules/games/games.service.ts`
+  - `apps/api/src/modules/games/games.repository.ts`
+  - `apps/api/src/modules/games/games.module.ts`
+  - `apps/api/src/modules/games/games.controller.spec.ts`
   - `apps/api/prisma/schema.prisma`
 - **성공 기준 (AC)**:
   - `POST /api/games`가 shared DTO/Zod 계약으로 요청을 검증한다.
@@ -33,10 +34,11 @@
 ## 📂 2. 대상 아티팩트
 
 - **신규 생성**:
-  - `apps/api/src/games/games.controller.ts`
-  - `apps/api/src/games/games.service.ts`
-  - `apps/api/src/games/games.module.ts`
-  - `apps/api/src/games/games.controller.spec.ts`
+  - `apps/api/src/modules/games/games.controller.ts`
+  - `apps/api/src/modules/games/games.service.ts`
+  - `apps/api/src/modules/games/games.repository.ts`
+  - `apps/api/src/modules/games/games.module.ts`
+  - `apps/api/src/modules/games/games.controller.spec.ts`
 - **수정 대상**:
   - `apps/api/src/app.module.ts`
   - `apps/api/prisma/schema.prisma`
@@ -51,6 +53,11 @@
   - `GamesController.create`는 `POST /api/games`를 제공합니다.
   - 요청 body는 shared의 저장 요청 스키마를 통해 검증합니다.
   - `GamesService.createGame`은 Prisma로 정식 기보를 저장하고 `{ id }` 형태의 응답을 반환합니다.
+- **모듈 구조**:
+  - `modules/games`는 REST resource 기준 복수형 폴더명을 사용한다.
+  - DTO는 `apps/api/src/modules/games/dto/`에 둔다.
+  - shared DTO와 Prisma 모델 사이 변환이 필요하면 `apps/api/src/modules/games/mappers/`에 둔다.
+  - `GamesRepository`는 Prisma 접근을 전담하고, `GamesService`는 저장 유스케이스 흐름만 조립한다.
 - **데이터 모델 해석**:
   - 저장 payload는 현재 draft에서 만든 `GameRecord`와 시스템 기본 저장소 식별자를 포함합니다.
   - 수순과 메타데이터는 조회/분석 후속 Task가 재사용할 수 있도록 구조를 보존해 저장합니다.
@@ -61,6 +68,8 @@
   - `@chess-db/shared`
 - **import/export 규칙**:
   - API 내부 DTO를 shared 스키마와 따로 복제하지 않습니다.
+  - 요청 DTO class가 필요하면 `nestjs-zod`의 `createZodDto`로 shared 스키마에서 생성합니다.
+  - 같은 요청 계약을 class-validator DTO로 중복 정의하지 않습니다.
   - Prisma 모델명과 shared DTO 필드명 차이가 있으면 service layer에서만 명시적으로 매핑합니다.
 - **권장 네이밍**:
   - `GamesController`, `GamesService`, `createGame`, `CreateGameRequestSchema`, `CreateGameResponse`

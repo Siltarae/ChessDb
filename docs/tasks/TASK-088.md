@@ -2,7 +2,7 @@
 
 **작업 상태**: 대기 중  
 **선행 작업**: `[TASK-064]` (워크스페이스 초기화)  
-**후속 작업**: `[TASK-089]` (DB 초기 설정)  
+**후속 작업**: `[TASK-093]` (API 테스트 환경 구성)  
 **연관 설계**: `[../architecture/tech-stack.md]`, `[../architecture/project-rules.md]`
 
 ---
@@ -12,7 +12,7 @@
 - **현재 상태 요약**: 백엔드 애플리케이션이 위치할 `apps/api` 폴더가 비어있거나 생성되지 않은 상태입니다.
 - **이 작업의 책임**: NestJS 프레임워크를 기반으로 백엔드 서버 프로젝트를 초기화하고, API 명세 자동화를 위한 Swagger UI를 구성합니다.
 
-- **이번 작업에서 하지 않는 것**: `[TASK-089]` (DB 초기 설정)에 연결된 후속 책임은 이번 태스크에서 함께 닫지 않는다.
+- **이번 작업에서 하지 않는 것**: `[TASK-093]` (API 테스트 환경 구성)에 연결된 후속 책임은 이번 태스크에서 함께 닫지 않는다.
 
 - **경계 메모**:
   - 이번 태스크는 apps/api NestJS 프로젝트 초기화 및 Swagger 연동 범위만 닫고, 후속 태스크 또는 인접 Feature의 세부 구현은 여기서 함께 처리하지 않는다.
@@ -41,7 +41,7 @@
   - placeholder, 임시 스켈레톤, 중복 export, 오래된 경로 표기
 
 - **이번 작업에서 수정하지 않음**:
-  - `[TASK-089]` (DB 초기 설정)에 연결된 후속 책임 파일
+  - `[TASK-093]` (API 테스트 환경 구성)에 연결된 후속 책임 파일
 
 - **아티팩트 작성 규칙**:
   - 가능한 한 실제 파일 경로를 기준으로 작성하고, 범위 밖 파일은 이유 없이 함께 수정하지 않는다.
@@ -52,6 +52,11 @@
 - **프로젝트 생성**: `@nestjs/cli`를 사용하여 `apps/api`에 스캐폴딩 생성.
 - **패키지명**: `@chess-db/api`로 명시.
 - **TypeScript 설정**: 루트 `tsconfig.base.json` 확장 적용 및 `paths` 설정 공유.
+- **디렉터리 구조**:
+  - 백엔드 앱은 `core`, `common`, `integrations`, `modules`, `events`, `commands` 기준 구조를 따른다.
+  - 실제 책임이 생기지 않은 빈 디렉터리는 만들지 않는다.
+  - 도메인 모듈은 `apps/api/src/modules/[resources]`에 둔다.
+  - 도메인 모듈 폴더명은 REST resource 기준 복수형을 사용한다. 예: `modules/games`.
 - **Swagger 설정 (`main.ts`)**:
   ```ts
   const config = new DocumentBuilder()
@@ -122,7 +127,7 @@ const app = await NestFactory.create(AppModule);
   - 기존 상태를 직접 오염시키지 않고, 이번 태스크의 책임 범위 안에서 상태를 갱신한다.
 
 - **범위 규칙**:
-  - `[TASK-089]` (DB 초기 설정)에 연결된 범위는 여기서 닫지 않는다.
+  - `[TASK-093]` (API 테스트 환경 구성)에 연결된 범위는 여기서 닫지 않는다.
 
 - **헌법 정렬 규칙**:
   - `../architecture/project-rules.md`의 네이밍, import/export, 상태 규칙을 그대로 따른다.

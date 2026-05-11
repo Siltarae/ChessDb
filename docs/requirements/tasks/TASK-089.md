@@ -14,7 +14,7 @@
 
 ## 완료 조건
 
-- [ ] `apps/api` (또는 프로젝트 루트)에 PostgreSQL 구동을 위한 `docker-compose.yml`이 생성되어야 한다.
+- [ ] 프로젝트 루트에 PostgreSQL 구동을 위한 `docker-compose.yml`이 생성되어야 한다.
 - [ ] `prisma`가 설치되고 `prisma/schema.prisma` 파일이 초기화되어야 한다.
 - [ ] 로컬 DB 컨테이너 실행 후 Prisma 연결 테스트가 성공해야 한다.
 

@@ -17,6 +17,28 @@
 - **변수, 함수, 메서드**: 카멜 케이스(`camelCase`)를 사용한다.
 - **상수 및 Enum**: 대문자 스네이크 케이스(`UPPER_SNAKE_CASE`)를 사용한다.
 - **Boolean 변수**: 반드시 상태를 묻는 조동사(`is`, `has`, `should`, `can`)로 시작한다.
+- **백엔드 도메인 모듈 폴더명**: `apps/api/src/modules` 아래에서는 REST resource 기준 복수형을 사용한다. (예: `games`, `repositories`)
+- **백엔드 단일 개념 파일명**: DTO, mapper, entity처럼 단일 개념을 표현하는 파일은 단수형을 사용한다. (예: `create-game.dto.ts`, `game-record.mapper.ts`)
+- **백엔드 provider 파일명**: 모듈의 resource 이름과 맞춘다. (예: `games.controller.ts`, `games.service.ts`, `games.repository.ts`, `games.module.ts`)
+
+## 백엔드 구조 규칙
+
+- `apps/api/src/core`는 앱 전역 내부 인프라 모듈을 둔다. 예: `config`, `database`, `logger`, 추후 `auth`.
+- `apps/api/src/common`은 가벼운 공용 유틸리티를 둔다. 예: `pipes`, `filters`, `decorators`, `errors`, `types`.
+- `apps/api/src/integrations`는 외부 또는 내부 서비스 클라이언트 래퍼를 둔다.
+- `apps/api/src/modules`는 제품 기능과 도메인 모듈을 둔다.
+- `apps/api/src/events`는 이벤트 기반 publisher/listener가 실제로 필요할 때 사용한다.
+- `apps/api/src/commands`는 CLI, CRON, 반복 작업 진입점이 실제로 필요할 때 사용한다.
+- 빈 디렉토리는 만들지 않고, 해당 책임이 생기는 Task에서 생성한다.
+- 기본 모듈 구조는 `controller/service/repository/module`로 시작한다.
+- `controller`는 HTTP 요청/응답 경계만 담당한다.
+- `service`는 유스케이스 흐름을 조립한다.
+- `repository`는 Prisma 접근을 전담한다.
+- DTO는 해당 도메인 모듈 내부의 `dto/`에 둔다.
+- shared DTO와 Prisma 저장 구조 사이 변환이 필요하면 해당 도메인 모듈 내부의 `mappers/`에 둔다.
+- 모듈 내부에서만 쓰는 helper는 해당 모듈 내부의 `utils/`에 둔다.
+- `service`가 여러 유스케이스를 조립하느라 비대해지면 해당 모듈 내부에 `use-cases/`를 도입한다.
+- 초기 구조에서 `domain/application/infrastructure/presentation` 계층 폴더를 강제하지 않는다.
 
 ## import/export 규칙
 
@@ -33,6 +55,8 @@
 
 - **공통 에러 응답 포맷**: 백엔드의 모든 예외 상황은 클라이언트가 파싱하기 쉬운 단일 공통 JSON 구조(`{ statusCode, errorCode, message }` 등)로 규격화하여 반환한다.
 - **Fail-Fast (사전 차단)**: 잘못된 입력(API Payload 등)은 비즈니스 로직을 타기 전 가장 바깥쪽 경계에서 Zod 스키마 검증을 통해 즉시 차단한다.
+- **API 요청 검증 연동**: 백엔드 HTTP 요청 검증과 Swagger DTO 문서화는 `nestjs-zod`를 사용해 `packages/shared`의 Zod 스키마와 연결한다.
+- **DTO 중복 금지**: 같은 API 계약을 Zod 스키마와 class-validator DTO로 중복 정의하지 않는다.
 - **UI 에러 격리**: 컴포넌트 렌더링 중 발생하는 런타임 에러는 `react-error-boundary`를 통해 격리하여 앱 전체가 멈추는 현상을 방지한다.
 
 ## 환경 변수 및 보안 규칙
