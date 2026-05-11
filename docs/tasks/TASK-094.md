@@ -1,7 +1,7 @@
 # 📋 개별 작업 지침서: Zod를 활용한 전역 환경 변수 검증 체계 구축 (TASK-094)
 
 **작업 상태**: 대기 중  
-**선행 작업**: `[TASK-088]` (API 초기화), `[TASK-089]` (DB 설정)  
+**선행 작업**: `[TASK-088]` (API 초기화), `[TASK-093]` (API 테스트 환경 구성), `[TASK-089]` (DB 설정)  
 **후속 작업**: `[TASK-090]` (DTO 연결)  
 **연관 설계**: `[../architecture/project-rules.md]` (환경 변수 규칙)
 
@@ -22,7 +22,7 @@
 - **최종 상태**: 환경 변수에 오타가 있거나 누락된 경우, 서버가 구동되기 직전에 명확한 에러 메시지를 남기며 종료됩니다.
 
 - **이번 작업의 최소 결과물**:
-  - `apps/api/src/config/env.config.ts`
+  - `apps/api/src/core/config/env.config.ts`
 
 - **성공 기준 (AC)**:
   - 서버 시작 시 Zod 검증 로직이 가장 먼저 실행됨을 확인했다.
@@ -32,10 +32,10 @@
 ## 📂 2. 대상 아티팩트
 
 - **신규 생성**:
-  - `apps/api/src/config/env.config.ts`
+  - `apps/api/src/core/config/env.config.ts`
 
 - **수정 대상**:
-  - `apps/api/src/config/env.config.ts`
+  - `apps/api/src/core/config/env.config.ts`
 
 - **조건부 정리 대상**: 필요할 때만 작성
   - placeholder, 임시 스켈레톤, 중복 export, 오래된 경로 표기
@@ -49,7 +49,7 @@
 
 ## 🛠️ 3. 상세 기술 사양
 
-- **위치**: `apps/api/src/config/env.config.ts`
+- **위치**: `apps/api/src/core/config/env.config.ts`
 - **구현 방식**:
   ```ts
   const envSchema = z.object({

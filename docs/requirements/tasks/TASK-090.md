@@ -15,7 +15,7 @@
 ## 완료 조건
 
 - [ ] `apps/api`의 의존성에 `packages/shared` 워크스페이스가 추가되어야 한다.
-- [ ] `@nestjs/config` 및 `zod`를 활용한 환경변수 검증이나 요청 데이터 검증 파이프가 기초적으로 설정되어야 한다.
+- [ ] `nestjs-zod`를 사용해 shared Zod 스키마 기반 요청 검증과 Swagger DTO 문서화가 연결되어야 한다.
 - [ ] `shared` 패키지의 타입/스키마를 `apps/api`에서 import하여 빌드가 성공하는지 확인해야 한다.
 
 ## 참고 사항

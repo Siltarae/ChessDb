@@ -26,19 +26,19 @@
   - `packages/shared/src/dto`
 
 - **성공 기준 (AC)**:
-  - `shared` 패키지의 스키마가 백엔드의 `ValidationPipe`에 성공적으로 적용되었다.
+  - `shared` 패키지의 스키마가 `nestjs-zod` 기반 요청 검증에 성공적으로 적용되었다.
   - Swagger UI에서 공유 DTO의 필드 정보가 정확히 노출된다.
   - 잘못된 데이터 형식에 대한 Fail-Fast 처리가 시스템 전반에 적용되었다.
 
 ## 📂 2. 대상 아티팩트
 
 - **신규 생성**:
-  - `packages/shared`
   - `packages/shared/src/dto`
 
 - **수정 대상**:
-  - `packages/shared`
   - `packages/shared/src/dto`
+  - `apps/api/src/main.ts`
+  - `apps/api/src/app.module.ts`
 
 - **조건부 정리 대상**: 필요할 때만 작성
   - placeholder, 임시 스켈레톤, 중복 export, 오래된 경로 표기
@@ -53,7 +53,10 @@
 ## 🛠️ 3. 상세 기술 사양
 
 - **DTO 구조**: `packages/shared/src/dto` 폴더 생성 및 공통 요청/응답 스키마 배치.
-- **백엔드 연동**: `nestjs-zod` 라이브러리 등을 사용하여 Zod 스키마를 NestJS의 `Pipe` 및 Swagger DTO로 변환.
+- **백엔드 연동**:
+  - `nestjs-zod`를 사용하여 Zod 스키마를 NestJS 요청 검증과 Swagger DTO로 변환한다.
+  - `createZodDto`로 shared 스키마 기반 DTO class를 만들고, API 내부에서 별도 class-validator DTO를 중복 정의하지 않는다.
+  - `ZodValidationPipe` 또는 `nestjs-zod`가 제공하는 동등한 전역 pipe를 `main.ts`에 연결한다.
 - **프론트엔드 연동**: `z.infer<typeof Schema>`를 사용하여 API 통신부의 타입을 강제.
 - **필수 describe/it 목록**:
   - describe: `DTO Type Safety`
@@ -61,7 +64,7 @@
     - it: `프론트엔드에서 API 응답 타입을 shared 패키지로부터 정확히 추론해야 한다`
 
 - **핵심 조립/흐름 규칙**:
-  - `shared` 패키지의 스키마가 백엔드의 `ValidationPipe`에 성공적으로 적용되었다.
+  - `shared` 패키지의 스키마가 `nestjs-zod` 기반 요청 검증에 성공적으로 적용되었다.
   - Swagger UI에서 공유 DTO의 필드 정보가 정확히 노출된다.
   - 잘못된 데이터 형식에 대한 Fail-Fast 처리가 시스템 전반에 적용되었다.
 
@@ -71,6 +74,7 @@
 
 - **외부 의존성**:
   - `zod`
+  - `nestjs-zod`
   - `@nestjs/common`
   - `@nestjs/swagger`
   - shared 패키지 DTO
@@ -102,6 +106,7 @@ type SaveGamePayload = z.infer<typeof SaveGameSchema>;
 
 - **반드시 포함할 실패 시나리오**:
   - 프론트 타입과 백엔드 검증 스키마를 따로 복제하는 경우
+  - class-validator DTO와 Zod DTO를 같은 요청 계약에 중복 정의하는 경우
   - Swagger 문서와 실제 검증 스키마가 어긋나는 경우
 
 ## ⚖️ 4. 기술 제약 및 규칙
@@ -127,7 +132,7 @@ type SaveGamePayload = z.infer<typeof SaveGameSchema>;
 ## 🧪 5. 검증 시나리오 및 단언
 
 1. **정상 시나리오: 핵심 동작 확인**
-   - `shared` 패키지의 스키마가 백엔드의 `ValidationPipe`에 성공적으로 적용되었다.
+   - `shared` 패키지의 스키마가 `nestjs-zod` 기반 요청 검증에 성공적으로 적용되었다.
    - 요구사항 문서의 완료 기준이 코드 또는 테스트에서 직접 확인되어야 한다.
 
 2. **실패 시나리오: 범위 침범 차단**
@@ -150,7 +155,7 @@ type SaveGamePayload = z.infer<typeof SaveGameSchema>;
 
 ## ✅ 7. 완료 판정 체크리스트
 
-- [ ] `shared` 패키지의 스키마가 백엔드의 `ValidationPipe`에 성공적으로 적용되었다.
+- [ ] `shared` 패키지의 스키마가 `nestjs-zod` 기반 요청 검증에 성공적으로 적용되었다.
 - [ ] Swagger UI에서 공유 DTO의 필드 정보가 정확히 노출된다.
 - [ ] 잘못된 데이터 형식에 대한 Fail-Fast 처리가 시스템 전반에 적용되었다.
 

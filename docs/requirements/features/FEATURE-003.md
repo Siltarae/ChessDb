@@ -29,11 +29,11 @@
 
 ## 하위 Task
 
-- [TASK-088 apps/api NestJS 프로젝트 초기화 및 Swagger 연동](../tasks/TASK-088.md)
-- [TASK-089 apps/api PostgreSQL + Prisma 초기 설정 및 로컬 DB(docker-compose) 구성](../tasks/TASK-089.md)
-- [TASK-093 apps/api Jest 및 Supertest 기반 테스트 환경 구성](../tasks/TASK-093.md)
-- [TASK-094 Zod를 활용한 전역 환경 변수(.env) 검증 체계 구축](../tasks/TASK-094.md)
 - [TASK-063 기보 및 저장소 관련 로컬 스토리지 데이터 스키마 정의](../tasks/TASK-063.md)
+- [TASK-088 apps/api NestJS 프로젝트 초기화 및 Swagger 연동](../tasks/TASK-088.md)
+- [TASK-093 apps/api Jest 및 Supertest 기반 테스트 환경 구성](../tasks/TASK-093.md)
+- [TASK-089 apps/api PostgreSQL + Prisma 초기 설정 및 로컬 DB(docker-compose) 구성](../tasks/TASK-089.md)
+- [TASK-094 Zod를 활용한 전역 환경 변수(.env) 검증 체계 구축](../tasks/TASK-094.md)
 - [TASK-090 apps/api & packages/shared API 통신용 공통 DTO(Zod) 공유 구조 연결](../tasks/TASK-090.md)
 - [TASK-095 기보 정식 저장 API 구현](../tasks/TASK-095.md)
 - [TASK-020 반수별 코멘트 입력](../tasks/TASK-020.md)

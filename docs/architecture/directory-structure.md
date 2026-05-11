@@ -29,12 +29,21 @@ ChessDb/
         shared/    # 도메인에 종속되지 않은 공통 UI(shadcn), 유틸리티, API 클라이언트
     api/        # NestJS 기반 백엔드 애플리케이션
       src/
-        modules/  # 도메인/기능별 모듈 (예: games, stats)
-          [feature]/
-            [feature].controller.ts  # 외부 HTTP 요청/응답 처리
-            [feature].service.ts     # 순수 비즈니스 로직 담당
-            [feature].repository.ts  # DB(Prisma) 연동 전담
-            [feature].module.ts      # 모듈 의존성 조립
+        core/          # 앱 전역 내부 인프라 모듈 (config, database, logger 등)
+        common/        # 가벼운 공용 유틸리티 (pipes, filters, decorators, types 등)
+        integrations/  # 외부/내부 서비스 클라이언트 래퍼
+        modules/       # 도메인 기능 모듈 (games, repositories, statistics 등)
+          [resources]/
+            dto/
+            mappers/
+            [resources].controller.ts  # 외부 HTTP 요청/응답 처리
+            [resources].service.ts     # 유스케이스 흐름 조립
+            [resources].repository.ts  # DB(Prisma) 연동 전담
+            [resources].module.ts      # 모듈 의존성 조립
+        events/        # 이벤트 기반 publisher/listener
+        commands/      # CLI, CRON, 반복 작업 진입점
+        app.module.ts
+        main.ts
   packages/
     shared/     # 체스 도메인 코어 로직(행마법, 상태 검증 등) 및 프론트/백엔드 공통 타입(DTO), 유틸리티
   docs/         # 프로젝트 산출물 및 문서 (요구사항, 프로세스, 아키텍처 등)
@@ -47,3 +56,9 @@ ChessDb/
 - 앱 명칭은 `apps/web`, `apps/api`를 기준으로 고정한다.
 - 각 애플리케이션 내부의 상세 구조는 요구사항과 기술 스택에 맞추어 점진적으로 구체화한다.
 - 현재 이 문서는 목표 구조를 설명하며, 아직 생성되지 않은 디렉토리는 이후 Task 진행 시 실제로 추가한다.
+- `apps/api/src/modules` 아래 도메인 모듈 폴더는 REST resource 기준의 복수형을 사용한다. 예: `games`, `repositories`, `statistics`.
+- DTO, mapper처럼 단일 개념을 표현하는 파일명은 대상 개념 기준의 단수형을 사용한다. 예: `create-game.dto.ts`, `game-record.mapper.ts`.
+- `core`, `common`, `integrations`, `events`, `commands`는 실제 책임이 생길 때 생성한다. 빈 디렉토리를 미리 만들지 않는다.
+- 기본 백엔드 모듈 구조는 `controller/service/repository/module`을 유지한다.
+- `service`가 여러 유스케이스를 조립하느라 비대해지면 해당 모듈 내부에 `use-cases/`를 도입한다.
+- 별도의 `domain/application/infrastructure/presentation` 계층 폴더는 초기 구조로 강제하지 않는다.
