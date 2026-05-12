@@ -4,6 +4,7 @@ build
 .turbo
 .next
 coverage
+generated
 playwright-report
 test-results
 blob-report
