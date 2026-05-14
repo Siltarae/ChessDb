@@ -49,5 +49,16 @@ describe('CreateGameRecordDto', () => {
         CreateGameRecordDto.create(requestWithServerField),
       ).toThrow();
     });
+
+    it('완료된 대국인데 종료 사유가 없는 요청 payload는 거절해야 한다', () => {
+      const requestWithoutTerminationReason = {
+        ...VALID_CREATE_GAME_RECORD_REQUEST,
+        terminationReason: null,
+      };
+
+      expect(() =>
+        CreateGameRecordDto.create(requestWithoutTerminationReason),
+      ).toThrow();
+    });
   });
 });
