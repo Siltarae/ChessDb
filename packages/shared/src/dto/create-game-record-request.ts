@@ -13,7 +13,7 @@ import {
 } from '../models/game-state.js';
 
 const ResultSchema = z.enum(GAME_RECORD_RESULT);
-const TerminationReasonSchema = z.enum(GAME_TERMINATION_REASON).nullable();
+const TerminationReasonSchema = z.enum(GAME_TERMINATION_REASON).nullish();
 const PlayedAtSchema = z.iso.date().nullable();
 const SquareSchema: z.ZodType<Square> = z.number().int().min(0).max(63) as z.ZodType<Square>;
 const AnnotationSchema = z.enum(MOVE_ANNOTATION).nullable();
@@ -68,15 +68,21 @@ export const CreateGameRecordRequestSchema = z
   })
   .strict()
   .superRefine((gameRecord, ctx) => {
-    if (gameRecord.result === 'ONGOING' && gameRecord.terminationReason !== null) {
+    const hasTerminationReason =
+      gameRecord.terminationReason !== null && gameRecord.terminationReason !== undefined;
+
+    const hasNoTerminationReason =
+      gameRecord.terminationReason === null || gameRecord.terminationReason === undefined;
+
+    if (gameRecord.result === 'ONGOING' && hasTerminationReason) {
       ctx.addIssue({
         code: 'custom',
         path: ['terminationReason'],
-        message: 'ONGOING result must have null terminationReason',
+        message: 'ONGOING result must have null or undefined terminationReason',
       });
     }
 
-    if (gameRecord.result !== 'ONGOING' && gameRecord.terminationReason === null) {
+    if (gameRecord.result !== 'ONGOING' && hasNoTerminationReason) {
       ctx.addIssue({
         code: 'custom',
         path: ['terminationReason'],

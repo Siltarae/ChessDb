@@ -6,3 +6,65 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum GameResult {
+  ONGOING
+  WHITE_WIN
+  BLACK_WIN
+  DRAW
+
+  @@map("game_result")
+}
+
+enum GameTerminationReason {
+  CHECKMATE
+  STALEMATE
+  FIFTY_MOVE
+  THREEFOLD_REPETITION
+  INSUFFICIENT_MATERIAL
+  RESIGNATION
+  AGREEMENT
+  OTHER
+
+  @@map("game_termination_reason")
+}
+
+enum MoveAnnotation {
+  BRILLIANT
+  GOOD
+  INTERESTING
+  DUBIOUS
+  MISTAKE
+  BLUNDER
+
+  @@map("move_annotation")
+}
+
+model Game {
+  id                String                 @id @default(uuid()) @db.Uuid
+  result            GameResult
+  terminationReason GameTerminationReason? @map("termination_reason")
+  playedAt          DateTime?              @map("played_at") @db.Timestamptz(6)
+  createdAt         DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime               @updatedAt @map("updated_at") @db.Timestamptz(6)
+  gameMoves         GameMove[]
+
+  @@map("games")
+}
+
+model GameMove {
+  id            String          @id @default(uuid()) @db.Uuid
+  gameId        String          @map("game_id") @db.Uuid
+  halfMoveIndex Int             @map("half_move_index")
+  san           String          @db.VarChar
+  move          Json            @db.JsonB
+  comment       String?         @db.Text
+  annotation    MoveAnnotation?
+  createdAt     DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  game Game @relation(fields: [gameId], references: [id])
+
+  @@unique([gameId, halfMoveIndex])
+  @@map("game_moves")
+}
