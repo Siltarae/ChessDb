@@ -5,6 +5,7 @@ import { groupMoveHistoryRows, useMoveHistoryStore } from '@/entities/move-histo
 import { MoveHistoryPanel } from '@/widgets/move-history';
 import type { BoardOrientation } from '@/widgets/chess-board';
 import { useEffect, useMemo } from 'react';
+import { MoveMetadataTabs } from './move-metadata-tabs';
 
 type SidebarShellProps = {
   boardOrientation: BoardOrientation;
@@ -65,7 +66,7 @@ export function SidebarShell({ boardOrientation, onToggleBoardOrientation }: Sid
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
-        <div className="rounded-md border border-dashed bg-muted/40 px-4 py-8 text-center text-sm text-muted-foreground">
+        <div className="flex min-h-full flex-col gap-4">
           <MoveHistoryPanel
             rows={rows}
             selectedHalfMoveIndex={selectedHalfMoveIndex}
@@ -78,6 +79,7 @@ export function SidebarShell({ boardOrientation, onToggleBoardOrientation }: Sid
             onUndo={goToPreviousHalfMove}
             onRedo={goToNextHalfMove}
           />
+          <MoveMetadataTabs />
         </div>
       </div>
     </aside>

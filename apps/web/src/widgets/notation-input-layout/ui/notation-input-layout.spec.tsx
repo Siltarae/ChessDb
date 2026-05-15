@@ -10,6 +10,7 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { BoardShell } from './board-shell';
+import { useDraftStore } from '@/entities/draft';
 import { useMoveHistoryStore } from '@/entities/move-history';
 import { NotationInputLayout } from './notation-input-layout';
 import { SidebarShell } from './sidebar-shell';
@@ -22,6 +23,7 @@ const sidebarShellProps: React.ComponentProps<typeof SidebarShell> = {
 afterEach(() => {
   cleanup();
   useMoveHistoryStore.getState().clearMoveHistory();
+  useDraftStore.getState().clearDraftComments();
 });
 
 describe('NotationInputLayout', () => {
@@ -125,17 +127,23 @@ describe('NotationInputLayout', () => {
       appendSampleMoves();
       useMoveHistoryStore.getState().selectHalfMove(2);
 
-      render(
-        <>
-          <input aria-label="수순 메모" />
-          <SidebarShell {...sidebarShellProps} />
-        </>,
-      );
+      render(<SidebarShell {...sidebarShellProps} />);
 
-      screen.getByRole('textbox', { name: '수순 메모' }).focus();
-      fireEvent.keyDown(screen.getByRole('textbox', { name: '수순 메모' }), { key: 'ArrowLeft' });
+      screen.getByRole('textbox', { name: '선택 수 코멘트' }).focus();
+      fireEvent.keyDown(screen.getByRole('textbox', { name: '선택 수 코멘트' }), {
+        key: 'ArrowLeft',
+      });
 
       expect(useMoveHistoryStore.getState().selectedHalfMoveIndex).toBe(2);
+    });
+
+    it('수순 목록 아래에 메타데이터 탭과 코멘트 입력 영역을 렌더링해야 한다', () => {
+      render(<SidebarShell {...sidebarShellProps} />);
+
+      expect(screen.getByRole('region', { name: '수순 메타데이터' })).toBeInTheDocument();
+      expect(screen.getByRole('tablist', { name: '메타데이터 탭' })).toBeInTheDocument();
+      expect(screen.getByRole('tab', { name: '코멘트', selected: true })).toBeInTheDocument();
+      expect(screen.getByRole('textbox', { name: '선택 수 코멘트' })).toBeInTheDocument();
     });
   });
 });

@@ -14,7 +14,8 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "type-check": "tsc -b --noEmit"
   },
   "dependencies": {
     "@chess-db/shared": "workspace:*",
