@@ -1,5 +1,6 @@
 import { GameResultField } from './game-result-field';
 import { GameTerminationField } from './game-termination-field';
+import { PlayedAtField } from './played-at-field';
 
 export const GameMetadataEditor = () => {
   return (
@@ -10,6 +11,7 @@ export const GameMetadataEditor = () => {
           결과와 종료 사유는 기보 전체에 연결됩니다.
         </p>
       </div>
+      <PlayedAtField />
       <GameResultField />
       <GameTerminationField />
     </div>

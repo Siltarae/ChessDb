@@ -2,7 +2,7 @@ import { GAME_RECORD_RESULT, GAME_TERMINATION_REASON } from '@chess-db/shared';
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { selectGameMetadata, useDraftStore } from '@/entities/draft';
+import { createDefaultPlayedAt, selectGameMetadata, useDraftStore } from '@/entities/draft';
 import {
   decisiveTerminationReasonOptions,
   drawTerminationReasonOptions,
@@ -22,6 +22,7 @@ describe('useGameMetadataEdit', () => {
 
     expect(result.current.selectedResult).toBeNull();
     expect(result.current.selectedTerminationReason).toBeNull();
+    expect(result.current.playedAtValue).toBe(createDefaultPlayedAt());
   });
 
   it('결과 옵션을 shared 저장값과 UI label로 제공해야 한다', () => {
@@ -76,6 +77,7 @@ describe('useGameMetadataEdit', () => {
     expect(selectGameMetadata(useDraftStore.getState())).toEqual({
       result: GAME_RECORD_RESULT.WHITE_WIN,
       terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
+      playedAt: createDefaultPlayedAt(),
     });
     expect(result.current.selectedResult).toBe(GAME_RECORD_RESULT.WHITE_WIN);
   });
@@ -94,6 +96,7 @@ describe('useGameMetadataEdit', () => {
     expect(selectGameMetadata(useDraftStore.getState())).toEqual({
       result: GAME_RECORD_RESULT.WHITE_WIN,
       terminationReason: null,
+      playedAt: createDefaultPlayedAt(),
     });
     expect(result.current.selectedTerminationReason).toBeNull();
   });
@@ -111,7 +114,39 @@ describe('useGameMetadataEdit', () => {
     expect(selectGameMetadata(useDraftStore.getState())).toEqual({
       result: GAME_RECORD_RESULT.DRAW,
       terminationReason: GAME_TERMINATION_REASON.AGREEMENT,
+      playedAt: createDefaultPlayedAt(),
     });
     expect(result.current.selectedTerminationReason).toBe(GAME_TERMINATION_REASON.AGREEMENT);
+  });
+
+  it('updatePlayedAt은 날짜만 갱신하고 기존 결과와 종료 사유를 보존해야 한다', () => {
+    useDraftStore.getState().updateGameMetadata({
+      result: GAME_RECORD_RESULT.WHITE_WIN,
+      terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
+    });
+    const { result } = renderHook(() => useGameMetadataEdit());
+
+    act(() => {
+      result.current.updatePlayedAt('2026-04-21');
+    });
+
+    expect(selectGameMetadata(useDraftStore.getState())).toEqual({
+      result: GAME_RECORD_RESULT.WHITE_WIN,
+      terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
+      playedAt: '2026-04-21',
+    });
+    expect(result.current.playedAtValue).toBe('2026-04-21');
+  });
+
+  it('updatePlayedAt은 빈 문자열 입력을 null로 저장해야 한다', () => {
+    useDraftStore.getState().updateGameMetadata({ playedAt: '2026-04-21' });
+    const { result } = renderHook(() => useGameMetadataEdit());
+
+    act(() => {
+      result.current.updatePlayedAt('');
+    });
+
+    expect(selectGameMetadata(useDraftStore.getState()).playedAt).toBeNull();
+    expect(result.current.playedAtValue).toBe('');
   });
 });

@@ -21,6 +21,7 @@ export type DraftMoveAnnotation = {
 export type DraftGameMetadata = {
   readonly result: GameRecordResult | null;
   readonly terminationReason: GameTerminationReason | null;
+  readonly playedAt: string | null;
 };
 
 type DraftStoreState = {
@@ -38,15 +39,18 @@ type DraftStoreState = {
   readonly clearGameMetadata: () => void;
 };
 
-const initialGameMetadata: DraftGameMetadata = {
-  result: null,
-  terminationReason: null,
+const createInitialGameMetadata = (): DraftGameMetadata => {
+  return {
+    result: null,
+    terminationReason: null,
+    playedAt: createDefaultPlayedAt(),
+  };
 };
 
 export const useDraftStore = create<DraftStoreState>((set) => ({
   moveComments: [],
   moveAnnotations: [],
-  metadata: initialGameMetadata,
+  metadata: createInitialGameMetadata(),
 
   updateMoveComment: (halfMoveIndex: number, nextComment: string) => {
     set((state) => {
@@ -138,7 +142,7 @@ export const useDraftStore = create<DraftStoreState>((set) => ({
   clearGameMetadata: () => {
     set((state) => ({
       ...state,
-      metadata: initialGameMetadata,
+      metadata: createInitialGameMetadata(),
     }));
   },
 }));
@@ -152,6 +156,41 @@ export const normalizeMoveComment = (nextComment: string): string | null => {
 
   return trimmedComment;
 };
+
+export function formatLocalDateOnly(date: Date): string {
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, '0');
+  const day = `${date.getDate()}`.padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+
+export function isDateOnlyString(value: unknown): value is string {
+  if (typeof value !== 'string') {
+    return false;
+  }
+
+  const match = /^(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})$/.exec(value);
+
+  if (match?.groups === undefined) {
+    return false;
+  }
+
+  const year = Number(match.groups.year);
+  const month = Number(match.groups.month);
+  const day = Number(match.groups.day);
+  const parsedDate = new Date(Date.UTC(year, month - 1, day));
+
+  return (
+    parsedDate.getUTCFullYear() === year &&
+    parsedDate.getUTCMonth() === month - 1 &&
+    parsedDate.getUTCDate() === day
+  );
+}
+
+export function createDefaultPlayedAt(): string {
+  return formatLocalDateOnly(new Date());
+}
 
 export const selectMoveComments = (state: DraftStoreState) => state.moveComments;
 
@@ -230,6 +269,13 @@ const isValidGameMetadataPatch = (metadataPatch: Partial<DraftGameMetadata>): bo
   if (
     'terminationReason' in metadataPatch &&
     !isNullableGameTerminationReason(metadataPatch.terminationReason ?? null)
+  ) {
+    return false;
+  }
+
+  if (
+    'playedAt' in metadataPatch &&
+    !(metadataPatch.playedAt === null || isDateOnlyString(metadataPatch.playedAt))
   ) {
     return false;
   }
