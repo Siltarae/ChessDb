@@ -44,4 +44,16 @@ describe('MoveMetadataTabs', () => {
     expect(screen.getByRole('group', { name: '평가 기호 선택' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '매우 좋은 수' })).toBeInTheDocument();
   });
+
+  it('기보 정보 탭을 선택하면 기보 정보 편집 UI를 렌더링해야 한다', () => {
+    render(<MoveMetadataTabs />);
+
+    fireEvent.click(screen.getByRole('tab', { name: '기보 정보' }));
+
+    expect(screen.getByRole('tab', { name: '기보 정보', selected: true })).toBeInTheDocument();
+    expect(screen.getByRole('tabpanel', { name: '기보 정보' })).toBeInTheDocument();
+    expect(screen.getByRole('group', { name: '기보 결과 선택' })).toBeInTheDocument();
+    expect(screen.getByRole('group', { name: '종료 사유 선택' })).toBeInTheDocument();
+    expect(screen.getByText('결과를 먼저 선택하세요.')).toBeInTheDocument();
+  });
 });

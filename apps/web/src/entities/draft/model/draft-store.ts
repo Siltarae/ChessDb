@@ -1,4 +1,11 @@
-import { MOVE_ANNOTATION, type MoveAnnotation } from '@chess-db/shared';
+import {
+  GAME_RECORD_RESULT,
+  GAME_TERMINATION_REASON,
+  MOVE_ANNOTATION,
+  type GameRecordResult,
+  type GameTerminationReason,
+  type MoveAnnotation,
+} from '@chess-db/shared';
 import { create } from 'zustand';
 
 export type DraftMoveComment = {
@@ -11,21 +18,35 @@ export type DraftMoveAnnotation = {
   readonly annotation: MoveAnnotation | null;
 };
 
+export type DraftGameMetadata = {
+  readonly result: GameRecordResult | null;
+  readonly terminationReason: GameTerminationReason | null;
+};
+
 type DraftStoreState = {
   readonly moveComments: readonly DraftMoveComment[];
   readonly moveAnnotations: readonly DraftMoveAnnotation[];
+  readonly metadata: DraftGameMetadata;
   readonly updateMoveComment: (halfMoveIndex: number, nextComment: string) => void;
   readonly updateMoveAnnotation: (
     halfMoveIndex: number,
     nextAnnotation: MoveAnnotation | null,
   ) => void;
+  readonly updateGameMetadata: (metadataPatch: Partial<DraftGameMetadata>) => void;
   readonly clearDraftComments: () => void;
   readonly clearDraftAnnotations: () => void;
+  readonly clearGameMetadata: () => void;
+};
+
+const initialGameMetadata: DraftGameMetadata = {
+  result: null,
+  terminationReason: null,
 };
 
 export const useDraftStore = create<DraftStoreState>((set) => ({
   moveComments: [],
   moveAnnotations: [],
+  metadata: initialGameMetadata,
 
   updateMoveComment: (halfMoveIndex: number, nextComment: string) => {
     set((state) => {
@@ -84,6 +105,22 @@ export const useDraftStore = create<DraftStoreState>((set) => ({
     });
   },
 
+  updateGameMetadata: (metadataPatch: Partial<DraftGameMetadata>) => {
+    set((state) => {
+      if (!isValidGameMetadataPatch(metadataPatch)) {
+        return state;
+      }
+
+      return {
+        ...state,
+        metadata: {
+          ...state.metadata,
+          ...metadataPatch,
+        },
+      };
+    });
+  },
+
   clearDraftComments: () => {
     set((state) => ({
       ...state,
@@ -95,6 +132,13 @@ export const useDraftStore = create<DraftStoreState>((set) => ({
     set((state) => ({
       ...state,
       moveAnnotations: [],
+    }));
+  },
+
+  clearGameMetadata: () => {
+    set((state) => ({
+      ...state,
+      metadata: initialGameMetadata,
     }));
   },
 }));
@@ -112,6 +156,8 @@ export const normalizeMoveComment = (nextComment: string): string | null => {
 export const selectMoveComments = (state: DraftStoreState) => state.moveComments;
 
 export const selectMoveAnnotations = (state: DraftStoreState) => state.moveAnnotations;
+
+export const selectGameMetadata = (state: DraftStoreState) => state.metadata;
 
 export const selectMoveCommentByHalfMoveIndex =
   (halfMoveIndex: number) =>
@@ -135,10 +181,14 @@ export const selectUpdateMoveComment = (state: DraftStoreState) => state.updateM
 
 export const selectUpdateMoveAnnotation = (state: DraftStoreState) => state.updateMoveAnnotation;
 
+export const selectUpdateGameMetadata = (state: DraftStoreState) => state.updateGameMetadata;
+
 export const selectClearDraftComments = (state: DraftStoreState) => state.clearDraftComments;
 
 export const selectClearDraftAnnotations = (state: DraftStoreState) =>
   state.clearDraftAnnotations;
+
+export const selectClearGameMetadata = (state: DraftStoreState) => state.clearGameMetadata;
 
 const isValidHalfMoveIndex = (halfMoveIndex: number): boolean => {
   return Number.isInteger(halfMoveIndex) && halfMoveIndex >= 0;
@@ -150,4 +200,39 @@ export const isMoveAnnotation = (value: unknown): value is MoveAnnotation => {
 
 const isNullableMoveAnnotation = (value: MoveAnnotation | null): value is MoveAnnotation | null => {
   return value === null || isMoveAnnotation(value);
+};
+
+export const isGameRecordResult = (value: unknown): value is GameRecordResult => {
+  return Object.values(GAME_RECORD_RESULT).includes(value as GameRecordResult);
+};
+
+export const isGameTerminationReason = (value: unknown): value is GameTerminationReason => {
+  return Object.values(GAME_TERMINATION_REASON).includes(value as GameTerminationReason);
+};
+
+const isNullableGameRecordResult = (
+  value: GameRecordResult | null,
+): value is GameRecordResult | null => {
+  return value === null || isGameRecordResult(value);
+};
+
+const isNullableGameTerminationReason = (
+  value: GameTerminationReason | null,
+): value is GameTerminationReason | null => {
+  return value === null || isGameTerminationReason(value);
+};
+
+const isValidGameMetadataPatch = (metadataPatch: Partial<DraftGameMetadata>): boolean => {
+  if ('result' in metadataPatch && !isNullableGameRecordResult(metadataPatch.result ?? null)) {
+    return false;
+  }
+
+  if (
+    'terminationReason' in metadataPatch &&
+    !isNullableGameTerminationReason(metadataPatch.terminationReason ?? null)
+  ) {
+    return false;
+  }
+
+  return true;
 };

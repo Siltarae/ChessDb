@@ -1,14 +1,23 @@
 export {
+  isGameRecordResult,
+  isGameTerminationReason,
   isMoveAnnotation,
   normalizeMoveComment,
   selectClearDraftAnnotations,
   selectClearDraftComments,
+  selectClearGameMetadata,
+  selectGameMetadata,
   selectMoveAnnotationByHalfMoveIndex,
   selectMoveAnnotations,
   selectMoveCommentByHalfMoveIndex,
   selectMoveComments,
+  selectUpdateGameMetadata,
   selectUpdateMoveAnnotation,
   selectUpdateMoveComment,
   useDraftStore,
 } from './model/draft-store';
-export type { DraftMoveAnnotation, DraftMoveComment } from './model/draft-store';
+export type {
+  DraftGameMetadata,
+  DraftMoveAnnotation,
+  DraftMoveComment,
+} from './model/draft-store';

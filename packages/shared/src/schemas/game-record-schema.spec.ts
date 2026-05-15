@@ -271,4 +271,13 @@ describe('GameRecordSchema', () => {
   it('타입과 Zod 스키마 구조가 서로 다르면 드러난다', () => {
     expectTypeOf<z.infer<typeof GameRecordSchema>>().toEqualTypeOf<GameRecord>();
   });
+
+  it('시간패 종료 사유를 기보 저장값으로 허용한다', () => {
+    const recordWithTimeout = {
+      ...VALID_GAME_RECORD,
+      terminationReason: GAME_TERMINATION_REASON.TIMEOUT,
+    };
+
+    expect(GameRecordSchema.safeParse(recordWithTimeout).success).toBe(true);
+  });
 });
