@@ -28,6 +28,7 @@ const ongoingGameResultStatus: GameResultStatusView = {
 const renderMoveHistoryPanel = ({
   rows = [],
   selectedHalfMoveIndex = null,
+  moveAnnotationLabelsByHalfMoveIndex = {},
   gameResultStatus = ongoingGameResultStatus,
   canUndo = false,
   canRedo = false,
@@ -39,6 +40,9 @@ const renderMoveHistoryPanel = ({
 }: {
   rows?: MoveHistoryRow[];
   selectedHalfMoveIndex?: number | null;
+  moveAnnotationLabelsByHalfMoveIndex?: React.ComponentProps<
+    typeof MoveHistoryPanel
+  >['moveAnnotationLabelsByHalfMoveIndex'];
   gameResultStatus?: GameResultStatusView;
   canUndo?: boolean;
   canRedo?: boolean;
@@ -52,6 +56,7 @@ const renderMoveHistoryPanel = ({
     <MoveHistoryPanel
       rows={rows}
       selectedHalfMoveIndex={selectedHalfMoveIndex}
+      moveAnnotationLabelsByHalfMoveIndex={moveAnnotationLabelsByHalfMoveIndex}
       gameResultStatus={gameResultStatus}
       canUndo={canUndo}
       canRedo={canRedo}
@@ -158,6 +163,30 @@ describe('MoveHistoryPanel', () => {
     expect(screen.getByText('1.')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'e4' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'e5' })).toHaveAttribute('aria-current', 'step');
+  });
+
+  it('반수별 평가 기호 label을 SAN 뒤에 붙여 표시해야 한다', () => {
+    const whiteState = createInitialGameState();
+    const whiteMove = createMove(SQUARE.E2, SQUARE.E4, MOVE_KIND.DOUBLE_PAWN_PUSH);
+    const rows: MoveHistoryRow[] = [
+      {
+        moveNumber: 1,
+        white: createHistoryItem({
+          beforeState: whiteState,
+          move: whiteMove,
+          san: 'e4',
+          halfMoveIndex: 0,
+        }),
+        black: null,
+      },
+    ];
+
+    renderMoveHistoryPanel({
+      rows,
+      moveAnnotationLabelsByHalfMoveIndex: { 0: '!' },
+    });
+
+    expect(screen.getByRole('button', { name: 'e4!' })).toBeInTheDocument();
   });
 
   it('과거 수순 선택 상태와 마지막 착수 강조를 분리해야 한다', () => {

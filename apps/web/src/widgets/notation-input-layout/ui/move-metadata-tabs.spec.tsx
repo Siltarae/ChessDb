@@ -1,7 +1,15 @@
-import { cleanup, render, screen, within } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { useDraftStore } from '@/entities/draft';
+import { useMoveHistoryStore } from '@/entities/move-history';
 import { MoveMetadataTabs } from './move-metadata-tabs';
+
+beforeEach(() => {
+  useMoveHistoryStore.getState().clearMoveHistory();
+  useDraftStore.getState().clearDraftComments();
+  useDraftStore.getState().clearDraftAnnotations();
+});
 
 afterEach(() => {
   cleanup();
@@ -24,5 +32,16 @@ describe('MoveMetadataTabs', () => {
     );
     expect(screen.getByRole('tabpanel', { name: '코멘트' })).toBeInTheDocument();
     expect(screen.getByRole('textbox', { name: '선택 수 코멘트' })).toBeInTheDocument();
+  });
+
+  it('평가 탭을 선택하면 평가 기호 선택 UI를 렌더링해야 한다', () => {
+    render(<MoveMetadataTabs />);
+
+    fireEvent.click(screen.getByRole('tab', { name: '평가' }));
+
+    expect(screen.getByRole('tab', { name: '평가', selected: true })).toBeInTheDocument();
+    expect(screen.getByRole('tabpanel', { name: '평가' })).toBeInTheDocument();
+    expect(screen.getByRole('group', { name: '평가 기호 선택' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '매우 좋은 수' })).toBeInTheDocument();
   });
 });
