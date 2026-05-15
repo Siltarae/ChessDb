@@ -1,9 +1,13 @@
+import { MoveAnnotationPicker } from '@/features/move-annotation-edit';
 import { MoveCommentEditor } from '@/features/move-comment-edit';
+import { useState } from 'react';
 
 const metadataTabs = ['SAN', '코멘트', '평가', '기보 정보'] as const;
-const activeMetadataTab = '코멘트';
+type MetadataTab = (typeof metadataTabs)[number];
 
 export const MoveMetadataTabs = () => {
+  const [activeMetadataTab, setActiveMetadataTab] = useState<MetadataTab>('코멘트');
+
   return (
     <section aria-label="수순 메타데이터" className="rounded-md border bg-muted/30">
       <div
@@ -20,6 +24,7 @@ export const MoveMetadataTabs = () => {
               type="button"
               role="tab"
               aria-selected={isActive}
+              onClick={() => setActiveMetadataTab(tab)}
               className={[
                 'h-8 rounded-md border px-3 text-xs font-semibold',
                 isActive
@@ -33,8 +38,9 @@ export const MoveMetadataTabs = () => {
         })}
       </div>
 
-      <div role="tabpanel" aria-label="코멘트" className="px-4 py-4">
-        <MoveCommentEditor />
+      <div role="tabpanel" aria-label={activeMetadataTab} className="px-4 py-4">
+        {activeMetadataTab === '코멘트' ? <MoveCommentEditor /> : null}
+        {activeMetadataTab === '평가' ? <MoveAnnotationPicker /> : null}
       </div>
     </section>
   );

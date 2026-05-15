@@ -6,6 +6,7 @@ import { RotateCwSquare } from 'lucide-react';
 type MoveHistoryPanelProps = {
   rows: MoveHistoryRow[];
   selectedHalfMoveIndex: number | null;
+  moveAnnotationLabelsByHalfMoveIndex?: Readonly<Record<number, string>>;
   gameResultStatus: GameResultStatusView;
   canUndo: boolean;
   canRedo: boolean;
@@ -19,6 +20,7 @@ type MoveHistoryPanelProps = {
 export const MoveHistoryPanel = ({
   rows,
   selectedHalfMoveIndex,
+  moveAnnotationLabelsByHalfMoveIndex = {},
   gameResultStatus,
   canUndo,
   canRedo,
@@ -81,6 +83,7 @@ export const MoveHistoryPanel = ({
                 row={row}
                 selectedHalfMoveIndex={selectedHalfMoveIndex}
                 latestHalfMoveIndex={latestHalfMoveIndex}
+                moveAnnotationLabelsByHalfMoveIndex={moveAnnotationLabelsByHalfMoveIndex}
                 onSelectHalfMove={onSelectHalfMove}
               />
             ))}
@@ -118,6 +121,7 @@ type MoveHistoryRowViewProps = {
   row: MoveHistoryRow;
   selectedHalfMoveIndex: number | null;
   latestHalfMoveIndex: number | null;
+  moveAnnotationLabelsByHalfMoveIndex: Readonly<Record<number, string>>;
   onSelectHalfMove: (halfMoveIndex: number) => void;
 };
 
@@ -125,6 +129,7 @@ const MoveHistoryRowView = ({
   row,
   selectedHalfMoveIndex,
   latestHalfMoveIndex,
+  moveAnnotationLabelsByHalfMoveIndex,
   onSelectHalfMove,
 }: MoveHistoryRowViewProps) => {
   return (
@@ -134,6 +139,9 @@ const MoveHistoryRowView = ({
       <MoveHistoryCell
         san={row.white?.san ?? null}
         halfMoveIndex={row.white?.halfMoveIndex ?? null}
+        annotationLabel={
+          row.white === null ? null : (moveAnnotationLabelsByHalfMoveIndex[row.white.halfMoveIndex] ?? null)
+        }
         isSelected={row.white?.halfMoveIndex === selectedHalfMoveIndex}
         isLastMove={row.white?.halfMoveIndex === latestHalfMoveIndex}
         onSelectHalfMove={onSelectHalfMove}
@@ -142,6 +150,9 @@ const MoveHistoryRowView = ({
       <MoveHistoryCell
         san={row.black?.san ?? null}
         halfMoveIndex={row.black?.halfMoveIndex ?? null}
+        annotationLabel={
+          row.black === null ? null : (moveAnnotationLabelsByHalfMoveIndex[row.black.halfMoveIndex] ?? null)
+        }
         isSelected={row.black?.halfMoveIndex === selectedHalfMoveIndex}
         isLastMove={row.black?.halfMoveIndex === latestHalfMoveIndex}
         onSelectHalfMove={onSelectHalfMove}
@@ -153,6 +164,7 @@ const MoveHistoryRowView = ({
 type MoveHistoryCellProps = {
   san: string | null;
   halfMoveIndex: number | null;
+  annotationLabel: string | null;
   isSelected: boolean;
   isLastMove: boolean;
   onSelectHalfMove: (halfMoveIndex: number) => void;
@@ -161,6 +173,7 @@ type MoveHistoryCellProps = {
 const MoveHistoryCell = ({
   san,
   halfMoveIndex,
+  annotationLabel,
   isSelected,
   isLastMove,
   onSelectHalfMove,
@@ -181,6 +194,7 @@ const MoveHistoryCell = ({
       onClick={() => onSelectHalfMove(halfMoveIndex)}
     >
       {san}
+      {annotationLabel}
     </button>
   );
 };

@@ -1,4 +1,6 @@
 import { selectGameState, selectRepetitionHistory, useGameStore } from '@/entities/game';
+import { selectMoveAnnotations, useDraftStore } from '@/entities/draft';
+import { moveAnnotationOptions } from '@/features/move-annotation-edit';
 import { useGameResultStatus } from '@/features/game-result';
 import { useHistoryNavigation } from '@/features/history-navigation';
 import { groupMoveHistoryRows, useMoveHistoryStore } from '@/entities/move-history';
@@ -15,6 +17,7 @@ type SidebarShellProps = {
 export function SidebarShell({ boardOrientation, onToggleBoardOrientation }: SidebarShellProps) {
   const gameState = useGameStore(selectGameState);
   const repetitionHistory = useGameStore(selectRepetitionHistory);
+  const moveAnnotations = useDraftStore(selectMoveAnnotations);
 
   const { historyItems, selectedHalfMoveIndex, selectHalfMove } = useMoveHistoryStore();
   const gameResultStatus = useGameResultStatus(gameState, repetitionHistory);
@@ -25,6 +28,10 @@ export function SidebarShell({ boardOrientation, onToggleBoardOrientation }: Sid
   });
 
   const rows = useMemo(() => groupMoveHistoryRows(historyItems), [historyItems]);
+  const moveAnnotationLabelsByHalfMoveIndex = useMemo(
+    () => buildMoveAnnotationLabelsByHalfMoveIndex(moveAnnotations),
+    [moveAnnotations],
+  );
 
   const handleSelectHalfMove = (halfMoveIndex: number) => {
     selectHalfMove(halfMoveIndex);
@@ -70,6 +77,7 @@ export function SidebarShell({ boardOrientation, onToggleBoardOrientation }: Sid
           <MoveHistoryPanel
             rows={rows}
             selectedHalfMoveIndex={selectedHalfMoveIndex}
+            moveAnnotationLabelsByHalfMoveIndex={moveAnnotationLabelsByHalfMoveIndex}
             gameResultStatus={gameResultStatus}
             canUndo={canUndo}
             canRedo={canRedo}
@@ -106,4 +114,26 @@ const shouldIgnoreHistoryNavigationKey = (event: KeyboardEvent) => {
   }
 
   return ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName);
+};
+
+const buildMoveAnnotationLabelsByHalfMoveIndex = (
+  moveAnnotations: readonly { halfMoveIndex: number; annotation: string | null }[],
+) => {
+  return Object.fromEntries(
+    moveAnnotations.flatMap((moveAnnotation) => {
+      if (moveAnnotation.annotation === null) {
+        return [];
+      }
+
+      const option = moveAnnotationOptions.find(
+        (annotationOption) => annotationOption.annotation === moveAnnotation.annotation,
+      );
+
+      if (!option) {
+        return [];
+      }
+
+      return [[moveAnnotation.halfMoveIndex, option.label]];
+    }),
+  );
 };
