@@ -1,4 +1,7 @@
 export {
+  createDefaultPlayedAt,
+  formatLocalDateOnly,
+  isDateOnlyString,
   isGameRecordResult,
   isGameTerminationReason,
   isMoveAnnotation,

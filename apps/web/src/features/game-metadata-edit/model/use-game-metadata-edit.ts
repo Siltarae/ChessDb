@@ -14,10 +14,12 @@ import {
 export type UseGameMetadataEditResult = {
   readonly selectedResult: GameRecordResult | null;
   readonly selectedTerminationReason: GameTerminationReason | null;
+  readonly playedAtValue: string;
   readonly resultOptions: typeof gameResultOptions;
   readonly terminationReasonOptions: ReturnType<typeof getTerminationReasonOptionsByResult>;
   readonly updateResult: (nextResult: GameRecordResult) => void;
   readonly updateTerminationReason: (nextTerminationReason: GameTerminationReason) => void;
+  readonly updatePlayedAt: (nextPlayedAt: string | null) => void;
 };
 
 export const useGameMetadataEdit = (): UseGameMetadataEditResult => {
@@ -46,12 +48,21 @@ export const useGameMetadataEdit = (): UseGameMetadataEditResult => {
     [updateGameMetadata],
   );
 
+  const updatePlayedAt = useCallback(
+    (nextPlayedAt: string | null) => {
+      updateGameMetadata({ playedAt: nextPlayedAt === '' ? null : nextPlayedAt });
+    },
+    [updateGameMetadata],
+  );
+
   return {
     selectedResult: metadata.result,
     selectedTerminationReason: metadata.terminationReason,
+    playedAtValue: metadata.playedAt ?? '',
     resultOptions: gameResultOptions,
     terminationReasonOptions: getTerminationReasonOptionsByResult(metadata.result),
     updateResult,
     updateTerminationReason,
+    updatePlayedAt,
   };
 };

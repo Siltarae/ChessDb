@@ -6,9 +6,12 @@ import {
   type GameTerminationReason,
   type MoveAnnotation,
 } from '@chess-db/shared';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  createDefaultPlayedAt,
+  formatLocalDateOnly,
+  isDateOnlyString,
   isGameRecordResult,
   isGameTerminationReason,
   isMoveAnnotation,
@@ -29,6 +32,10 @@ describe('draft-store', () => {
     useDraftStore.getState().clearDraftComments();
     useDraftStore.getState().clearDraftAnnotations();
     useDraftStore.getState().clearGameMetadata();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   describe('normalizeMoveComment로 코멘트 입력값을 저장 표현으로 바꿀 때', () => {
@@ -177,6 +184,19 @@ describe('draft-store', () => {
   });
 
   describe('useDraftStore가 기보 메타데이터를 갱신할 때', () => {
+    it('새 draft metadata의 playedAt 기본값은 오늘 로컬 날짜여야 한다', () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(2026, 4, 15, 9, 30, 0));
+
+      useDraftStore.getState().clearGameMetadata();
+
+      expect(selectGameMetadata(useDraftStore.getState())).toEqual({
+        result: null,
+        terminationReason: null,
+        playedAt: '2026-05-15',
+      });
+    });
+
     it('결과와 종료 사유를 shared 허용 값으로 저장해야 한다', () => {
       const updateGameMetadata = selectUpdateGameMetadata(useDraftStore.getState());
 
@@ -188,6 +208,7 @@ describe('draft-store', () => {
       expect(selectGameMetadata(useDraftStore.getState())).toEqual({
         result: GAME_RECORD_RESULT.WHITE_WIN,
         terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
+        playedAt: createDefaultPlayedAt(),
       });
     });
 
@@ -203,6 +224,35 @@ describe('draft-store', () => {
       expect(selectGameMetadata(useDraftStore.getState())).toEqual({
         result: GAME_RECORD_RESULT.DRAW,
         terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
+        playedAt: createDefaultPlayedAt(),
+      });
+    });
+
+    it('playedAt은 date-only 문자열 또는 null로 갱신해야 한다', () => {
+      const updateGameMetadata = selectUpdateGameMetadata(useDraftStore.getState());
+
+      updateGameMetadata({ playedAt: '2026-04-21' });
+
+      expect(selectGameMetadata(useDraftStore.getState()).playedAt).toBe('2026-04-21');
+
+      updateGameMetadata({ playedAt: null });
+
+      expect(selectGameMetadata(useDraftStore.getState()).playedAt).toBeNull();
+    });
+
+    it('playedAt 갱신은 결과와 종료 사유를 보존해야 한다', () => {
+      const updateGameMetadata = selectUpdateGameMetadata(useDraftStore.getState());
+
+      updateGameMetadata({
+        result: GAME_RECORD_RESULT.WHITE_WIN,
+        terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
+      });
+      updateGameMetadata({ playedAt: '2026-04-21' });
+
+      expect(selectGameMetadata(useDraftStore.getState())).toEqual({
+        result: GAME_RECORD_RESULT.WHITE_WIN,
+        terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
+        playedAt: '2026-04-21',
       });
     });
 
@@ -226,22 +276,29 @@ describe('draft-store', () => {
       expect(selectGameMetadata(useDraftStore.getState())).toEqual({
         result: GAME_RECORD_RESULT.BLACK_WIN,
         terminationReason: null,
+        playedAt: createDefaultPlayedAt(),
       });
     });
 
-    it('허용되지 않은 결과와 종료 사유는 기존 상태를 유지해야 한다', () => {
+    it('허용되지 않은 결과와 종료 사유와 날짜는 기존 상태를 유지해야 한다', () => {
       const updateGameMetadata = selectUpdateGameMetadata(useDraftStore.getState());
 
       updateGameMetadata({
         result: GAME_RECORD_RESULT.WHITE_WIN,
         terminationReason: GAME_TERMINATION_REASON.RESIGNATION,
+        playedAt: '2026-04-21',
       });
       updateGameMetadata({ result: '1-0' as GameRecordResult });
       updateGameMetadata({ terminationReason: 'UNSUPPORTED' as GameTerminationReason });
+      updateGameMetadata({ playedAt: '' });
+      updateGameMetadata({ playedAt: '2026-02-30' });
+      updateGameMetadata({ playedAt: '2026-04-21T00:00:00.000Z' });
+      updateGameMetadata({ playedAt: new Date(2026, 3, 21) as unknown as string });
 
       expect(selectGameMetadata(useDraftStore.getState())).toEqual({
         result: GAME_RECORD_RESULT.WHITE_WIN,
         terminationReason: GAME_TERMINATION_REASON.RESIGNATION,
+        playedAt: '2026-04-21',
       });
     });
 
@@ -253,6 +310,7 @@ describe('draft-store', () => {
       updateGameMetadata({
         result: GAME_RECORD_RESULT.DRAW,
         terminationReason: GAME_TERMINATION_REASON.AGREEMENT,
+        playedAt: '2026-04-21',
       });
 
       useDraftStore.getState().clearGameMetadata();
@@ -260,6 +318,7 @@ describe('draft-store', () => {
       expect(selectGameMetadata(useDraftStore.getState())).toEqual({
         result: null,
         terminationReason: null,
+        playedAt: createDefaultPlayedAt(),
       });
       expect(selectMoveCommentByHalfMoveIndex(0)(useDraftStore.getState())).toEqual({
         halfMoveIndex: 0,
@@ -275,6 +334,18 @@ describe('draft-store', () => {
       expect(isGameTerminationReason(GAME_TERMINATION_REASON.TIMEOUT)).toBe(true);
       expect(isGameTerminationReason(GAME_TERMINATION_REASON.CHECKMATE)).toBe(true);
       expect(isGameTerminationReason('UNSUPPORTED')).toBe(false);
+    });
+
+    it('date-only 문자열만 playedAt 저장값으로 허용해야 한다', () => {
+      expect(isDateOnlyString('2026-04-21')).toBe(true);
+      expect(isDateOnlyString('2026-02-30')).toBe(false);
+      expect(isDateOnlyString('2026-04-21T00:00:00.000Z')).toBe(false);
+      expect(isDateOnlyString('')).toBe(false);
+      expect(isDateOnlyString(new Date(2026, 3, 21))).toBe(false);
+    });
+
+    it('formatLocalDateOnly는 로컬 날짜 기준 YYYY-MM-DD를 반환해야 한다', () => {
+      expect(formatLocalDateOnly(new Date(2026, 0, 5, 23, 30, 0))).toBe('2026-01-05');
     });
   });
 });
