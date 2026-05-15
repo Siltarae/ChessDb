@@ -1,3 +1,4 @@
+import { GameMetadataEditor } from '@/features/game-metadata-edit';
 import { MoveAnnotationPicker } from '@/features/move-annotation-edit';
 import { MoveCommentEditor } from '@/features/move-comment-edit';
 import { useState } from 'react';
@@ -41,6 +42,7 @@ export const MoveMetadataTabs = () => {
       <div role="tabpanel" aria-label={activeMetadataTab} className="px-4 py-4">
         {activeMetadataTab === '코멘트' ? <MoveCommentEditor /> : null}
         {activeMetadataTab === '평가' ? <MoveAnnotationPicker /> : null}
+        {activeMetadataTab === '기보 정보' ? <GameMetadataEditor /> : null}
       </div>
     </section>
   );

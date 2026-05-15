@@ -81,6 +81,15 @@ describe('CreateGameRecordRequestSchema', () => {
       );
     });
 
+    it('시간패 종료 사유를 저장 요청 값으로 허용해야 한다', () => {
+      const timeoutRequest = {
+        ...VALID_CREATE_GAME_RECORD_REQUEST,
+        terminationReason: GAME_TERMINATION_REASON.TIMEOUT,
+      };
+
+      expect(CreateGameRecordRequestSchema.safeParse(timeoutRequest).success).toBe(true);
+    });
+
     it('비어 있는 수순 목록은 실패해야 한다', () => {
       const requestWithoutMoves = {
         ...VALID_CREATE_GAME_RECORD_REQUEST,
