@@ -16,7 +16,9 @@ export const MoveCommentEditor = () => {
         className="min-h-24 w-full resize-none rounded-md border bg-background px-3 py-2 text-sm outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-700/20 disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground"
         onChange={(event) => updateComment(event.target.value)}
       />
-      <p className="text-xs text-muted-foreground">코멘트는 선택 수에 연결되고 초안에 즉시 반영됩니다.</p>
+      <p className="text-xs text-muted-foreground">
+        코멘트는 선택 수에 연결되고 초안에 즉시 반영됩니다.
+      </p>
     </div>
   );
 };

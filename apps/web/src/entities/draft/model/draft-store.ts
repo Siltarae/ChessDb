@@ -94,7 +94,10 @@ export const useDraftStore = create<DraftStoreState>((set) => ({
       if (existingAnnotationIndex === -1) {
         return {
           ...state,
-          moveAnnotations: [...state.moveAnnotations, { halfMoveIndex, annotation: nextAnnotation }],
+          moveAnnotations: [
+            ...state.moveAnnotations,
+            { halfMoveIndex, annotation: nextAnnotation },
+          ],
         };
       }
 
@@ -224,8 +227,7 @@ export const selectUpdateGameMetadata = (state: DraftStoreState) => state.update
 
 export const selectClearDraftComments = (state: DraftStoreState) => state.clearDraftComments;
 
-export const selectClearDraftAnnotations = (state: DraftStoreState) =>
-  state.clearDraftAnnotations;
+export const selectClearDraftAnnotations = (state: DraftStoreState) => state.clearDraftAnnotations;
 
 export const selectClearGameMetadata = (state: DraftStoreState) => state.clearGameMetadata;
 

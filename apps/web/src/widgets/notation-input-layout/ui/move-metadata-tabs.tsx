@@ -11,11 +11,7 @@ export const MoveMetadataTabs = () => {
 
   return (
     <section aria-label="수순 메타데이터" className="rounded-md border bg-muted/30">
-      <div
-        role="tablist"
-        aria-label="메타데이터 탭"
-        className="flex gap-1 border-b px-3 py-3"
-      >
+      <div role="tablist" aria-label="메타데이터 탭" className="flex gap-1 border-b px-3 py-3">
         {metadataTabs.map((tab) => {
           const isActive = tab === activeMetadataTab;
 

@@ -19,8 +19,4 @@ export {
   selectUpdateMoveComment,
   useDraftStore,
 } from './model/draft-store';
-export type {
-  DraftGameMetadata,
-  DraftMoveAnnotation,
-  DraftMoveComment,
-} from './model/draft-store';
+export type { DraftGameMetadata, DraftMoveAnnotation, DraftMoveComment } from './model/draft-store';
