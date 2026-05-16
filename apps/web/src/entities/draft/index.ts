@@ -10,6 +10,7 @@ export {
   selectClearDraftComments,
   selectClearGameMetadata,
   selectGameMetadata,
+  selectHydrateDraft,
   selectMoveAnnotationByHalfMoveIndex,
   selectMoveAnnotations,
   selectMoveCommentByHalfMoveIndex,
@@ -19,4 +20,9 @@ export {
   selectUpdateMoveComment,
   useDraftStore,
 } from './model/draft-store';
-export type { DraftGameMetadata, DraftMoveAnnotation, DraftMoveComment } from './model/draft-store';
+export type {
+  DraftGameMetadata,
+  DraftMoveAnnotation,
+  DraftMoveComment,
+  HydrateDraftInput,
+} from './model/draft-store';

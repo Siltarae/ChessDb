@@ -24,6 +24,12 @@ export type DraftGameMetadata = {
   readonly playedAt: string | null;
 };
 
+export type HydrateDraftInput = {
+  readonly moveComments: readonly DraftMoveComment[];
+  readonly moveAnnotations: readonly DraftMoveAnnotation[];
+  readonly metadata: DraftGameMetadata;
+};
+
 type DraftStoreState = {
   readonly moveComments: readonly DraftMoveComment[];
   readonly moveAnnotations: readonly DraftMoveAnnotation[];
@@ -34,6 +40,7 @@ type DraftStoreState = {
     nextAnnotation: MoveAnnotation | null,
   ) => void;
   readonly updateGameMetadata: (metadataPatch: Partial<DraftGameMetadata>) => void;
+  readonly hydrateDraft: (input: HydrateDraftInput) => void;
   readonly clearDraftComments: () => void;
   readonly clearDraftAnnotations: () => void;
   readonly clearGameMetadata: () => void;
@@ -124,6 +131,21 @@ export const useDraftStore = create<DraftStoreState>((set) => ({
           ...state.metadata,
           ...metadataPatch,
         },
+      };
+    });
+  },
+
+  hydrateDraft: (input: HydrateDraftInput) => {
+    set((state) => {
+      if (!isValidDraftHydrationInput(input)) {
+        return state;
+      }
+
+      return {
+        ...state,
+        moveComments: [...input.moveComments],
+        moveAnnotations: [...input.moveAnnotations],
+        metadata: input.metadata,
       };
     });
   },
@@ -225,6 +247,8 @@ export const selectUpdateMoveAnnotation = (state: DraftStoreState) => state.upda
 
 export const selectUpdateGameMetadata = (state: DraftStoreState) => state.updateGameMetadata;
 
+export const selectHydrateDraft = (state: DraftStoreState) => state.hydrateDraft;
+
 export const selectClearDraftComments = (state: DraftStoreState) => state.clearDraftComments;
 
 export const selectClearDraftAnnotations = (state: DraftStoreState) => state.clearDraftAnnotations;
@@ -283,4 +307,56 @@ const isValidGameMetadataPatch = (metadataPatch: Partial<DraftGameMetadata>): bo
   }
 
   return true;
+};
+
+const isRecord = (value: unknown): value is Record<string, unknown> => {
+  return typeof value === 'object' && value !== null;
+};
+
+const isValidDraftMoveComment = (moveComment: unknown): moveComment is DraftMoveComment => {
+  if (!isRecord(moveComment)) {
+    return false;
+  }
+
+  return (
+    typeof moveComment.halfMoveIndex === 'number' &&
+    isValidHalfMoveIndex(moveComment.halfMoveIndex) &&
+    (typeof moveComment.comment === 'string' || moveComment.comment === null)
+  );
+};
+
+const isValidDraftMoveAnnotation = (
+  moveAnnotation: unknown,
+): moveAnnotation is DraftMoveAnnotation => {
+  if (!isRecord(moveAnnotation)) {
+    return false;
+  }
+
+  return (
+    typeof moveAnnotation.halfMoveIndex === 'number' &&
+    isValidHalfMoveIndex(moveAnnotation.halfMoveIndex) &&
+    (moveAnnotation.annotation === null || isMoveAnnotation(moveAnnotation.annotation))
+  );
+};
+
+const isValidGameMetadata = (metadata: unknown): metadata is DraftGameMetadata => {
+  if (!isRecord(metadata)) {
+    return false;
+  }
+
+  return (
+    isNullableGameRecordResult(metadata.result as GameRecordResult | null) &&
+    isNullableGameTerminationReason(metadata.terminationReason as GameTerminationReason | null) &&
+    (metadata.playedAt === null || isDateOnlyString(metadata.playedAt))
+  );
+};
+
+const isValidDraftHydrationInput = (input: HydrateDraftInput): boolean => {
+  return (
+    Array.isArray(input.moveComments) &&
+    input.moveComments.every(isValidDraftMoveComment) &&
+    Array.isArray(input.moveAnnotations) &&
+    input.moveAnnotations.every(isValidDraftMoveAnnotation) &&
+    isValidGameMetadata(input.metadata)
+  );
 };

@@ -22,3 +22,62 @@ export const serializeDraft = (draftSnapshot: SerializedDraftSnapshot): string =
 export const saveDraft = (serializedDraft: string, storage: Storage = localStorage): void => {
   storage.setItem(CHESS_DB_DRAFT_KEY, serializedDraft);
 };
+
+const isRecord = (value: unknown): value is Record<string, unknown> => {
+  return typeof value === 'object' && value !== null;
+};
+
+const isSerializedDraftSnapshot = (value: unknown): value is SerializedDraftSnapshot => {
+  if (!isRecord(value)) {
+    return false;
+  }
+
+  return (
+    'gameState' in value &&
+    Array.isArray(value.historyItems) &&
+    Array.isArray(value.moveComments) &&
+    Array.isArray(value.moveAnnotations) &&
+    'metadata' in value &&
+    typeof value.savedAt === 'string'
+  );
+};
+
+export const loadDraft = <
+  GameStateSnapshot = unknown,
+  MoveHistorySnapshot = unknown,
+  MoveCommentSnapshot = unknown,
+  MoveAnnotationSnapshot = unknown,
+  MetadataSnapshot = unknown,
+>(
+  storage: Storage = localStorage,
+): SerializedDraftSnapshot<
+  GameStateSnapshot,
+  MoveHistorySnapshot,
+  MoveCommentSnapshot,
+  MoveAnnotationSnapshot,
+  MetadataSnapshot
+> | null => {
+  const storedDraft = storage.getItem(CHESS_DB_DRAFT_KEY);
+
+  if (storedDraft === null) {
+    return null;
+  }
+
+  try {
+    const parsedDraft: unknown = JSON.parse(storedDraft);
+
+    if (!isSerializedDraftSnapshot(parsedDraft)) {
+      return null;
+    }
+
+    return parsedDraft as SerializedDraftSnapshot<
+      GameStateSnapshot,
+      MoveHistorySnapshot,
+      MoveCommentSnapshot,
+      MoveAnnotationSnapshot,
+      MetadataSnapshot
+    >;
+  } catch {
+    return null;
+  }
+};

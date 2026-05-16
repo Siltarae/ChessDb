@@ -17,6 +17,7 @@ import {
   isMoveAnnotation,
   normalizeMoveComment,
   selectGameMetadata,
+  selectHydrateDraft,
   selectMoveAnnotationByHalfMoveIndex,
   selectMoveAnnotations,
   selectMoveCommentByHalfMoveIndex,
@@ -324,6 +325,62 @@ describe('draft-store', () => {
         halfMoveIndex: 0,
         comment: '첫 수 코멘트',
       });
+    });
+  });
+
+  describe('저장된 draft 상태를 복원할 때', () => {
+    it('코멘트와 평가 기호와 메타데이터를 저장된 스냅샷으로 한 번에 치환해야 한다', () => {
+      const updateMoveComment = selectUpdateMoveComment(useDraftStore.getState());
+      const updateMoveAnnotation = selectUpdateMoveAnnotation(useDraftStore.getState());
+      const updateGameMetadata = selectUpdateGameMetadata(useDraftStore.getState());
+      const hydrateDraft = selectHydrateDraft(useDraftStore.getState());
+
+      updateMoveComment(0, '기존 코멘트');
+      updateMoveAnnotation(0, MOVE_ANNOTATION.GOOD);
+      updateGameMetadata({ result: GAME_RECORD_RESULT.WHITE_WIN });
+
+      hydrateDraft({
+        moveComments: [{ halfMoveIndex: 1, comment: '복원된 코멘트' }],
+        moveAnnotations: [{ halfMoveIndex: 1, annotation: MOVE_ANNOTATION.MISTAKE }],
+        metadata: {
+          result: GAME_RECORD_RESULT.DRAW,
+          terminationReason: GAME_TERMINATION_REASON.AGREEMENT,
+          playedAt: '2026-05-16',
+        },
+      });
+
+      expect(selectMoveComments(useDraftStore.getState())).toEqual([
+        { halfMoveIndex: 1, comment: '복원된 코멘트' },
+      ]);
+      expect(selectMoveAnnotations(useDraftStore.getState())).toEqual([
+        { halfMoveIndex: 1, annotation: MOVE_ANNOTATION.MISTAKE },
+      ]);
+      expect(selectGameMetadata(useDraftStore.getState())).toEqual({
+        result: GAME_RECORD_RESULT.DRAW,
+        terminationReason: GAME_TERMINATION_REASON.AGREEMENT,
+        playedAt: '2026-05-16',
+      });
+    });
+
+    it('복원 입력이 잘못된 값이면 기존 draft 상태를 보존해야 한다', () => {
+      const updateMoveComment = selectUpdateMoveComment(useDraftStore.getState());
+      const hydrateDraft = selectHydrateDraft(useDraftStore.getState());
+
+      updateMoveComment(0, '기존 코멘트');
+
+      hydrateDraft({
+        moveComments: [{ halfMoveIndex: -1, comment: '잘못된 코멘트' }],
+        moveAnnotations: [],
+        metadata: {
+          result: null,
+          terminationReason: null,
+          playedAt: '2026-05-16',
+        },
+      });
+
+      expect(selectMoveComments(useDraftStore.getState())).toEqual([
+        { halfMoveIndex: 0, comment: '기존 코멘트' },
+      ]);
     });
   });
 

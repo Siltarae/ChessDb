@@ -15,7 +15,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useDraftStore } from '@/entities/draft';
 import { useGameStore } from '@/entities/game';
 import { useMoveHistoryStore } from '@/entities/move-history';
-import { CHESS_DB_DRAFT_KEY } from '@/shared/lib/storage/draft-storage';
+import { CHESS_DB_DRAFT_KEY, serializeDraft } from '@/shared/lib/storage/draft-storage';
 import { useDraftAutosave } from './use-draft-autosave';
 
 const SAVED_AT_FIXTURE = '2026-05-16T00:00:00.000Z';
@@ -52,6 +52,35 @@ const getStoredDraft = () => {
   }
 
   return JSON.parse(serializedDraft) as Record<string, unknown>;
+};
+
+const createDraftSnapshot = () => {
+  const beforeState = createInitialGameState();
+  const move = createMove(SQUARE.E2, SQUARE.E4, MOVE_KIND.DOUBLE_PAWN_PUSH);
+  const afterState = executeMove(beforeState, move);
+
+  return {
+    gameState: afterState,
+    historyItems: [
+      {
+        halfMoveIndex: 0,
+        moveNumber: 1,
+        side: beforeState.turn,
+        san: 'e4',
+        move,
+        beforeState,
+        afterState,
+      },
+    ],
+    moveComments: [{ halfMoveIndex: 0, comment: '중앙 장악' }],
+    moveAnnotations: [{ halfMoveIndex: 0, annotation: MOVE_ANNOTATION.GOOD }],
+    metadata: {
+      result: GAME_RECORD_RESULT.WHITE_WIN,
+      terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
+      playedAt: '2026-05-16',
+    },
+    savedAt: SAVED_AT_FIXTURE,
+  };
 };
 
 describe('useDraftAutosave', () => {
@@ -167,6 +196,59 @@ describe('useDraftAutosave', () => {
       rerender();
 
       expect(setItemSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('초안 복원으로 store가 바뀔 때', () => {
+    it('복원 직후 상태 변경은 새 저장 이벤트로 처리하지 않아야 한다', () => {
+      const draftSnapshot = createDraftSnapshot();
+      const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
+      localStorage.setItem(CHESS_DB_DRAFT_KEY, serializeDraft(draftSnapshot));
+      setItemSpy.mockClear();
+      const { result } = renderHook(() => useDraftAutosave());
+
+      act(() => {
+        useGameStore.getState().hydrateGameState(draftSnapshot.gameState);
+        useMoveHistoryStore.getState().hydrateMoveHistory(draftSnapshot.historyItems);
+        useDraftStore.getState().hydrateDraft({
+          moveComments: draftSnapshot.moveComments,
+          moveAnnotations: draftSnapshot.moveAnnotations,
+          metadata: draftSnapshot.metadata,
+        });
+      });
+
+      expect(setItemSpy).not.toHaveBeenCalled();
+      expect(result.current.lastSavedAt).toBeNull();
+      expect(result.current.isSaveNoticeVisible).toBe(false);
+    });
+
+    it('복원 뒤 사용자가 상태를 바꾸면 그 변경은 저장해야 한다', () => {
+      const draftSnapshot = createDraftSnapshot();
+      const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
+
+      localStorage.setItem(CHESS_DB_DRAFT_KEY, serializeDraft(draftSnapshot));
+      setItemSpy.mockClear();
+
+      renderHook(() => useDraftAutosave());
+
+      act(() => {
+        useGameStore.getState().hydrateGameState(draftSnapshot.gameState);
+        useMoveHistoryStore.getState().hydrateMoveHistory(draftSnapshot.historyItems);
+        useDraftStore.getState().hydrateDraft({
+          moveComments: draftSnapshot.moveComments,
+          moveAnnotations: draftSnapshot.moveAnnotations,
+          metadata: draftSnapshot.metadata,
+        });
+      });
+
+      act(() => {
+        useDraftStore.getState().updateMoveComment(0, '복원 뒤 수정');
+      });
+
+      expect(setItemSpy).toHaveBeenCalledTimes(1);
+      expect(getStoredDraft().moveComments).toEqual([
+        { halfMoveIndex: 0, comment: '복원 뒤 수정' },
+      ]);
     });
   });
 

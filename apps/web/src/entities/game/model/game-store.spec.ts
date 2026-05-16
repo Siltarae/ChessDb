@@ -12,6 +12,7 @@ import {
   selectBoardState,
   selectCurrentTurn,
   selectGameState,
+  selectHydrateGameState,
   selectRepetitionHistory,
   useGameStore,
 } from './game-store';
@@ -77,6 +78,30 @@ describe('game-store', () => {
       const repetitionHistory = selectRepetitionHistory(useGameStore.getState());
       expect(repetitionHistory[positionFingerprint(currentGameState)]).toBe(1);
       expect(repetitionHistory[positionFingerprint(nextGameState)]).toBeUndefined();
+    });
+  });
+
+  describe('저장된 GameState를 복원할 때', () => {
+    it('저장된 GameState만 반영하고 반복 이력은 복원하지 않아야 한다', () => {
+      const state = useGameStore.getState();
+      const currentGameState = selectGameState(state);
+      const applyGameState = selectApplyGameState(state);
+      const hydrateGameState = selectHydrateGameState(state);
+      const nextGameState = {
+        ...currentGameState,
+        turn: COLOR.BLACK,
+      };
+      const restoredGameState = {
+        ...currentGameState,
+        fullmoveNumber: currentGameState.fullmoveNumber + 3,
+      };
+
+      applyGameState(nextGameState);
+      hydrateGameState(restoredGameState);
+
+      const updatedState = useGameStore.getState();
+      expect(selectGameState(updatedState)).toBe(restoredGameState);
+      expect(selectRepetitionHistory(updatedState)).toEqual({});
     });
   });
 });

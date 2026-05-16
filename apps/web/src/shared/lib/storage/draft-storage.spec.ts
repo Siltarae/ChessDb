@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { CHESS_DB_DRAFT_KEY, saveDraft, serializeDraft } from './draft-storage';
+import { CHESS_DB_DRAFT_KEY, loadDraft, saveDraft, serializeDraft } from './draft-storage';
 import type { SerializedDraftSnapshot } from './draft-storage';
 
 const DRAFT_SNAPSHOT_FIXTURE = {
@@ -77,6 +77,48 @@ describe('draft-storage', () => {
 
       expect(fakeStorage.setItem).toHaveBeenCalledWith(CHESS_DB_DRAFT_KEY, serializedDraft);
       expect(fakeStorage.getItem(CHESS_DB_DRAFT_KEY)).toBe(serializedDraft);
+    });
+  });
+
+  describe('저장된 초안을 불러올 때', () => {
+    it('저장된 값이 없으면 null을 반환해야 한다', () => {
+      const fakeStorage = createFakeStorage();
+
+      const loadedDraft = loadDraft(fakeStorage);
+
+      expect(loadedDraft).toBeNull();
+    });
+
+    it('저장된 초안이 있으면 파싱된 스냅샷을 반환해야 한다', () => {
+      const fakeStorage = createFakeStorage();
+      const serializedDraft = serializeDraft(DRAFT_SNAPSHOT_FIXTURE);
+
+      saveDraft(serializedDraft, fakeStorage);
+
+      expect(loadDraft(fakeStorage)).toEqual(DRAFT_SNAPSHOT_FIXTURE);
+    });
+
+    it('저장된 값이 JSON으로 파싱되지 않으면 null을 반환해야 한다', () => {
+      const fakeStorage = createFakeStorage();
+
+      fakeStorage.setItem(CHESS_DB_DRAFT_KEY, '{broken-json');
+
+      expect(loadDraft(fakeStorage)).toBeNull();
+    });
+
+    it('파싱된 값에 필수 필드가 누락되면 null을 반환해야 한다', () => {
+      const fakeStorage = createFakeStorage();
+      const draftWithoutSavedAt = {
+        gameState: DRAFT_SNAPSHOT_FIXTURE.gameState,
+        historyItems: DRAFT_SNAPSHOT_FIXTURE.historyItems,
+        moveComments: DRAFT_SNAPSHOT_FIXTURE.moveComments,
+        moveAnnotations: DRAFT_SNAPSHOT_FIXTURE.moveAnnotations,
+        metadata: DRAFT_SNAPSHOT_FIXTURE.metadata,
+      };
+
+      fakeStorage.setItem(CHESS_DB_DRAFT_KEY, JSON.stringify(draftWithoutSavedAt));
+
+      expect(loadDraft(fakeStorage)).toBeNull();
     });
   });
 });
