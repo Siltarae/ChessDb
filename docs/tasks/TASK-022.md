@@ -1,6 +1,6 @@
 # 📋 개별 작업 지침서: 초안 자동 저장 (TASK-022)
 
-**작업 상태**: 대기 중  
+**작업 상태**: 완료
 **선행 작업**: `[TASK-020]`, `[TASK-021]`, `[TASK-026]`, `[TASK-027]`
 **후속 작업**: `[TASK-023]` (새로고침 후 초안 복원)  
 **연관 설계**: `[../architecture/project-rules.md]`, `[../architecture/patterns.md]`, `[../architecture/directory-structure.md]`
@@ -23,7 +23,7 @@
 - **이번 작업의 최소 결과물**:
   - `apps/web/src/features/draft-autosave/model/use-draft-autosave.ts`
   - `apps/web/src/shared/lib/storage/draft-storage.ts`
-  - `apps/web/src/entities/draft/model/draft-store.ts`
+  - `apps/web/src/pages/notation-input-page.tsx`
 - **성공 기준 (AC)**:
   - 편집 상태 변경 후 저장소에 최신 초안이 직렬화된다.
   - 초안 직렬화 대상에는 보드 상태, 수순 목록, 코멘트, 평가, 기보 정보 메타데이터가 포함된다.
@@ -49,6 +49,7 @@
   - `draft-storage.ts`에 `saveDraft`와 직렬화 키(`CHESS_DB_DRAFT_KEY`)를 고정합니다.
   - `use-draft-autosave`는 draft-store의 필요한 부분만 구독하고 debounce 또는 마지막 JSON 비교를 통해 저장 횟수를 줄입니다.
   - `notation-input-page.tsx`에서 autosave 훅을 마운트해 페이지 진입 시 자동 저장이 활성화되도록 합니다.
+  - 자동 저장 성공 후에는 화면 우상단에 `초안 저장됨` 토스트를 잠시 표시합니다.
 - **데이터 모델 해석**:
   - 저장 대상 초안은 `GameRecord`에 가까운 직렬화 가능한 객체로 해석합니다.
   - 함수, UI 상태, 임시 focus 값은 저장 대상에 포함하지 않습니다.
