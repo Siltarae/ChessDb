@@ -20,12 +20,11 @@ describe('MoveMetadataTabs', () => {
     render(<MoveMetadataTabs />);
 
     const tablist = screen.getByRole('tablist', { name: '메타데이터 탭' });
-    expect(within(tablist).getAllByRole('tab').map((tab) => tab.textContent)).toEqual([
-      'SAN',
-      '코멘트',
-      '평가',
-      '기보 정보',
-    ]);
+    expect(
+      within(tablist)
+        .getAllByRole('tab')
+        .map((tab) => tab.textContent),
+    ).toEqual(['SAN', '코멘트', '평가', '기보 정보']);
     expect(within(tablist).getByRole('tab', { name: '코멘트' })).toHaveAttribute(
       'aria-selected',
       'true',

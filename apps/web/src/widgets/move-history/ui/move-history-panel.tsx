@@ -140,7 +140,9 @@ const MoveHistoryRowView = ({
         san={row.white?.san ?? null}
         halfMoveIndex={row.white?.halfMoveIndex ?? null}
         annotationLabel={
-          row.white === null ? null : (moveAnnotationLabelsByHalfMoveIndex[row.white.halfMoveIndex] ?? null)
+          row.white === null
+            ? null
+            : (moveAnnotationLabelsByHalfMoveIndex[row.white.halfMoveIndex] ?? null)
         }
         isSelected={row.white?.halfMoveIndex === selectedHalfMoveIndex}
         isLastMove={row.white?.halfMoveIndex === latestHalfMoveIndex}
@@ -151,7 +153,9 @@ const MoveHistoryRowView = ({
         san={row.black?.san ?? null}
         halfMoveIndex={row.black?.halfMoveIndex ?? null}
         annotationLabel={
-          row.black === null ? null : (moveAnnotationLabelsByHalfMoveIndex[row.black.halfMoveIndex] ?? null)
+          row.black === null
+            ? null
+            : (moveAnnotationLabelsByHalfMoveIndex[row.black.halfMoveIndex] ?? null)
         }
         isSelected={row.black?.halfMoveIndex === selectedHalfMoveIndex}
         isLastMove={row.black?.halfMoveIndex === latestHalfMoveIndex}

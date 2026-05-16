@@ -1,9 +1,5 @@
 import type { GameRecordResult, GameTerminationReason } from '@chess-db/shared';
-import {
-  selectGameMetadata,
-  selectUpdateGameMetadata,
-  useDraftStore,
-} from '@/entities/draft';
+import { selectGameMetadata, selectUpdateGameMetadata, useDraftStore } from '@/entities/draft';
 import { useCallback } from 'react';
 import {
   gameResultOptions,

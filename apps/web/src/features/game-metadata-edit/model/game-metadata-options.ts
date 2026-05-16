@@ -83,10 +83,7 @@ export const getTerminationReasonOptionsByResult = (
     return drawTerminationReasonOptions;
   }
 
-  if (
-    result === GAME_RECORD_RESULT.WHITE_WIN ||
-    result === GAME_RECORD_RESULT.BLACK_WIN
-  ) {
+  if (result === GAME_RECORD_RESULT.WHITE_WIN || result === GAME_RECORD_RESULT.BLACK_WIN) {
     return decisiveTerminationReasonOptions;
   }
 
