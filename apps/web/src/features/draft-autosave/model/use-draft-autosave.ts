@@ -17,6 +17,7 @@ import {
   type MoveHistoryItem,
 } from '@/entities/move-history';
 import {
+  loadDraft,
   saveDraft,
   serializeDraft,
   type SerializedDraftSnapshot,
@@ -35,6 +36,8 @@ type DraftAutosaveStatus = {
   readonly isSaveNoticeVisible: boolean;
 };
 
+type DraftAutosaveContent = Omit<DraftAutosaveSnapshot, 'savedAt'>;
+
 export const useDraftAutosave = (): DraftAutosaveStatus => {
   const gameState = useGameStore(selectGameState);
   const historyItems = useMoveHistoryStore(selectMoveHistoryItems);
@@ -44,7 +47,7 @@ export const useDraftAutosave = (): DraftAutosaveStatus => {
   const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
   const [isSaveNoticeVisible, setIsSaveNoticeVisible] = useState(false);
   const hasMountedRef = useRef(false);
-  const lastSavedSnapshot = useRef<string | null>(null);
+  const lastSavedContent = useRef<string | null>(null);
   const saveNoticeTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -53,24 +56,47 @@ export const useDraftAutosave = (): DraftAutosaveStatus => {
       return;
     }
 
-    const draftSnapshot: DraftAutosaveSnapshot = {
+    const draftContent: DraftAutosaveContent = {
       gameState,
       historyItems,
       moveComments,
       moveAnnotations,
       metadata,
+    };
+    const serializedDraftContent = serializeDraftContent(draftContent);
+
+    if (lastSavedContent.current === serializedDraftContent) {
+      return;
+    }
+
+    const storedDraft = loadDraft<
+      GameState,
+      MoveHistoryItem,
+      DraftMoveComment,
+      DraftMoveAnnotation,
+      DraftGameMetadata
+    >();
+
+    if (
+      storedDraft !== null &&
+      serializeDraftContent(toDraftAutosaveContent(storedDraft)) === serializedDraftContent
+    ) {
+      lastSavedContent.current = serializedDraftContent;
+      return;
+    }
+
+    const draftSnapshot: DraftAutosaveSnapshot = {
+      ...draftContent,
       savedAt: new Date().toISOString(),
     };
     const serializedDraft = serializeDraft(draftSnapshot);
 
-    if (lastSavedSnapshot.current === serializedDraft) {
-      return;
-    }
-
     saveDraft(serializedDraft);
-    lastSavedSnapshot.current = serializedDraft;
+    lastSavedContent.current = serializedDraftContent;
+    /* eslint-disable react-hooks/set-state-in-effect -- 저장 완료 상태를 훅 반환값으로 노출한다. */
     setLastSavedAt(draftSnapshot.savedAt);
     setIsSaveNoticeVisible(true);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     if (saveNoticeTimeoutId.current !== null) {
       clearTimeout(saveNoticeTimeoutId.current);
@@ -91,4 +117,18 @@ export const useDraftAutosave = (): DraftAutosaveStatus => {
   }, []);
 
   return { lastSavedAt, isSaveNoticeVisible };
+};
+
+const toDraftAutosaveContent = (draftSnapshot: DraftAutosaveSnapshot): DraftAutosaveContent => {
+  return {
+    gameState: draftSnapshot.gameState,
+    historyItems: draftSnapshot.historyItems,
+    moveComments: draftSnapshot.moveComments,
+    moveAnnotations: draftSnapshot.moveAnnotations,
+    metadata: draftSnapshot.metadata,
+  };
+};
+
+const serializeDraftContent = (draftContent: DraftAutosaveContent): string => {
+  return JSON.stringify(draftContent);
 };

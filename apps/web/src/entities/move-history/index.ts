@@ -2,6 +2,7 @@ export {
   groupMoveHistoryRows,
   selectAppendMoveHistory,
   selectClearMoveHistory,
+  selectHydrateMoveHistory,
   selectMoveHistoryItems,
   selectSelectedHalfMoveIndex,
   selectSelectedMoveHistoryBoard,

@@ -3,6 +3,7 @@ export {
   selectBoardState,
   selectCurrentTurn,
   selectGameState,
+  selectHydrateGameState,
   selectRepetitionHistory,
   useGameStore,
 } from './model/game-store';

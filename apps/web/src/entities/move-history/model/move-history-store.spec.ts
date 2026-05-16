@@ -130,5 +130,20 @@ describe('수순 목록 기록 및 내역 표시', () => {
       expect(selectSelectedMoveHistoryItem(useMoveHistoryStore.getState())).toBeNull();
       expect(selectSelectedMoveHistoryBoard(useMoveHistoryStore.getState())).toBeNull();
     });
+
+    it('저장된 수순 목록을 복원하면 선택 반수는 복원하지 않고 null로 초기화해야 한다', () => {
+      let state = createInitialGameState();
+      state = appendMove(state, createMove(SQUARE.E2, SQUARE.E4, MOVE_KIND.DOUBLE_PAWN_PUSH), 'e4');
+      appendMove(state, createMove(SQUARE.E7, SQUARE.E5, MOVE_KIND.DOUBLE_PAWN_PUSH), 'e5');
+      const savedHistoryItems = useMoveHistoryStore.getState().historyItems;
+
+      useMoveHistoryStore.getState().selectHalfMove(0);
+      useMoveHistoryStore.getState().hydrateMoveHistory(savedHistoryItems);
+
+      expect(useMoveHistoryStore.getState().historyItems).toEqual(savedHistoryItems);
+      expect(useMoveHistoryStore.getState().historyItems).not.toBe(savedHistoryItems);
+      expect(useMoveHistoryStore.getState().selectedHalfMoveIndex).toBeNull();
+      expect(selectSelectedMoveHistoryItem(useMoveHistoryStore.getState())).toBeNull();
+    });
   });
 });

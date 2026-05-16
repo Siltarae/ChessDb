@@ -28,6 +28,7 @@ type MoveHistoryStoreState = {
   readonly selectedHalfMoveIndex: number | null;
 
   appendMoveHistory: (input: AppendMoveHistoryInput) => void;
+  hydrateMoveHistory: (historyItems: readonly MoveHistoryItem[]) => void;
   selectHalfMove: (halfMoveIndex: number) => void;
   clearMoveHistory: () => void;
 };
@@ -52,6 +53,14 @@ export const useMoveHistoryStore = create<MoveHistoryStoreState>((set) => ({
         selectedHalfMoveIndex: nextItem.halfMoveIndex,
       };
     });
+  },
+
+  hydrateMoveHistory: (historyItems: readonly MoveHistoryItem[]) => {
+    set((state) => ({
+      ...state,
+      historyItems: [...historyItems],
+      selectedHalfMoveIndex: null,
+    }));
   },
 
   selectHalfMove: (halfMoveIndex: number) => {
@@ -136,6 +145,8 @@ export const selectSelectedMoveHistoryBoard = (state: MoveHistoryStoreState) =>
   selectSelectedMoveHistoryItem(state)?.afterState.board ?? null;
 
 export const selectAppendMoveHistory = (state: MoveHistoryStoreState) => state.appendMoveHistory;
+
+export const selectHydrateMoveHistory = (state: MoveHistoryStoreState) => state.hydrateMoveHistory;
 
 export const selectSelectHalfMove = (state: MoveHistoryStoreState) => state.selectHalfMove;
 
