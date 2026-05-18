@@ -1,10 +1,15 @@
 import { useDraftAutosave } from '@/features/draft-autosave';
+import { ResetDraftDialog, useResetDraft } from '@/features/draft-management';
+import { Button } from '@/shared/ui/button';
 import type { BoardOrientation } from '@/widgets/chess-board';
 import { BoardShell, NotationInputLayout, SidebarShell } from '@/widgets/notation-input-layout';
+import { RotateCcw } from 'lucide-react';
 import { useState } from 'react';
 
 export const NotationInputPage = () => {
   const { isSaveNoticeVisible } = useDraftAutosave();
+  const { isResetDialogOpen, requestDraftReset, cancelDraftReset, confirmDraftReset } =
+    useResetDraft();
 
   const [boardOrientation, setBoardOrientation] = useState<BoardOrientation>('white');
 
@@ -17,12 +22,27 @@ export const NotationInputPage = () => {
   return (
     <>
       <DraftSavedToast isVisible={isSaveNoticeVisible} />
+      <ResetDraftDialog
+        open={isResetDialogOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            cancelDraftReset();
+          }
+        }}
+        onConfirm={confirmDraftReset}
+      />
       <NotationInputLayout
         boardSlot={<BoardShell orientation={boardOrientation} />}
         sidebarSlot={
           <SidebarShell
             boardOrientation={boardOrientation}
             onToggleBoardOrientation={toggleBoardOrientation}
+            toolbarSlot={
+              <Button type="button" variant="outline" size="sm" onClick={requestDraftReset}>
+                <RotateCcw aria-hidden="true" />
+                초기화
+              </Button>
+            }
           />
         }
       />

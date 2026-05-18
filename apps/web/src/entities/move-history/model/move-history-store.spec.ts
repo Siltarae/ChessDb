@@ -131,6 +131,18 @@ describe('수순 목록 기록 및 내역 표시', () => {
       expect(selectSelectedMoveHistoryBoard(useMoveHistoryStore.getState())).toBeNull();
     });
 
+    it('새 draft 기준으로 초기화할 때 기존 수순과 선택 반수를 모두 비워야 한다', () => {
+      let state = createInitialGameState();
+      state = appendMove(state, createMove(SQUARE.E2, SQUARE.E4, MOVE_KIND.DOUBLE_PAWN_PUSH), 'e4');
+      appendMove(state, createMove(SQUARE.E7, SQUARE.E5, MOVE_KIND.DOUBLE_PAWN_PUSH), 'e5');
+
+      useMoveHistoryStore.getState().selectHalfMove(0);
+      useMoveHistoryStore.getState().clearMoveHistory();
+
+      expect(useMoveHistoryStore.getState().historyItems).toEqual([]);
+      expect(useMoveHistoryStore.getState().selectedHalfMoveIndex).toBeNull();
+    });
+
     it('저장된 수순 목록을 복원하면 선택 반수는 복원하지 않고 null로 초기화해야 한다', () => {
       let state = createInitialGameState();
       state = appendMove(state, createMove(SQUARE.E2, SQUARE.E4, MOVE_KIND.DOUBLE_PAWN_PUSH), 'e4');

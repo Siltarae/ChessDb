@@ -1,4 +1,4 @@
-import type { GameState } from '@chess-db/shared';
+import { createInitialGameState, type GameState } from '@chess-db/shared';
 import { useEffect, useRef, useState } from 'react';
 
 import {
@@ -77,6 +77,11 @@ export const useDraftAutosave = (): DraftAutosaveStatus => {
       DraftGameMetadata
     >();
 
+    if (storedDraft === null && isEmptyDraftContent(draftContent)) {
+      lastSavedContent.current = serializedDraftContent;
+      return;
+    }
+
     if (
       storedDraft !== null &&
       serializeDraftContent(toDraftAutosaveContent(storedDraft)) === serializedDraftContent
@@ -131,4 +136,15 @@ const toDraftAutosaveContent = (draftSnapshot: DraftAutosaveSnapshot): DraftAuto
 
 const serializeDraftContent = (draftContent: DraftAutosaveContent): string => {
   return JSON.stringify(draftContent);
+};
+
+const isEmptyDraftContent = (draftContent: DraftAutosaveContent): boolean => {
+  return (
+    JSON.stringify(draftContent.gameState) === JSON.stringify(createInitialGameState()) &&
+    draftContent.historyItems.length === 0 &&
+    draftContent.moveComments.length === 0 &&
+    draftContent.moveAnnotations.length === 0 &&
+    draftContent.metadata.result === null &&
+    draftContent.metadata.terminationReason === null
+  );
 };

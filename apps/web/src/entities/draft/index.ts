@@ -15,6 +15,7 @@ export {
   selectMoveAnnotations,
   selectMoveCommentByHalfMoveIndex,
   selectMoveComments,
+  selectResetDraft,
   selectUpdateGameMetadata,
   selectUpdateMoveAnnotation,
   selectUpdateMoveComment,

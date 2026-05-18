@@ -44,6 +44,7 @@ type DraftStoreState = {
   readonly clearDraftComments: () => void;
   readonly clearDraftAnnotations: () => void;
   readonly clearGameMetadata: () => void;
+  readonly resetDraft: () => void;
 };
 
 const createInitialGameMetadata = (): DraftGameMetadata => {
@@ -170,6 +171,15 @@ export const useDraftStore = create<DraftStoreState>((set) => ({
       metadata: createInitialGameMetadata(),
     }));
   },
+
+  resetDraft: () => {
+    set((state) => ({
+      ...state,
+      moveComments: [],
+      moveAnnotations: [],
+      metadata: createInitialGameMetadata(),
+    }));
+  },
 }));
 
 export const normalizeMoveComment = (nextComment: string): string | null => {
@@ -254,6 +264,8 @@ export const selectClearDraftComments = (state: DraftStoreState) => state.clearD
 export const selectClearDraftAnnotations = (state: DraftStoreState) => state.clearDraftAnnotations;
 
 export const selectClearGameMetadata = (state: DraftStoreState) => state.clearGameMetadata;
+
+export const selectResetDraft = (state: DraftStoreState) => state.resetDraft;
 
 const isValidHalfMoveIndex = (halfMoveIndex: number): boolean => {
   return Number.isInteger(halfMoveIndex) && halfMoveIndex >= 0;

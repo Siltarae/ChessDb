@@ -125,6 +125,19 @@ describe('useDraftAutosave', () => {
       expect(result.current.isSaveNoticeVisible).toBe(true);
     });
 
+    it('저장된 초안이 없고 현재 상태가 빈 초안이면 저장하지 않아야 한다', () => {
+      const setItemSpy = vi.spyOn(Storage.prototype, 'setItem');
+
+      renderHook(() => useDraftAutosave());
+
+      act(() => {
+        useDraftStore.getState().resetDraft();
+      });
+
+      expect(setItemSpy).not.toHaveBeenCalled();
+      expect(localStorage.getItem(CHESS_DB_DRAFT_KEY)).toBeNull();
+    });
+
     it('코멘트와 평가 기호를 저장 대상에 포함해야 한다', () => {
       renderHook(() => useDraftAutosave());
 

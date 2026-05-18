@@ -23,6 +23,10 @@ export const saveDraft = (serializedDraft: string, storage: Storage = localStora
   storage.setItem(CHESS_DB_DRAFT_KEY, serializedDraft);
 };
 
+export const removeDraft = (storage: Storage = localStorage): void => {
+  storage.removeItem(CHESS_DB_DRAFT_KEY);
+};
+
 const isRecord = (value: unknown): value is Record<string, unknown> => {
   return typeof value === 'object' && value !== null;
 };
