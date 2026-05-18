@@ -1,5 +1,6 @@
 import { StrictMode } from 'react';
 import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import {
   GAME_RECORD_RESULT,
   GAME_TERMINATION_REASON,
@@ -130,5 +131,58 @@ describe('App', () => {
       },
       { timeout: 2500 },
     );
+  });
+
+  it('복원된 초안 초기화를 취소하면 기존 상태와 storage를 유지해야 한다', async () => {
+    const user = userEvent.setup();
+    window.history.pushState({}, '', '/');
+    const draftSnapshot = createDraftSnapshotFixture();
+    localStorage.setItem(CHESS_DB_DRAFT_KEY, serializeDraft(draftSnapshot));
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(useGameStore.getState().gameState).toEqual(draftSnapshot.gameState);
+    });
+
+    await user.click(screen.getByRole('button', { name: '초기화' }));
+    await user.click(screen.getByRole('button', { name: '취소' }));
+
+    expect(screen.queryByRole('alertdialog', { name: '초안 초기화' })).not.toBeInTheDocument();
+    expect(useGameStore.getState().gameState).toEqual(draftSnapshot.gameState);
+    expect(useMoveHistoryStore.getState().historyItems).toEqual(draftSnapshot.historyItems);
+    expect(useDraftStore.getState().moveComments).toEqual(draftSnapshot.moveComments);
+    expect(useDraftStore.getState().moveAnnotations).toEqual(draftSnapshot.moveAnnotations);
+    expect(useDraftStore.getState().metadata).toEqual(draftSnapshot.metadata);
+    expect(localStorage.getItem(CHESS_DB_DRAFT_KEY)).toBe(serializeDraft(draftSnapshot));
+  });
+
+  it('복원된 초안 초기화를 확인하면 메모리 상태와 storage를 초기화해야 한다', async () => {
+    const user = userEvent.setup();
+    window.history.pushState({}, '', '/');
+    const draftSnapshot = createDraftSnapshotFixture();
+    localStorage.setItem(CHESS_DB_DRAFT_KEY, serializeDraft(draftSnapshot));
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(useGameStore.getState().gameState).toEqual(draftSnapshot.gameState);
+    });
+
+    await user.click(screen.getByRole('button', { name: '초기화' }));
+    await user.click(screen.getByRole('button', { name: '초기화' }));
+
+    expect(useGameStore.getState().gameState).toEqual(createInitialGameState());
+    expect(useMoveHistoryStore.getState().historyItems).toEqual([]);
+    expect(useMoveHistoryStore.getState().selectedHalfMoveIndex).toBeNull();
+    expect(useDraftStore.getState().moveComments).toEqual([]);
+    expect(useDraftStore.getState().moveAnnotations).toEqual([]);
+    expect(useDraftStore.getState().metadata).toEqual({
+      result: null,
+      terminationReason: null,
+      playedAt: expect.any(String),
+    });
+    expect(localStorage.getItem(CHESS_DB_DRAFT_KEY)).toBeNull();
+    expect(screen.queryByText('초안 저장됨')).not.toBeInTheDocument();
   });
 });

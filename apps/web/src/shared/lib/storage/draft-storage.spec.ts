@@ -1,7 +1,13 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { CHESS_DB_DRAFT_KEY, loadDraft, saveDraft, serializeDraft } from './draft-storage';
 import type { SerializedDraftSnapshot } from './draft-storage';
+import {
+  CHESS_DB_DRAFT_KEY,
+  loadDraft,
+  removeDraft,
+  saveDraft,
+  serializeDraft,
+} from './draft-storage';
 
 const DRAFT_SNAPSHOT_FIXTURE = {
   gameState: {
@@ -77,6 +83,22 @@ describe('draft-storage', () => {
 
       expect(fakeStorage.setItem).toHaveBeenCalledWith(CHESS_DB_DRAFT_KEY, serializedDraft);
       expect(fakeStorage.getItem(CHESS_DB_DRAFT_KEY)).toBe(serializedDraft);
+    });
+  });
+
+  describe('저장된 초안을 삭제할 때', () => {
+    it('고정된 localStorage 키의 값만 삭제해야 한다', () => {
+      const fakeStorage = createFakeStorage();
+      const serializedDraft = serializeDraft(DRAFT_SNAPSHOT_FIXTURE);
+
+      saveDraft(serializedDraft, fakeStorage);
+      fakeStorage.setItem('other-key', 'keep');
+
+      removeDraft(fakeStorage);
+
+      expect(fakeStorage.removeItem).toHaveBeenCalledWith(CHESS_DB_DRAFT_KEY);
+      expect(fakeStorage.getItem(CHESS_DB_DRAFT_KEY)).toBeNull();
+      expect(fakeStorage.getItem('other-key')).toBe('keep');
     });
   });
 

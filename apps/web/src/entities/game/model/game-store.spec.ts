@@ -14,6 +14,7 @@ import {
   selectGameState,
   selectHydrateGameState,
   selectRepetitionHistory,
+  selectResetGameState,
   useGameStore,
 } from './game-store';
 
@@ -101,6 +102,32 @@ describe('game-store', () => {
 
       const updatedState = useGameStore.getState();
       expect(selectGameState(updatedState)).toBe(restoredGameState);
+      expect(selectRepetitionHistory(updatedState)).toEqual({});
+    });
+  });
+
+  describe('새 draft 기준으로 GameState를 초기화할 때', () => {
+    it('표준 시작 상태와 빈 반복 이력으로 되돌려야 한다', () => {
+      const state = useGameStore.getState();
+      const currentGameState = selectGameState(state);
+      const applyGameState = selectApplyGameState(state);
+      const resetGameState = selectResetGameState(state);
+      const nextGameState = {
+        ...currentGameState,
+        turn: COLOR.BLACK,
+      };
+
+      applyGameState(nextGameState);
+      resetGameState();
+
+      const updatedState = useGameStore.getState();
+      const resetState = selectGameState(updatedState);
+      expect(resetState).toEqual(createInitialGameState());
+      expect(selectCurrentTurn(updatedState)).toBe(COLOR.WHITE);
+      expect(selectBoardState(updatedState)[SQUARE.A1]).toEqual({
+        type: PIECE_TYPE.ROOK,
+        color: COLOR.WHITE,
+      });
       expect(selectRepetitionHistory(updatedState)).toEqual({});
     });
   });

@@ -145,6 +145,14 @@ describe('NotationInputLayout', () => {
       expect(screen.getByRole('tab', { name: '코멘트', selected: true })).toBeInTheDocument();
       expect(screen.getByRole('textbox', { name: '선택 수 코멘트' })).toBeInTheDocument();
     });
+
+    it('헤더 도구 슬롯을 렌더링해야 한다', () => {
+      render(
+        <SidebarShell {...sidebarShellProps} toolbarSlot={<button type="button">초기화</button>} />,
+      );
+
+      expect(screen.getByRole('button', { name: '초기화' })).toBeInTheDocument();
+    });
   });
 });
 

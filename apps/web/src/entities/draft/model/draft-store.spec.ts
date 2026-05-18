@@ -22,6 +22,7 @@ import {
   selectMoveAnnotations,
   selectMoveCommentByHalfMoveIndex,
   selectMoveComments,
+  selectResetDraft,
   selectUpdateGameMetadata,
   selectUpdateMoveAnnotation,
   selectUpdateMoveComment,
@@ -324,6 +325,33 @@ describe('draft-store', () => {
       expect(selectMoveCommentByHalfMoveIndex(0)(useDraftStore.getState())).toEqual({
         halfMoveIndex: 0,
         comment: '첫 수 코멘트',
+      });
+    });
+
+    it('resetDraft는 코멘트와 평가 기호와 메타데이터를 새 draft 기준으로 초기화해야 한다', () => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(2026, 4, 18, 9, 30, 0));
+      const updateMoveComment = selectUpdateMoveComment(useDraftStore.getState());
+      const updateMoveAnnotation = selectUpdateMoveAnnotation(useDraftStore.getState());
+      const updateGameMetadata = selectUpdateGameMetadata(useDraftStore.getState());
+      const resetDraft = selectResetDraft(useDraftStore.getState());
+
+      updateMoveComment(0, '첫 수 코멘트');
+      updateMoveAnnotation(0, MOVE_ANNOTATION.GOOD);
+      updateGameMetadata({
+        result: GAME_RECORD_RESULT.DRAW,
+        terminationReason: GAME_TERMINATION_REASON.AGREEMENT,
+        playedAt: '2026-04-21',
+      });
+
+      resetDraft();
+
+      expect(selectMoveComments(useDraftStore.getState())).toEqual([]);
+      expect(selectMoveAnnotations(useDraftStore.getState())).toEqual([]);
+      expect(selectGameMetadata(useDraftStore.getState())).toEqual({
+        result: null,
+        terminationReason: null,
+        playedAt: '2026-05-18',
       });
     });
   });

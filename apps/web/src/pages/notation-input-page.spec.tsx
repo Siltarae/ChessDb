@@ -1,4 +1,5 @@
 import { cleanup, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { NotationInputPage } from './notation-input-page';
@@ -30,10 +31,17 @@ vi.mock('@/widgets/notation-input-layout', () => ({
   ),
   SidebarShell: ({
     boardOrientation,
+    toolbarSlot,
   }: {
     readonly boardOrientation: string;
     readonly onToggleBoardOrientation: () => void;
-  }) => <aside data-testid="sidebar-shell">{boardOrientation}</aside>,
+    readonly toolbarSlot?: React.ReactNode;
+  }) => (
+    <aside data-testid="sidebar-shell">
+      {boardOrientation}
+      {toolbarSlot}
+    </aside>
+  ),
 }));
 
 describe('NotationInputPage', () => {
@@ -59,5 +67,17 @@ describe('NotationInputPage', () => {
     render(<NotationInputPage />);
 
     expect(screen.getByRole('status')).toHaveTextContent('초안 저장됨');
+  });
+
+  it('초기화 버튼을 누르면 확인 다이얼로그를 표시해야 한다', async () => {
+    const user = userEvent.setup();
+    render(<NotationInputPage />);
+
+    await user.click(screen.getByRole('button', { name: '초기화' }));
+
+    expect(screen.getByRole('alertdialog', { name: '초안 초기화' })).toBeInTheDocument();
+    expect(
+      screen.getByText('현재 입력 중인 초안을 초기화합니다. 계속하시겠습니까?'),
+    ).toBeInTheDocument();
   });
 });

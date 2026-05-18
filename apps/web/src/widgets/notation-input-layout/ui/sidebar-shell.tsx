@@ -6,15 +6,20 @@ import { useHistoryNavigation } from '@/features/history-navigation';
 import { groupMoveHistoryRows, useMoveHistoryStore } from '@/entities/move-history';
 import { MoveHistoryPanel } from '@/widgets/move-history';
 import type { BoardOrientation } from '@/widgets/chess-board';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, type ReactNode } from 'react';
 import { MoveMetadataTabs } from './move-metadata-tabs';
 
 type SidebarShellProps = {
   boardOrientation: BoardOrientation;
   onToggleBoardOrientation: () => void;
+  toolbarSlot?: ReactNode;
 };
 
-export function SidebarShell({ boardOrientation, onToggleBoardOrientation }: SidebarShellProps) {
+export function SidebarShell({
+  boardOrientation,
+  onToggleBoardOrientation,
+  toolbarSlot,
+}: SidebarShellProps) {
   const gameState = useGameStore(selectGameState);
   const repetitionHistory = useGameStore(selectRepetitionHistory);
   const moveAnnotations = useDraftStore(selectMoveAnnotations);
@@ -67,9 +72,12 @@ export function SidebarShell({ boardOrientation, onToggleBoardOrientation }: Sid
       aria-label="기보 입력 사이드 패널"
       className="flex h-full min-h-80 flex-col rounded-md border bg-card text-card-foreground"
     >
-      <div className="border-b px-4 py-3">
-        <h2 className="text-sm font-semibold">기보 작업</h2>
-        <p className="mt-1 text-xs text-muted-foreground">수순, 메모, 작업 도구가 들어갈 영역</p>
+      <div className="flex items-start justify-between gap-3 border-b px-4 py-3">
+        <div className="min-w-0">
+          <h2 className="text-sm font-semibold">기보 작업</h2>
+          <p className="mt-1 text-xs text-muted-foreground">수순, 메모, 작업 도구가 들어갈 영역</p>
+        </div>
+        {toolbarSlot ? <div className="shrink-0">{toolbarSlot}</div> : null}
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">

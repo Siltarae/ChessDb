@@ -18,6 +18,7 @@ type GameStoreState = {
   repetitionHistory: History;
   applyGameState: (nextGameState: GameState) => void;
   hydrateGameState: (gameState: GameState) => void;
+  resetGameState: () => void;
 };
 
 type UpdateRepetitionHistory = (repetitionHistory: History, nextGameState: GameState) => History;
@@ -59,6 +60,12 @@ export const useGameStore = create<GameStoreState>((set) => {
         repetitionHistory: {},
       });
     },
+    resetGameState: () => {
+      set({
+        gameState: createInitialGameState(),
+        repetitionHistory: {},
+      });
+    },
   };
 });
 
@@ -75,4 +82,5 @@ export const selectBoardState = (state: GameStoreState) => state.gameState.board
 export const selectCurrentTurn = (state: GameStoreState) => state.gameState.turn;
 export const selectApplyGameState = (state: GameStoreState) => state.applyGameState;
 export const selectHydrateGameState = (state: GameStoreState) => state.hydrateGameState;
+export const selectResetGameState = (state: GameStoreState) => state.resetGameState;
 export const selectRepetitionHistory = (state: GameStoreState) => state.repetitionHistory;
