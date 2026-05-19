@@ -9,6 +9,8 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://chess_db:chess_db@localhost:5432/chess_db?schema=public
 
     steps:
       - name: Checkout repository
