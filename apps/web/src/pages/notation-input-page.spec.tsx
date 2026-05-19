@@ -1,4 +1,4 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { act, cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -75,6 +75,7 @@ vi.mock('@/widgets/notation-input-layout', () => ({
 describe('NotationInputPage', () => {
   afterEach(() => {
     cleanup();
+    vi.useRealTimers();
     useDraftAutosaveMock.mockClear();
     requestSaveGameMock.mockClear();
     useSaveGameMock.mockReset();
@@ -144,6 +145,26 @@ describe('NotationInputPage', () => {
     render(<NotationInputPage />);
 
     expect(screen.getByText('기보가 저장되었습니다.')).toBeInTheDocument();
+  });
+
+  it('기보 저장 성공 상태는 일정 시간 후 숨겨야 한다', () => {
+    vi.useFakeTimers();
+    useSaveGameMock.mockReturnValue(
+      createUseSaveGameResult({
+        savedGameId: 'game-1',
+        saveStatus: 'success',
+      }),
+    );
+
+    render(<NotationInputPage />);
+
+    expect(screen.getByText('기보가 저장되었습니다.')).toBeInTheDocument();
+
+    act(() => {
+      vi.advanceTimersByTime(3000);
+    });
+
+    expect(screen.queryByText('기보가 저장되었습니다.')).not.toBeInTheDocument();
   });
 
   it('기보 저장 실패 상태를 표시해야 한다', () => {

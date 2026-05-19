@@ -52,6 +52,8 @@ export const useSaveGame = (): UseSaveGameResult => {
       return;
     }
 
+    setSaveStatus('idle');
+
     try {
       isSavingRef.current = true;
       const response = await mutateAsync(createGameRecordRequest);
