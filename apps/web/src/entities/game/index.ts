@@ -1,4 +1,5 @@
 export {
+  buildRepetitionHistoryFromStates,
   selectApplyGameState,
   selectBoardState,
   selectCurrentTurn,

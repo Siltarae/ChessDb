@@ -8,11 +8,19 @@ import {
   SQUARE,
   createInitialGameState,
   executeMove,
+  positionFingerprint,
+  type GameState,
   type Move,
 } from '@chess-db/shared';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { DRAFT_GAME_METADATA_RESULT_SOURCE, useDraftStore } from '@/entities/draft';
+import {
+  DRAFT_GAME_METADATA_RESULT_SOURCE,
+  useDraftStore,
+  type DraftGameMetadata,
+  type DraftMoveAnnotation,
+  type DraftMoveComment,
+} from '@/entities/draft';
 import { useGameStore } from '@/entities/game';
 import { useMoveHistoryStore, type MoveHistoryItem } from '@/entities/move-history';
 import {
@@ -33,7 +41,13 @@ const createMove = (
   kind,
 });
 
-const createDraftSnapshotFixture = (): SerializedDraftSnapshot => {
+const createDraftSnapshotFixture = (): SerializedDraftSnapshot<
+  GameState,
+  MoveHistoryItem,
+  DraftMoveComment,
+  DraftMoveAnnotation,
+  DraftGameMetadata
+> => {
   const beforeState = createInitialGameState();
   const move = createMove(SQUARE.E2, SQUARE.E4, MOVE_KIND.DOUBLE_PAWN_PUSH);
   const afterState = executeMove(beforeState, move);
@@ -115,6 +129,44 @@ describe('DraftRestoreProvider', () => {
     expect(useDraftStore.getState().moveComments).toEqual(draftSnapshot.moveComments);
     expect(useDraftStore.getState().moveAnnotations).toEqual(draftSnapshot.moveAnnotations);
     expect(useDraftStore.getState().metadata).toEqual(draftSnapshot.metadata);
+  });
+
+  it('저장된 초안의 수순 이력으로 반복 이력을 재구성해야 한다', async () => {
+    const draftSnapshot = createDraftSnapshotFixture();
+    const repeatedBeforeState = draftSnapshot.historyItems[0]?.beforeState;
+
+    if (repeatedBeforeState === undefined) {
+      throw new Error('테스트 수순 이력이 없습니다.');
+    }
+
+    const draftWithRepeatedHistory = {
+      ...draftSnapshot,
+      historyItems: [
+        draftSnapshot.historyItems[0],
+        {
+          ...draftSnapshot.historyItems[0],
+          halfMoveIndex: 1,
+          side: draftSnapshot.gameState.turn,
+          beforeState: repeatedBeforeState,
+        },
+      ],
+    };
+
+    localStorage.setItem(CHESS_DB_DRAFT_KEY, serializeDraft(draftWithRepeatedHistory));
+
+    render(
+      <DraftRestoreProvider>
+        <div>ready</div>
+      </DraftRestoreProvider>,
+    );
+
+    await waitFor(() => {
+      expect(useGameStore.getState().gameState).toEqual(draftSnapshot.gameState);
+    });
+
+    expect(
+      useGameStore.getState().repetitionHistory[positionFingerprint(repeatedBeforeState)],
+    ).toBe(2);
   });
 
   it('저장된 초안을 복원하면 복원 완료 토스트를 표시한 뒤 숨겨야 한다', async () => {

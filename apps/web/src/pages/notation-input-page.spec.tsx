@@ -6,9 +6,14 @@ import type { UseSaveGameResult } from '@/features/save-game';
 import { NotationInputPage } from './notation-input-page';
 
 const useDraftAutosaveMock = vi.fn();
-let draftAutosaveResult = {
+let draftAutosaveResult: {
+  readonly lastSavedAt: string | null;
+  readonly isSaveNoticeVisible: boolean;
+  readonly isSaveFailureNoticeVisible: boolean;
+} = {
   lastSavedAt: '2026-05-16T00:00:00.000Z',
   isSaveNoticeVisible: true,
+  isSaveFailureNoticeVisible: false,
 };
 const requestSaveGameMock = vi.fn();
 const createUseSaveGameResult = (override: Partial<UseSaveGameResult> = {}): UseSaveGameResult => ({
@@ -83,6 +88,7 @@ describe('NotationInputPage', () => {
     draftAutosaveResult = {
       lastSavedAt: '2026-05-16T00:00:00.000Z',
       isSaveNoticeVisible: true,
+      isSaveFailureNoticeVisible: false,
     };
     useDraftAutosaveMock.mockClear();
     requestSaveGameMock.mockClear();
@@ -109,6 +115,18 @@ describe('NotationInputPage', () => {
     expect(screen.getByRole('status')).toHaveTextContent('초안 저장됨');
   });
 
+  it('초안 저장에 실패하면 실패 토스트를 표시해야 한다', () => {
+    draftAutosaveResult = {
+      lastSavedAt: null,
+      isSaveNoticeVisible: false,
+      isSaveFailureNoticeVisible: true,
+    };
+
+    render(<NotationInputPage />);
+
+    expect(screen.getByRole('status')).toHaveTextContent('초안 저장 실패');
+  });
+
   it('초안 저장 이벤트가 바뀌면 토스트 강조 상태를 갱신해야 한다', () => {
     const { rerender } = render(<NotationInputPage />);
 
@@ -120,6 +138,7 @@ describe('NotationInputPage', () => {
     draftAutosaveResult = {
       lastSavedAt: '2026-05-16T00:00:01.000Z',
       isSaveNoticeVisible: true,
+      isSaveFailureNoticeVisible: false,
     };
     rerender(<NotationInputPage />);
 
@@ -193,6 +212,37 @@ describe('NotationInputPage', () => {
     });
 
     expect(screen.queryByText('기보가 저장되었습니다.')).not.toBeInTheDocument();
+  });
+
+  it('동일한 기보 저장 성공 상태가 반복되어도 다시 표시해야 한다', () => {
+    vi.useFakeTimers();
+    useSaveGameMock.mockReturnValue(
+      createUseSaveGameResult({
+        savedGameId: 'game-1',
+        saveStatus: 'success',
+      }),
+    );
+
+    const { rerender } = render(<NotationInputPage />);
+
+    act(() => {
+      vi.advanceTimersByTime(3000);
+    });
+
+    expect(screen.queryByText('기보가 저장되었습니다.')).not.toBeInTheDocument();
+
+    useSaveGameMock.mockReturnValue(createUseSaveGameResult({ saveStatus: 'idle' }));
+    rerender(<NotationInputPage />);
+
+    useSaveGameMock.mockReturnValue(
+      createUseSaveGameResult({
+        savedGameId: 'game-2',
+        saveStatus: 'success',
+      }),
+    );
+    rerender(<NotationInputPage />);
+
+    expect(screen.getByText('기보가 저장되었습니다.')).toBeInTheDocument();
   });
 
   it('기보 저장 실패 상태를 표시해야 한다', () => {

@@ -4,6 +4,9 @@ import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
+  define: {
+    'import.meta.env.VITE_API_BASE_URL': JSON.stringify(''),
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

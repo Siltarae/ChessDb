@@ -34,6 +34,7 @@ type DraftAutosaveSnapshot = SerializedDraftSnapshot<
 type DraftAutosaveStatus = {
   readonly lastSavedAt: string | null;
   readonly isSaveNoticeVisible: boolean;
+  readonly isSaveFailureNoticeVisible: boolean;
 };
 
 type DraftAutosaveContent = Omit<DraftAutosaveSnapshot, 'savedAt'>;
@@ -46,9 +47,12 @@ export const useDraftAutosave = (): DraftAutosaveStatus => {
   const metadata = useDraftStore(selectGameMetadata);
   const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
   const [isSaveNoticeVisible, setIsSaveNoticeVisible] = useState(false);
+  const [isSaveFailureNoticeVisible, setIsSaveFailureNoticeVisible] = useState(false);
   const hasMountedRef = useRef(false);
   const lastSavedContent = useRef<string | null>(null);
+  const lastFailedContent = useRef<string | null>(null);
   const saveNoticeTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const saveFailureNoticeTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (!hasMountedRef.current) {
@@ -96,11 +100,32 @@ export const useDraftAutosave = (): DraftAutosaveStatus => {
     };
     const serializedDraft = serializeDraft(draftSnapshot);
 
-    saveDraft(serializedDraft);
+    if (!saveDraft(serializedDraft)) {
+      if (lastFailedContent.current === serializedDraftContent) {
+        return;
+      }
+
+      lastFailedContent.current = serializedDraftContent;
+      setIsSaveNoticeVisible(false);
+      setIsSaveFailureNoticeVisible(true);
+
+      if (saveFailureNoticeTimeoutId.current !== null) {
+        clearTimeout(saveFailureNoticeTimeoutId.current);
+      }
+
+      saveFailureNoticeTimeoutId.current = setTimeout(() => {
+        setIsSaveFailureNoticeVisible(false);
+        saveFailureNoticeTimeoutId.current = null;
+      }, 2000);
+      return;
+    }
+
     lastSavedContent.current = serializedDraftContent;
+    lastFailedContent.current = null;
     /* eslint-disable react-hooks/set-state-in-effect -- 저장 완료 상태를 훅 반환값으로 노출한다. */
     setLastSavedAt(draftSnapshot.savedAt);
     setIsSaveNoticeVisible(true);
+    setIsSaveFailureNoticeVisible(false);
     /* eslint-enable react-hooks/set-state-in-effect */
 
     if (saveNoticeTimeoutId.current !== null) {
@@ -118,10 +143,14 @@ export const useDraftAutosave = (): DraftAutosaveStatus => {
       if (saveNoticeTimeoutId.current !== null) {
         clearTimeout(saveNoticeTimeoutId.current);
       }
+
+      if (saveFailureNoticeTimeoutId.current !== null) {
+        clearTimeout(saveFailureNoticeTimeoutId.current);
+      }
     };
   }, []);
 
-  return { lastSavedAt, isSaveNoticeVisible };
+  return { lastSavedAt, isSaveNoticeVisible, isSaveFailureNoticeVisible };
 };
 
 const toDraftAutosaveContent = (draftSnapshot: DraftAutosaveSnapshot): DraftAutosaveContent => {

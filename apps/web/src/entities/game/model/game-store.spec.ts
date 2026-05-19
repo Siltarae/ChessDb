@@ -8,6 +8,7 @@ import {
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import {
+  buildRepetitionHistoryFromStates,
   selectApplyGameState,
   selectBoardState,
   selectCurrentTurn,
@@ -83,7 +84,7 @@ describe('game-store', () => {
   });
 
   describe('저장된 GameState를 복원할 때', () => {
-    it('저장된 GameState만 반영하고 반복 이력은 복원하지 않아야 한다', () => {
+    it('저장된 GameState와 재구성된 반복 이력을 함께 반영해야 한다', () => {
       const state = useGameStore.getState();
       const currentGameState = selectGameState(state);
       const applyGameState = selectApplyGameState(state);
@@ -96,13 +97,49 @@ describe('game-store', () => {
         ...currentGameState,
         fullmoveNumber: currentGameState.fullmoveNumber + 3,
       };
+      const restoredRepetitionHistory = buildRepetitionHistoryFromStates([
+        currentGameState,
+        currentGameState,
+      ]);
 
       applyGameState(nextGameState);
+      hydrateGameState(restoredGameState, restoredRepetitionHistory);
+
+      const updatedState = useGameStore.getState();
+      expect(selectGameState(updatedState)).toBe(restoredGameState);
+      expect(selectRepetitionHistory(updatedState)).toEqual(restoredRepetitionHistory);
+    });
+
+    it('반복 이력을 넘기지 않으면 빈 반복 이력으로 복원해야 한다', () => {
+      const currentGameState = selectGameState(useGameStore.getState());
+      const hydrateGameState = selectHydrateGameState(useGameStore.getState());
+      const restoredGameState = {
+        ...currentGameState,
+        turn: COLOR.BLACK,
+      };
+
       hydrateGameState(restoredGameState);
 
       const updatedState = useGameStore.getState();
       expect(selectGameState(updatedState)).toBe(restoredGameState);
       expect(selectRepetitionHistory(updatedState)).toEqual({});
+    });
+
+    it('GameState 목록의 fingerprint 기준으로 반복 이력을 재구성해야 한다', () => {
+      const currentGameState = selectGameState(useGameStore.getState());
+      const nextGameState = {
+        ...currentGameState,
+        turn: COLOR.BLACK,
+      };
+
+      const repetitionHistory = buildRepetitionHistoryFromStates([
+        currentGameState,
+        nextGameState,
+        currentGameState,
+      ]);
+
+      expect(repetitionHistory[positionFingerprint(currentGameState)]).toBe(2);
+      expect(repetitionHistory[positionFingerprint(nextGameState)]).toBe(1);
     });
   });
 
