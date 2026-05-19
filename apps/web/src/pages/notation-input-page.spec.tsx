@@ -6,6 +6,10 @@ import type { UseSaveGameResult } from '@/features/save-game';
 import { NotationInputPage } from './notation-input-page';
 
 const useDraftAutosaveMock = vi.fn();
+let draftAutosaveResult = {
+  lastSavedAt: '2026-05-16T00:00:00.000Z',
+  isSaveNoticeVisible: true,
+};
 const requestSaveGameMock = vi.fn();
 const createUseSaveGameResult = (override: Partial<UseSaveGameResult> = {}): UseSaveGameResult => ({
   requestSaveGame: requestSaveGameMock,
@@ -20,7 +24,7 @@ const useSaveGameMock = vi.fn<() => UseSaveGameResult>(() => createUseSaveGameRe
 vi.mock('@/features/draft-autosave', () => ({
   useDraftAutosave: () => {
     useDraftAutosaveMock();
-    return { lastSavedAt: '2026-05-16T00:00:00.000Z', isSaveNoticeVisible: true };
+    return draftAutosaveResult;
   },
 }));
 
@@ -76,6 +80,10 @@ describe('NotationInputPage', () => {
   afterEach(() => {
     cleanup();
     vi.useRealTimers();
+    draftAutosaveResult = {
+      lastSavedAt: '2026-05-16T00:00:00.000Z',
+      isSaveNoticeVisible: true,
+    };
     useDraftAutosaveMock.mockClear();
     requestSaveGameMock.mockClear();
     useSaveGameMock.mockReset();
@@ -99,6 +107,26 @@ describe('NotationInputPage', () => {
     render(<NotationInputPage />);
 
     expect(screen.getByRole('status')).toHaveTextContent('초안 저장됨');
+  });
+
+  it('초안 저장 이벤트가 바뀌면 토스트 강조 상태를 갱신해야 한다', () => {
+    const { rerender } = render(<NotationInputPage />);
+
+    const firstToast = screen.getByRole('status');
+
+    expect(firstToast).toHaveAttribute('data-save-event-id', '2026-05-16T00:00:00.000Z');
+    expect(firstToast).toHaveClass('animate-[draft-save-toast-highlight_420ms_ease-out]');
+
+    draftAutosaveResult = {
+      lastSavedAt: '2026-05-16T00:00:01.000Z',
+      isSaveNoticeVisible: true,
+    };
+    rerender(<NotationInputPage />);
+
+    expect(screen.getByRole('status')).toHaveAttribute(
+      'data-save-event-id',
+      '2026-05-16T00:00:01.000Z',
+    );
   });
 
   it('초기화 버튼을 누르면 확인 다이얼로그를 표시해야 한다', async () => {

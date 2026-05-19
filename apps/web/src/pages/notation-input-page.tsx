@@ -8,7 +8,7 @@ import { RotateCcw } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export const NotationInputPage = () => {
-  const { isSaveNoticeVisible } = useDraftAutosave();
+  const { lastSavedAt, isSaveNoticeVisible } = useDraftAutosave();
   const { isResetDialogOpen, requestDraftReset, cancelDraftReset, confirmDraftReset } =
     useResetDraft();
   const { requestSaveGame, isSaving, canSaveGame, saveStatus } = useSaveGame();
@@ -23,7 +23,11 @@ export const NotationInputPage = () => {
 
   return (
     <>
-      <DraftSavedToast isVisible={isSaveNoticeVisible} />
+      <DraftSavedToast
+        key={lastSavedAt ?? 'draft-save'}
+        isVisible={isSaveNoticeVisible}
+        saveEventId={lastSavedAt}
+      />
       <SaveGameStatusToast saveStatus={saveStatus} />
       <ResetDraftDialog
         open={isResetDialogOpen}
@@ -103,7 +107,13 @@ const SaveGameStatusToast = ({
   );
 };
 
-const DraftSavedToast = ({ isVisible }: { readonly isVisible: boolean }) => {
+const DraftSavedToast = ({
+  isVisible,
+  saveEventId,
+}: {
+  readonly isVisible: boolean;
+  readonly saveEventId: string | null;
+}) => {
   if (!isVisible) {
     return null;
   }
@@ -112,7 +122,8 @@ const DraftSavedToast = ({ isVisible }: { readonly isVisible: boolean }) => {
     <div
       role="status"
       aria-live="polite"
-      className="fixed right-4 top-4 z-50 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-medium text-emerald-700 shadow-sm"
+      data-save-event-id={saveEventId ?? undefined}
+      className="fixed right-4 top-4 z-50 animate-[draft-save-toast-highlight_420ms_ease-out] rounded-md border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-medium text-emerald-700 shadow-sm"
     >
       초안 저장됨
     </div>
