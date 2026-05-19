@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build",
+    "build": "pnpm prisma:generate && nest build",
     "dev": "nest start --watch",
     "format": "prettier --ignore-path ../../.prettierignore --write .",
     "format:check": "prettier --ignore-path ../../.prettierignore --check .",
@@ -18,13 +18,13 @@
     "lint:fix": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "prisma:generate": "prisma generate",
     "prisma:validate": "prisma validate",
-    "test": "jest",
+    "test": "pnpm prisma:generate && jest",
     "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:coverage": "jest --coverage",
+    "test:cov": "pnpm prisma:generate && jest --coverage",
+    "test:coverage": "pnpm prisma:generate && jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "type-check": "tsc --noEmit"
+    "test:e2e": "pnpm prisma:generate && jest --config ./test/jest-e2e.json",
+    "type-check": "pnpm prisma:generate && tsc --noEmit"
   },
   "dependencies": {
     "@chess-db/shared": "workspace:*",
