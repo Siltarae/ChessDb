@@ -5,7 +5,7 @@ import { Button } from '@/shared/ui/button';
 import type { BoardOrientation } from '@/widgets/chess-board';
 import { BoardShell, NotationInputLayout, SidebarShell } from '@/widgets/notation-input-layout';
 import { RotateCcw } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const NotationInputPage = () => {
   const { isSaveNoticeVisible } = useDraftAutosave();
@@ -65,7 +65,24 @@ const SaveGameStatusToast = ({
 }: {
   readonly saveStatus: 'idle' | 'success' | 'error';
 }) => {
-  if (saveStatus === 'idle') {
+  const [dismissedStatus, setDismissedStatus] = useState<typeof saveStatus>('idle');
+  const isVisible = saveStatus !== 'idle' && dismissedStatus !== saveStatus;
+
+  useEffect(() => {
+    if (saveStatus === 'idle') {
+      return;
+    }
+
+    const saveStatusTimeoutId = setTimeout(() => {
+      setDismissedStatus(saveStatus);
+    }, 3000);
+
+    return () => {
+      clearTimeout(saveStatusTimeoutId);
+    };
+  }, [saveStatus]);
+
+  if (saveStatus === 'idle' || !isVisible) {
     return null;
   }
 
