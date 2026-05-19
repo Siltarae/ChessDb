@@ -2,7 +2,7 @@
 
 **작업 상태**: 대기 중  
 **선행 작업**: `[TASK-044]` (정식 기보 어노테이션 조회와 표시)  
-**후속 작업**: `[TASK-047]` (기보 삭제 확인 및 처리)  
+**후속 작업**: `[TASK-047]` (기보 삭제 확인 및 처리), `[TASK-103]` (정식 기보 수순 수정)  
 **연관 설계**: `[../architecture/directory-structure.md]`, `[../architecture/patterns.md]`
 
 ---
@@ -11,7 +11,7 @@
 
 - **현재 상태 요약**: 정식 저장된 기보 어노테이션을 읽을 수는 있지만 수정해서 바로 저장하는 흐름은 없습니다.
 - **이 작업의 책임**: 정식 기보 상세 화면에서 어노테이션을 수정하고 자동 저장합니다.
-- **이번 작업에서 하지 않는 것**: 기보 삭제나 다른 메타데이터 수정은 범위 밖입니다.
+- **이번 작업에서 하지 않는 것**: 기보 삭제, 기보 정보 수정, 수순 수정은 범위 밖입니다.
 - **경계 메모**:
   - 어노테이션 수정과 저장만 다룹니다.
 
@@ -37,6 +37,7 @@
   - `apps/web/src/pages/game-detail-page.tsx`
 - **이번 작업에서 수정하지 않음**:
   - `apps/web/src/features/game-comment-edit/**`
+  - `apps/web/src/features/game-sequence-edit/**`
 - **아티팩트 작성 규칙**:
   - 파일 경로는 `apps/web`, `apps/api`, `packages/shared` 기준의 실제 예상 위치로 고정합니다.
   - 후속 태스크 책임 파일은 같은 폴더에 있더라도 이번 문서 범위에서 같이 닫지 않습니다.
@@ -79,6 +80,7 @@ const { selectedAnnotation, updateAnnotation } = useGameAnnotationEdit(gameId, p
 
 - 허용 기호 집합을 유지합니다.
 - 코멘트 자동 저장 로직과 분리된 feature로 둡니다.
+- 이후 수순 수정 시 어노테이션 보존/삭제 규칙은 `[TASK-103]`에서 확정합니다.
 
 ## 🧪 5. 검증 시나리오 및 단언
 
