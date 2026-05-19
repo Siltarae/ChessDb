@@ -12,7 +12,7 @@ import {
 import { act, cleanup, renderHook } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useDraftStore } from '@/entities/draft';
+import { DRAFT_GAME_METADATA_RESULT_SOURCE, useDraftStore } from '@/entities/draft';
 import { useGameStore } from '@/entities/game';
 import { useMoveHistoryStore } from '@/entities/move-history';
 import { CHESS_DB_DRAFT_KEY, serializeDraft } from '@/shared/lib/storage/draft-storage';
@@ -78,6 +78,7 @@ const createDraftSnapshot = () => {
       result: GAME_RECORD_RESULT.WHITE_WIN,
       terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
       playedAt: '2026-05-16',
+      resultSource: DRAFT_GAME_METADATA_RESULT_SOURCE.MANUAL,
     },
     savedAt: SAVED_AT_FIXTURE,
   };
@@ -171,6 +172,7 @@ describe('useDraftAutosave', () => {
         result: GAME_RECORD_RESULT.WHITE_WIN,
         terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
         playedAt: '2026-05-16',
+        resultSource: DRAFT_GAME_METADATA_RESULT_SOURCE.MANUAL,
       });
     });
 

@@ -2,7 +2,12 @@ import { GAME_RECORD_RESULT, GAME_TERMINATION_REASON } from '@chess-db/shared';
 import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { createDefaultPlayedAt, selectGameMetadata, useDraftStore } from '@/entities/draft';
+import {
+  DRAFT_GAME_METADATA_RESULT_SOURCE,
+  createDefaultPlayedAt,
+  selectGameMetadata,
+  useDraftStore,
+} from '@/entities/draft';
 import {
   decisiveTerminationReasonOptions,
   drawTerminationReasonOptions,
@@ -78,6 +83,7 @@ describe('useGameMetadataEdit', () => {
       result: GAME_RECORD_RESULT.WHITE_WIN,
       terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
       playedAt: createDefaultPlayedAt(),
+      resultSource: DRAFT_GAME_METADATA_RESULT_SOURCE.MANUAL,
     });
     expect(result.current.selectedResult).toBe(GAME_RECORD_RESULT.WHITE_WIN);
   });
@@ -97,6 +103,7 @@ describe('useGameMetadataEdit', () => {
       result: GAME_RECORD_RESULT.WHITE_WIN,
       terminationReason: null,
       playedAt: createDefaultPlayedAt(),
+      resultSource: DRAFT_GAME_METADATA_RESULT_SOURCE.MANUAL,
     });
     expect(result.current.selectedTerminationReason).toBeNull();
   });
@@ -115,6 +122,7 @@ describe('useGameMetadataEdit', () => {
       result: GAME_RECORD_RESULT.DRAW,
       terminationReason: GAME_TERMINATION_REASON.AGREEMENT,
       playedAt: createDefaultPlayedAt(),
+      resultSource: DRAFT_GAME_METADATA_RESULT_SOURCE.MANUAL,
     });
     expect(result.current.selectedTerminationReason).toBe(GAME_TERMINATION_REASON.AGREEMENT);
   });
@@ -134,6 +142,7 @@ describe('useGameMetadataEdit', () => {
       result: GAME_RECORD_RESULT.WHITE_WIN,
       terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
       playedAt: '2026-04-21',
+      resultSource: DRAFT_GAME_METADATA_RESULT_SOURCE.MANUAL,
     });
     expect(result.current.playedAtValue).toBe('2026-04-21');
   });

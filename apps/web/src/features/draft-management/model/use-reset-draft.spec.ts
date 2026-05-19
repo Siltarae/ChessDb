@@ -138,6 +138,7 @@ describe('useResetDraft', () => {
       result: null,
       terminationReason: null,
       playedAt: '2026-05-18',
+      resultSource: null,
     });
     expect(localStorage.getItem(CHESS_DB_DRAFT_KEY)).toBeNull();
   });

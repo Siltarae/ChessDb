@@ -2,7 +2,12 @@ import { GAME_RECORD_RESULT, GAME_TERMINATION_REASON } from '@chess-db/shared';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { createDefaultPlayedAt, selectGameMetadata, useDraftStore } from '@/entities/draft';
+import {
+  DRAFT_GAME_METADATA_RESULT_SOURCE,
+  createDefaultPlayedAt,
+  selectGameMetadata,
+  useDraftStore,
+} from '@/entities/draft';
 import { GameMetadataEditor } from './game-metadata-editor';
 
 describe('GameMetadataEditor', () => {
@@ -35,6 +40,7 @@ describe('GameMetadataEditor', () => {
       result: GAME_RECORD_RESULT.BLACK_WIN,
       terminationReason: null,
       playedAt: createDefaultPlayedAt(),
+      resultSource: DRAFT_GAME_METADATA_RESULT_SOURCE.MANUAL,
     });
     expect(screen.getByRole('button', { name: '0-1' })).toHaveAttribute('aria-pressed', 'true');
   });
@@ -49,6 +55,7 @@ describe('GameMetadataEditor', () => {
       result: GAME_RECORD_RESULT.DRAW,
       terminationReason: GAME_TERMINATION_REASON.AGREEMENT,
       playedAt: createDefaultPlayedAt(),
+      resultSource: DRAFT_GAME_METADATA_RESULT_SOURCE.MANUAL,
     });
     expect(screen.getByRole('button', { name: '무승부 합의' })).toHaveAttribute(
       'aria-pressed',
@@ -100,6 +107,7 @@ describe('GameMetadataEditor', () => {
       result: GAME_RECORD_RESULT.WHITE_WIN,
       terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
       playedAt: '2026-04-21',
+      resultSource: DRAFT_GAME_METADATA_RESULT_SOURCE.MANUAL,
     });
   });
 
