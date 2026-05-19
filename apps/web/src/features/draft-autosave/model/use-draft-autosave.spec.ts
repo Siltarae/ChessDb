@@ -283,5 +283,49 @@ describe('useDraftAutosave', () => {
 
       expect(result.current.isSaveNoticeVisible).toBe(false);
     });
+
+    it('localStorage 저장에 실패하면 실패 알림을 표시하고 성공 알림은 표시하지 않아야 한다', () => {
+      vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+        throw new Error('storage unavailable');
+      });
+      const { result } = renderHook(() => useDraftAutosave());
+
+      act(() => {
+        useDraftStore.getState().updateMoveComment(0, '저장 실패');
+      });
+
+      expect(result.current.lastSavedAt).toBeNull();
+      expect(result.current.isSaveNoticeVisible).toBe(false);
+      expect(result.current.isSaveFailureNoticeVisible).toBe(true);
+
+      act(() => {
+        vi.advanceTimersByTime(2000);
+      });
+
+      expect(result.current.isSaveFailureNoticeVisible).toBe(false);
+    });
+
+    it('동일한 초안 내용의 저장 실패 알림은 반복 표시하지 않아야 한다', () => {
+      vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+        throw new Error('storage unavailable');
+      });
+      const { result, rerender } = renderHook(() => useDraftAutosave());
+
+      act(() => {
+        useDraftStore.getState().updateMoveComment(0, '반복 실패 제한');
+      });
+
+      expect(result.current.isSaveFailureNoticeVisible).toBe(true);
+
+      act(() => {
+        vi.advanceTimersByTime(2000);
+      });
+
+      expect(result.current.isSaveFailureNoticeVisible).toBe(false);
+
+      rerender();
+
+      expect(result.current.isSaveFailureNoticeVisible).toBe(false);
+    });
   });
 });

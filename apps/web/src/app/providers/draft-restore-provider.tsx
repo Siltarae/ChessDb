@@ -8,7 +8,11 @@ import {
   type DraftMoveAnnotation,
   type DraftMoveComment,
 } from '@/entities/draft';
-import { selectHydrateGameState, useGameStore } from '@/entities/game';
+import {
+  buildRepetitionHistoryFromStates,
+  selectHydrateGameState,
+  useGameStore,
+} from '@/entities/game';
 import {
   selectHydrateMoveHistory,
   useMoveHistoryStore,
@@ -46,7 +50,12 @@ export const DraftRestoreProvider = ({ children }: { readonly children: ReactNod
       return;
     }
 
-    hydrateGameState(restoredDraft.gameState);
+    hydrateGameState(
+      restoredDraft.gameState,
+      buildRepetitionHistoryFromStates(
+        restoredDraft.historyItems.map((historyItem) => historyItem.beforeState),
+      ),
+    );
     hydrateMoveHistory(restoredDraft.historyItems);
     hydrateDraft({
       moveComments: restoredDraft.moveComments,

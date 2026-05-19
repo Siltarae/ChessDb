@@ -1,3 +1,12 @@
+import {
+  COLOR,
+  GAME_RECORD_RESULT,
+  GAME_TERMINATION_REASON,
+  MOVE_ANNOTATION,
+  MOVE_KIND,
+  SQUARE,
+  createInitialGameState,
+} from '@chess-db/shared';
 import { describe, expect, it, vi } from 'vitest';
 
 import type { SerializedDraftSnapshot } from './draft-storage';
@@ -9,25 +18,36 @@ import {
   serializeDraft,
 } from './draft-storage';
 
+const INITIAL_GAME_STATE = createInitialGameState();
+const AFTER_E4_GAME_STATE = {
+  ...INITIAL_GAME_STATE,
+  turn: COLOR.BLACK,
+};
+
 const DRAFT_SNAPSHOT_FIXTURE = {
-  gameState: {
-    turn: 'white',
-    board: ['white-king', null, 'black-king'],
-  },
+  gameState: AFTER_E4_GAME_STATE,
   historyItems: [
     {
       halfMoveIndex: 0,
+      moveNumber: 1,
+      side: COLOR.WHITE,
       san: 'e4',
-      beforeState: { turn: 'white' },
-      afterState: { turn: 'black' },
+      move: {
+        from: SQUARE.E2,
+        to: SQUARE.E4,
+        kind: MOVE_KIND.DOUBLE_PAWN_PUSH,
+      },
+      beforeState: INITIAL_GAME_STATE,
+      afterState: AFTER_E4_GAME_STATE,
     },
   ],
   moveComments: [{ halfMoveIndex: 0, comment: '중앙을 잡는다' }],
-  moveAnnotations: [{ halfMoveIndex: 0, annotation: '!' }],
+  moveAnnotations: [{ halfMoveIndex: 0, annotation: MOVE_ANNOTATION.GOOD }],
   metadata: {
-    result: '1-0',
-    terminationReason: 'checkmate',
+    result: GAME_RECORD_RESULT.WHITE_WIN,
+    terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
     playedAt: '2026-05-16',
+    resultSource: 'MANUAL',
   },
   savedAt: '2026-05-16T00:00:00.000Z',
 } satisfies SerializedDraftSnapshot;
@@ -79,10 +99,24 @@ describe('draft-storage', () => {
       const fakeStorage = createFakeStorage();
       const serializedDraft = serializeDraft(DRAFT_SNAPSHOT_FIXTURE);
 
-      saveDraft(serializedDraft, fakeStorage);
+      const result = saveDraft(serializedDraft, fakeStorage);
 
+      expect(result).toBe(true);
       expect(fakeStorage.setItem).toHaveBeenCalledWith(CHESS_DB_DRAFT_KEY, serializedDraft);
       expect(fakeStorage.getItem(CHESS_DB_DRAFT_KEY)).toBe(serializedDraft);
+    });
+
+    it('localStorage 쓰기에 실패하면 false를 반환해야 한다', () => {
+      const fakeStorage = createFakeStorage();
+      const serializedDraft = serializeDraft(DRAFT_SNAPSHOT_FIXTURE);
+      vi.mocked(fakeStorage.setItem).mockImplementation(() => {
+        throw new Error('storage unavailable');
+      });
+
+      const result = saveDraft(serializedDraft, fakeStorage);
+
+      expect(result).toBe(false);
+      expect(fakeStorage.getItem(CHESS_DB_DRAFT_KEY)).toBeNull();
     });
   });
 
@@ -139,6 +173,74 @@ describe('draft-storage', () => {
       };
 
       fakeStorage.setItem(CHESS_DB_DRAFT_KEY, JSON.stringify(draftWithoutSavedAt));
+
+      expect(loadDraft(fakeStorage)).toBeNull();
+    });
+
+    it('중첩된 gameState 구조가 유효하지 않으면 null을 반환해야 한다', () => {
+      const fakeStorage = createFakeStorage();
+      const draftWithInvalidGameState = {
+        ...DRAFT_SNAPSHOT_FIXTURE,
+        gameState: null,
+      };
+
+      fakeStorage.setItem(CHESS_DB_DRAFT_KEY, JSON.stringify(draftWithInvalidGameState));
+
+      expect(loadDraft(fakeStorage)).toBeNull();
+    });
+
+    it('중첩된 historyItems 구조가 유효하지 않으면 null을 반환해야 한다', () => {
+      const fakeStorage = createFakeStorage();
+      const draftWithInvalidHistoryItems = {
+        ...DRAFT_SNAPSHOT_FIXTURE,
+        historyItems: [
+          {
+            ...DRAFT_SNAPSHOT_FIXTURE.historyItems[0],
+            afterState: null,
+          },
+        ],
+      };
+
+      fakeStorage.setItem(CHESS_DB_DRAFT_KEY, JSON.stringify(draftWithInvalidHistoryItems));
+
+      expect(loadDraft(fakeStorage)).toBeNull();
+    });
+
+    it('중첩된 moveComments 구조가 유효하지 않으면 null을 반환해야 한다', () => {
+      const fakeStorage = createFakeStorage();
+      const draftWithInvalidMoveComments = {
+        ...DRAFT_SNAPSHOT_FIXTURE,
+        moveComments: [{ halfMoveIndex: -1, comment: '잘못된 코멘트' }],
+      };
+
+      fakeStorage.setItem(CHESS_DB_DRAFT_KEY, JSON.stringify(draftWithInvalidMoveComments));
+
+      expect(loadDraft(fakeStorage)).toBeNull();
+    });
+
+    it('중첩된 moveAnnotations 구조가 유효하지 않으면 null을 반환해야 한다', () => {
+      const fakeStorage = createFakeStorage();
+      const draftWithInvalidMoveAnnotations = {
+        ...DRAFT_SNAPSHOT_FIXTURE,
+        moveAnnotations: [{ halfMoveIndex: 0, annotation: '!' }],
+      };
+
+      fakeStorage.setItem(CHESS_DB_DRAFT_KEY, JSON.stringify(draftWithInvalidMoveAnnotations));
+
+      expect(loadDraft(fakeStorage)).toBeNull();
+    });
+
+    it('중첩된 metadata 구조가 유효하지 않으면 null을 반환해야 한다', () => {
+      const fakeStorage = createFakeStorage();
+      const draftWithInvalidMetadata = {
+        ...DRAFT_SNAPSHOT_FIXTURE,
+        metadata: {
+          ...DRAFT_SNAPSHOT_FIXTURE.metadata,
+          result: '1-0',
+        },
+      };
+
+      fakeStorage.setItem(CHESS_DB_DRAFT_KEY, JSON.stringify(draftWithInvalidMetadata));
 
       expect(loadDraft(fakeStorage)).toBeNull();
     });

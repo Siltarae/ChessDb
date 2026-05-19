@@ -89,6 +89,21 @@ export const CreateGameRecordRequestSchema = z
         message: 'Finished result must have non-null terminationReason',
       });
     }
+
+    const seenHalfMoveIndexes = new Set<number>();
+
+    gameRecord.moves.forEach((move, index) => {
+      if (seenHalfMoveIndexes.has(move.halfMoveIndex)) {
+        ctx.addIssue({
+          code: 'custom',
+          path: ['moves', index, 'halfMoveIndex'],
+          message: 'halfMoveIndex must be unique within moves',
+        });
+        return;
+      }
+
+      seenHalfMoveIndexes.add(move.halfMoveIndex);
+    });
   });
 
 export type CreateGameMoveRecordRequest = z.infer<typeof CreateGameMoveRecordRequestSchema>;

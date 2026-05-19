@@ -101,6 +101,23 @@ describe('CreateGameRecordRequestSchema', () => {
       expect(result.success).toBe(false);
     });
 
+    it('중복된 halfMoveIndex가 있는 수순 목록은 실패해야 한다', () => {
+      const requestWithDuplicateHalfMoveIndex = {
+        ...VALID_CREATE_GAME_RECORD_REQUEST,
+        moves: [
+          VALID_CREATE_GAME_RECORD_REQUEST.moves[0],
+          {
+            ...VALID_CREATE_GAME_RECORD_REQUEST.moves[0],
+            san: 'e5',
+          },
+        ],
+      };
+
+      const result = CreateGameRecordRequestSchema.safeParse(requestWithDuplicateHalfMoveIndex);
+
+      expect(result.success).toBe(false);
+    });
+
     it('기존 Move 분기 규칙을 보존해야 한다', () => {
       const enPassantWithoutCapturedSquare = {
         ...VALID_CREATE_GAME_RECORD_REQUEST,

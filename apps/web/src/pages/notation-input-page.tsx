@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 
 export const NotationInputPage = () => {
   useEngineDerivedMetadataAutofill();
-  const { lastSavedAt, isSaveNoticeVisible } = useDraftAutosave();
+  const { lastSavedAt, isSaveFailureNoticeVisible, isSaveNoticeVisible } = useDraftAutosave();
   const { isResetDialogOpen, requestDraftReset, cancelDraftReset, confirmDraftReset } =
     useResetDraft();
   const { requestSaveGame, isSaving, canSaveGame, saveStatus } = useSaveGame();
@@ -30,7 +30,8 @@ export const NotationInputPage = () => {
         isVisible={isSaveNoticeVisible}
         saveEventId={lastSavedAt}
       />
-      <SaveGameStatusToast saveStatus={saveStatus} />
+      <DraftSaveFailedToast isVisible={isSaveFailureNoticeVisible} />
+      {saveStatus !== 'idle' ? <SaveGameStatusToast saveStatus={saveStatus} /> : null}
       <ResetDraftDialog
         open={isResetDialogOpen}
         onOpenChange={(open) => {
@@ -66,19 +67,11 @@ export const NotationInputPage = () => {
   );
 };
 
-const SaveGameStatusToast = ({
-  saveStatus,
-}: {
-  readonly saveStatus: 'idle' | 'success' | 'error';
-}) => {
-  const [dismissedStatus, setDismissedStatus] = useState<typeof saveStatus>('idle');
-  const isVisible = saveStatus !== 'idle' && dismissedStatus !== saveStatus;
+const SaveGameStatusToast = ({ saveStatus }: { readonly saveStatus: 'success' | 'error' }) => {
+  const [dismissedStatus, setDismissedStatus] = useState<typeof saveStatus | null>(null);
+  const isVisible = dismissedStatus !== saveStatus;
 
   useEffect(() => {
-    if (saveStatus === 'idle') {
-      return;
-    }
-
     const saveStatusTimeoutId = setTimeout(() => {
       setDismissedStatus(saveStatus);
     }, 3000);
@@ -88,7 +81,7 @@ const SaveGameStatusToast = ({
     };
   }, [saveStatus]);
 
-  if (saveStatus === 'idle' || !isVisible) {
+  if (!isVisible) {
     return null;
   }
 
@@ -128,6 +121,22 @@ const DraftSavedToast = ({
       className="fixed right-4 top-4 z-50 animate-[draft-save-toast-highlight_420ms_ease-out] rounded-md border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-medium text-emerald-700 shadow-sm"
     >
       초안 저장됨
+    </div>
+  );
+};
+
+const DraftSaveFailedToast = ({ isVisible }: { readonly isVisible: boolean }) => {
+  if (!isVisible) {
+    return null;
+  }
+
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className="fixed right-4 top-4 z-50 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 shadow-sm"
+    >
+      초안 저장 실패
     </div>
   );
 };
