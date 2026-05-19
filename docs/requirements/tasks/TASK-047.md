@@ -6,7 +6,7 @@
 
 ## 상위 Feature
 
-- [FEATURE-005 기보 목록과 상세 조회](../features/FEATURE-005.md)
+- [FEATURE-005 기보 목록과 상세 편집](../features/FEATURE-005.md)
 
 ## 추천 커밋 메시지
 
