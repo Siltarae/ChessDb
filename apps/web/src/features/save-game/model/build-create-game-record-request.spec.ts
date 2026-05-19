@@ -11,7 +11,7 @@ import {
 } from '@chess-db/shared';
 import { describe, expect, it } from 'vitest';
 
-import type { DraftGameMetadata } from '@/entities/draft';
+import { DRAFT_GAME_METADATA_RESULT_SOURCE, type DraftGameMetadata } from '@/entities/draft';
 import type { MoveHistoryItem } from '@/entities/move-history';
 import { buildCreateGameRecordRequest } from './build-create-game-record-request';
 
@@ -44,6 +44,7 @@ const DEFAULT_METADATA: DraftGameMetadata = {
   result: GAME_RECORD_RESULT.WHITE_WIN,
   terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
   playedAt: '2026-05-16',
+  resultSource: DRAFT_GAME_METADATA_RESULT_SOURCE.MANUAL,
 };
 
 const DEFAULT_HISTORY_ITEM = createMoveHistoryItem(
@@ -161,7 +162,10 @@ describe('buildCreateGameRecordRequest', () => {
   it('UI 전용 상태와 서버 생성 필드를 payload에 포함하지 않아야 한다', () => {
     const request = buildCreateGameRecordRequest({
       historyItems: [DEFAULT_HISTORY_ITEM],
-      metadata: DEFAULT_METADATA,
+      metadata: {
+        ...DEFAULT_METADATA,
+        resultSource: DRAFT_GAME_METADATA_RESULT_SOURCE.AUTO,
+      },
       moveAnnotations: [],
       moveComments: [],
     });
@@ -173,6 +177,7 @@ describe('buildCreateGameRecordRequest', () => {
     expect(serializedRequest).not.toContain('selectedHalfMoveIndex');
     expect(serializedRequest).not.toContain('boardOrientation');
     expect(serializedRequest).not.toContain('activeTab');
+    expect(serializedRequest).not.toContain('resultSource');
     expect(serializedRequest).not.toContain('repositoryId');
     expect(serializedRequest).not.toContain('createdAt');
     expect(serializedRequest).not.toContain('updatedAt');

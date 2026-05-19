@@ -6,6 +6,7 @@ export {
   isTerminationReasonAllowedForResult,
 } from './model/game-metadata-options';
 export { useGameMetadataEdit } from './model/use-game-metadata-edit';
+export { useEngineDerivedMetadataAutofill } from './model/use-engine-derived-metadata-autofill';
 export { GameMetadataEditor } from './ui/game-metadata-editor';
 export { GameResultField } from './ui/game-result-field';
 export { GameTerminationField } from './ui/game-termination-field';

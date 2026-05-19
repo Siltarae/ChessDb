@@ -22,12 +22,25 @@ export type DraftGameMetadata = {
   readonly result: GameRecordResult | null;
   readonly terminationReason: GameTerminationReason | null;
   readonly playedAt: string | null;
+  readonly resultSource: DraftGameMetadataResultSource;
 };
+
+export const DRAFT_GAME_METADATA_RESULT_SOURCE = {
+  AUTO: 'AUTO',
+  MANUAL: 'MANUAL',
+} as const;
+
+export type DraftGameMetadataResultSource =
+  | (typeof DRAFT_GAME_METADATA_RESULT_SOURCE)[keyof typeof DRAFT_GAME_METADATA_RESULT_SOURCE]
+  | null;
+
+export type HydratableDraftGameMetadata = Omit<DraftGameMetadata, 'resultSource'> &
+  Partial<Pick<DraftGameMetadata, 'resultSource'>>;
 
 export type HydrateDraftInput = {
   readonly moveComments: readonly DraftMoveComment[];
   readonly moveAnnotations: readonly DraftMoveAnnotation[];
-  readonly metadata: DraftGameMetadata;
+  readonly metadata: HydratableDraftGameMetadata;
 };
 
 type DraftStoreState = {
@@ -39,7 +52,10 @@ type DraftStoreState = {
     halfMoveIndex: number,
     nextAnnotation: MoveAnnotation | null,
   ) => void;
-  readonly updateGameMetadata: (metadataPatch: Partial<DraftGameMetadata>) => void;
+  readonly updateGameMetadata: (
+    metadataPatch: Partial<DraftGameMetadata>,
+    resultSource?: Exclude<DraftGameMetadataResultSource, null>,
+  ) => void;
   readonly hydrateDraft: (input: HydrateDraftInput) => void;
   readonly clearDraftComments: () => void;
   readonly clearDraftAnnotations: () => void;
@@ -52,6 +68,7 @@ const createInitialGameMetadata = (): DraftGameMetadata => {
     result: null,
     terminationReason: null,
     playedAt: createDefaultPlayedAt(),
+    resultSource: null,
   };
 };
 
@@ -120,17 +137,34 @@ export const useDraftStore = create<DraftStoreState>((set) => ({
     });
   },
 
-  updateGameMetadata: (metadataPatch: Partial<DraftGameMetadata>) => {
+  updateGameMetadata: (
+    metadataPatch: Partial<DraftGameMetadata>,
+    resultSource?: Exclude<DraftGameMetadataResultSource, null>,
+  ) => {
     set((state) => {
       if (!isValidGameMetadataPatch(metadataPatch)) {
         return state;
       }
+
+      if (
+        resultSource === DRAFT_GAME_METADATA_RESULT_SOURCE.AUTO &&
+        state.metadata.resultSource === DRAFT_GAME_METADATA_RESULT_SOURCE.MANUAL
+      ) {
+        return state;
+      }
+
+      const nextResultSource = resolveNextResultSource(
+        state.metadata.resultSource,
+        metadataPatch,
+        resultSource,
+      );
 
       return {
         ...state,
         metadata: {
           ...state.metadata,
           ...metadataPatch,
+          resultSource: nextResultSource,
         },
       };
     });
@@ -146,7 +180,7 @@ export const useDraftStore = create<DraftStoreState>((set) => ({
         ...state,
         moveComments: [...input.moveComments],
         moveAnnotations: [...input.moveAnnotations],
-        metadata: input.metadata,
+        metadata: normalizeHydratedGameMetadata(input.metadata),
       };
     });
   },
@@ -299,6 +333,17 @@ const isNullableGameTerminationReason = (
   return value === null || isGameTerminationReason(value);
 };
 
+export const isGameMetadataResultSource = (
+  value: unknown,
+): value is DraftGameMetadataResultSource => {
+  return (
+    value === null ||
+    Object.values(DRAFT_GAME_METADATA_RESULT_SOURCE).includes(
+      value as Exclude<DraftGameMetadataResultSource, null>,
+    )
+  );
+};
+
 const isValidGameMetadataPatch = (metadataPatch: Partial<DraftGameMetadata>): boolean => {
   if ('result' in metadataPatch && !isNullableGameRecordResult(metadataPatch.result ?? null)) {
     return false;
@@ -318,7 +363,46 @@ const isValidGameMetadataPatch = (metadataPatch: Partial<DraftGameMetadata>): bo
     return false;
   }
 
+  if ('resultSource' in metadataPatch && !isGameMetadataResultSource(metadataPatch.resultSource)) {
+    return false;
+  }
+
   return true;
+};
+
+const resolveNextResultSource = (
+  currentResultSource: DraftGameMetadataResultSource,
+  metadataPatch: Partial<DraftGameMetadata>,
+  resultSource?: Exclude<DraftGameMetadataResultSource, null>,
+): DraftGameMetadataResultSource => {
+  if (resultSource !== undefined) {
+    return resultSource;
+  }
+
+  if ('resultSource' in metadataPatch) {
+    return metadataPatch.resultSource ?? null;
+  }
+
+  if ('result' in metadataPatch || 'terminationReason' in metadataPatch) {
+    return DRAFT_GAME_METADATA_RESULT_SOURCE.MANUAL;
+  }
+
+  return currentResultSource;
+};
+
+const normalizeHydratedGameMetadata = (
+  metadata: HydratableDraftGameMetadata,
+): DraftGameMetadata => {
+  const resultSource =
+    metadata.resultSource ??
+    (metadata.result !== null || metadata.terminationReason !== null
+      ? DRAFT_GAME_METADATA_RESULT_SOURCE.MANUAL
+      : null);
+
+  return {
+    ...metadata,
+    resultSource,
+  };
 };
 
 const isRecord = (value: unknown): value is Record<string, unknown> => {
@@ -359,7 +443,8 @@ const isValidGameMetadata = (metadata: unknown): metadata is DraftGameMetadata =
   return (
     isNullableGameRecordResult(metadata.result as GameRecordResult | null) &&
     isNullableGameTerminationReason(metadata.terminationReason as GameTerminationReason | null) &&
-    (metadata.playedAt === null || isDateOnlyString(metadata.playedAt))
+    (metadata.playedAt === null || isDateOnlyString(metadata.playedAt)) &&
+    (!('resultSource' in metadata) || isGameMetadataResultSource(metadata.resultSource))
   );
 };
 

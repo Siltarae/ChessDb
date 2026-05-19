@@ -9,9 +9,11 @@ import {
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  DRAFT_GAME_METADATA_RESULT_SOURCE,
   createDefaultPlayedAt,
   formatLocalDateOnly,
   isDateOnlyString,
+  isGameMetadataResultSource,
   isGameRecordResult,
   isGameTerminationReason,
   isMoveAnnotation,
@@ -196,6 +198,7 @@ describe('draft-store', () => {
         result: null,
         terminationReason: null,
         playedAt: '2026-05-15',
+        resultSource: null,
       });
     });
 
@@ -211,6 +214,49 @@ describe('draft-store', () => {
         result: GAME_RECORD_RESULT.WHITE_WIN,
         terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
         playedAt: createDefaultPlayedAt(),
+        resultSource: DRAFT_GAME_METADATA_RESULT_SOURCE.MANUAL,
+      });
+    });
+
+    it('명시한 source로 결과와 종료 사유 입력 출처를 저장해야 한다', () => {
+      const updateGameMetadata = selectUpdateGameMetadata(useDraftStore.getState());
+
+      updateGameMetadata(
+        {
+          result: GAME_RECORD_RESULT.DRAW,
+          terminationReason: GAME_TERMINATION_REASON.STALEMATE,
+        },
+        DRAFT_GAME_METADATA_RESULT_SOURCE.AUTO,
+      );
+
+      expect(selectGameMetadata(useDraftStore.getState())).toEqual({
+        result: GAME_RECORD_RESULT.DRAW,
+        terminationReason: GAME_TERMINATION_REASON.STALEMATE,
+        playedAt: createDefaultPlayedAt(),
+        resultSource: DRAFT_GAME_METADATA_RESULT_SOURCE.AUTO,
+      });
+    });
+
+    it('수동 입력된 결과와 종료 사유는 자동 반영이 덮어쓰지 않아야 한다', () => {
+      const updateGameMetadata = selectUpdateGameMetadata(useDraftStore.getState());
+
+      updateGameMetadata({
+        result: GAME_RECORD_RESULT.WHITE_WIN,
+        terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
+      });
+      updateGameMetadata(
+        {
+          result: GAME_RECORD_RESULT.DRAW,
+          terminationReason: GAME_TERMINATION_REASON.STALEMATE,
+        },
+        DRAFT_GAME_METADATA_RESULT_SOURCE.AUTO,
+      );
+
+      expect(selectGameMetadata(useDraftStore.getState())).toEqual({
+        result: GAME_RECORD_RESULT.WHITE_WIN,
+        terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
+        playedAt: createDefaultPlayedAt(),
+        resultSource: DRAFT_GAME_METADATA_RESULT_SOURCE.MANUAL,
       });
     });
 
@@ -227,6 +273,7 @@ describe('draft-store', () => {
         result: GAME_RECORD_RESULT.DRAW,
         terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
         playedAt: createDefaultPlayedAt(),
+        resultSource: DRAFT_GAME_METADATA_RESULT_SOURCE.MANUAL,
       });
     });
 
@@ -255,6 +302,7 @@ describe('draft-store', () => {
         result: GAME_RECORD_RESULT.WHITE_WIN,
         terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
         playedAt: '2026-04-21',
+        resultSource: DRAFT_GAME_METADATA_RESULT_SOURCE.MANUAL,
       });
     });
 
@@ -279,6 +327,7 @@ describe('draft-store', () => {
         result: GAME_RECORD_RESULT.BLACK_WIN,
         terminationReason: null,
         playedAt: createDefaultPlayedAt(),
+        resultSource: DRAFT_GAME_METADATA_RESULT_SOURCE.MANUAL,
       });
     });
 
@@ -289,6 +338,7 @@ describe('draft-store', () => {
         result: GAME_RECORD_RESULT.WHITE_WIN,
         terminationReason: GAME_TERMINATION_REASON.RESIGNATION,
         playedAt: '2026-04-21',
+        resultSource: DRAFT_GAME_METADATA_RESULT_SOURCE.MANUAL,
       });
       updateGameMetadata({ result: '1-0' as GameRecordResult });
       updateGameMetadata({ terminationReason: 'UNSUPPORTED' as GameTerminationReason });
@@ -301,6 +351,7 @@ describe('draft-store', () => {
         result: GAME_RECORD_RESULT.WHITE_WIN,
         terminationReason: GAME_TERMINATION_REASON.RESIGNATION,
         playedAt: '2026-04-21',
+        resultSource: DRAFT_GAME_METADATA_RESULT_SOURCE.MANUAL,
       });
     });
 
@@ -321,6 +372,7 @@ describe('draft-store', () => {
         result: null,
         terminationReason: null,
         playedAt: createDefaultPlayedAt(),
+        resultSource: null,
       });
       expect(selectMoveCommentByHalfMoveIndex(0)(useDraftStore.getState())).toEqual({
         halfMoveIndex: 0,
@@ -352,6 +404,7 @@ describe('draft-store', () => {
         result: null,
         terminationReason: null,
         playedAt: '2026-05-18',
+        resultSource: null,
       });
     });
   });
@@ -374,6 +427,7 @@ describe('draft-store', () => {
           result: GAME_RECORD_RESULT.DRAW,
           terminationReason: GAME_TERMINATION_REASON.AGREEMENT,
           playedAt: '2026-05-16',
+          resultSource: DRAFT_GAME_METADATA_RESULT_SOURCE.AUTO,
         },
       });
 
@@ -387,6 +441,28 @@ describe('draft-store', () => {
         result: GAME_RECORD_RESULT.DRAW,
         terminationReason: GAME_TERMINATION_REASON.AGREEMENT,
         playedAt: '2026-05-16',
+        resultSource: DRAFT_GAME_METADATA_RESULT_SOURCE.AUTO,
+      });
+    });
+
+    it('resultSource가 없는 기존 초안은 결과 값이 있으면 수동 입력으로 보정해야 한다', () => {
+      const hydrateDraft = selectHydrateDraft(useDraftStore.getState());
+
+      hydrateDraft({
+        moveComments: [],
+        moveAnnotations: [],
+        metadata: {
+          result: GAME_RECORD_RESULT.WHITE_WIN,
+          terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
+          playedAt: '2026-05-16',
+        },
+      });
+
+      expect(selectGameMetadata(useDraftStore.getState())).toEqual({
+        result: GAME_RECORD_RESULT.WHITE_WIN,
+        terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
+        playedAt: '2026-05-16',
+        resultSource: DRAFT_GAME_METADATA_RESULT_SOURCE.MANUAL,
       });
     });
 
@@ -403,6 +479,7 @@ describe('draft-store', () => {
           result: null,
           terminationReason: null,
           playedAt: '2026-05-16',
+          resultSource: null,
         },
       });
 
@@ -419,6 +496,9 @@ describe('draft-store', () => {
       expect(isGameTerminationReason(GAME_TERMINATION_REASON.TIMEOUT)).toBe(true);
       expect(isGameTerminationReason(GAME_TERMINATION_REASON.CHECKMATE)).toBe(true);
       expect(isGameTerminationReason('UNSUPPORTED')).toBe(false);
+      expect(isGameMetadataResultSource(DRAFT_GAME_METADATA_RESULT_SOURCE.AUTO)).toBe(true);
+      expect(isGameMetadataResultSource(DRAFT_GAME_METADATA_RESULT_SOURCE.MANUAL)).toBe(true);
+      expect(isGameMetadataResultSource('SYSTEM')).toBe(false);
     });
 
     it('date-only 문자열만 playedAt 저장값으로 허용해야 한다', () => {

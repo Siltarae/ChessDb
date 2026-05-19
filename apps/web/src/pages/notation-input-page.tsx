@@ -1,5 +1,6 @@
 import { useDraftAutosave } from '@/features/draft-autosave';
 import { ResetDraftDialog, useResetDraft } from '@/features/draft-management';
+import { useEngineDerivedMetadataAutofill } from '@/features/game-metadata-edit';
 import { SaveGameButton, useSaveGame } from '@/features/save-game';
 import { Button } from '@/shared/ui/button';
 import type { BoardOrientation } from '@/widgets/chess-board';
@@ -8,6 +9,7 @@ import { RotateCcw } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export const NotationInputPage = () => {
+  useEngineDerivedMetadataAutofill();
   const { lastSavedAt, isSaveNoticeVisible } = useDraftAutosave();
   const { isResetDialogOpen, requestDraftReset, cancelDraftReset, confirmDraftReset } =
     useResetDraft();

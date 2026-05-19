@@ -12,7 +12,7 @@ import {
 } from '@chess-db/shared';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useDraftStore } from '@/entities/draft';
+import { DRAFT_GAME_METADATA_RESULT_SOURCE, useDraftStore } from '@/entities/draft';
 import { useGameStore } from '@/entities/game';
 import { useMoveHistoryStore, type MoveHistoryItem } from '@/entities/move-history';
 import {
@@ -56,6 +56,7 @@ const createDraftSnapshotFixture = (): SerializedDraftSnapshot => {
       result: GAME_RECORD_RESULT.WHITE_WIN,
       terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
       playedAt: '2026-05-16',
+      resultSource: DRAFT_GAME_METADATA_RESULT_SOURCE.MANUAL,
     },
     savedAt: '2026-05-16T00:00:00.000Z',
   };
