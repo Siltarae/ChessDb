@@ -2,15 +2,43 @@ import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import type { UseSaveGameResult } from '@/features/save-game';
 import { NotationInputPage } from './notation-input-page';
 
 const useDraftAutosaveMock = vi.fn();
+const requestSaveGameMock = vi.fn();
+const createUseSaveGameResult = (override: Partial<UseSaveGameResult> = {}): UseSaveGameResult => ({
+  requestSaveGame: requestSaveGameMock,
+  isSaving: false,
+  canSaveGame: true,
+  savedGameId: null,
+  saveStatus: 'idle',
+  ...override,
+});
+const useSaveGameMock = vi.fn<() => UseSaveGameResult>(() => createUseSaveGameResult());
 
 vi.mock('@/features/draft-autosave', () => ({
   useDraftAutosave: () => {
     useDraftAutosaveMock();
     return { lastSavedAt: '2026-05-16T00:00:00.000Z', isSaveNoticeVisible: true };
   },
+}));
+
+vi.mock('@/features/save-game', () => ({
+  SaveGameButton: ({
+    onSave,
+    isSaving,
+    disabled,
+  }: {
+    readonly onSave: () => void;
+    readonly isSaving: boolean;
+    readonly disabled?: boolean;
+  }) => (
+    <button type="button" onClick={onSave} disabled={disabled || isSaving}>
+      {isSaving ? '저장 중' : '기보 저장'}
+    </button>
+  ),
+  useSaveGame: () => useSaveGameMock(),
 }));
 
 vi.mock('@/widgets/notation-input-layout', () => ({
@@ -48,6 +76,9 @@ describe('NotationInputPage', () => {
   afterEach(() => {
     cleanup();
     useDraftAutosaveMock.mockClear();
+    requestSaveGameMock.mockClear();
+    useSaveGameMock.mockReset();
+    useSaveGameMock.mockReturnValue(createUseSaveGameResult());
   });
 
   it('페이지 렌더링 시 초안 자동 저장 훅을 활성화해야 한다', () => {
@@ -79,5 +110,51 @@ describe('NotationInputPage', () => {
     expect(
       screen.getByText('현재 입력 중인 초안을 초기화합니다. 계속하시겠습니까?'),
     ).toBeInTheDocument();
+  });
+
+  it('기보 저장 버튼을 표시하고 클릭하면 저장 요청을 실행해야 한다', async () => {
+    const user = userEvent.setup();
+    render(<NotationInputPage />);
+
+    await user.click(screen.getByRole('button', { name: '기보 저장' }));
+
+    expect(requestSaveGameMock).toHaveBeenCalledOnce();
+  });
+
+  it('저장할 수 없으면 기보 저장 버튼을 비활성화해야 한다', () => {
+    useSaveGameMock.mockReturnValue(
+      createUseSaveGameResult({
+        canSaveGame: false,
+      }),
+    );
+
+    render(<NotationInputPage />);
+
+    expect(screen.getByRole('button', { name: '기보 저장' })).toBeDisabled();
+  });
+
+  it('기보 저장 성공 상태를 표시해야 한다', () => {
+    useSaveGameMock.mockReturnValue(
+      createUseSaveGameResult({
+        savedGameId: 'game-1',
+        saveStatus: 'success',
+      }),
+    );
+
+    render(<NotationInputPage />);
+
+    expect(screen.getByText('기보가 저장되었습니다.')).toBeInTheDocument();
+  });
+
+  it('기보 저장 실패 상태를 표시해야 한다', () => {
+    useSaveGameMock.mockReturnValue(
+      createUseSaveGameResult({
+        saveStatus: 'error',
+      }),
+    );
+
+    render(<NotationInputPage />);
+
+    expect(screen.getByText('기보 저장에 실패했습니다.')).toBeInTheDocument();
   });
 });

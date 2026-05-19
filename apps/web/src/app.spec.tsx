@@ -1,5 +1,5 @@
 import { StrictMode } from 'react';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   GAME_RECORD_RESULT,
@@ -76,6 +76,7 @@ describe('App', () => {
 
   afterEach(() => {
     cleanup();
+    vi.unstubAllGlobals();
     vi.useRealTimers();
     localStorage.clear();
     resetStores();
@@ -184,5 +185,65 @@ describe('App', () => {
     });
     expect(localStorage.getItem(CHESS_DB_DRAFT_KEY)).toBeNull();
     expect(screen.queryByText('초안 저장됨')).not.toBeInTheDocument();
+  });
+
+  it('복원된 초안을 기보 저장하면 성공 후 localStorage 초안을 삭제하고 상세 이동하지 않아야 한다', async () => {
+    const user = userEvent.setup();
+    window.history.pushState({}, '', '/');
+    const draftSnapshot = createDraftSnapshotFixture();
+    localStorage.setItem(CHESS_DB_DRAFT_KEY, serializeDraft(draftSnapshot));
+    const fetchMock = vi.fn<typeof fetch>();
+    fetchMock.mockResolvedValueOnce(
+      new Response(JSON.stringify({ id: 'game-1' }), { status: 201 }),
+    );
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(useGameStore.getState().gameState).toEqual(draftSnapshot.gameState);
+    });
+
+    await user.click(screen.getByRole('button', { name: '기보 저장' }));
+
+    expect(await screen.findByText('기보가 저장되었습니다.')).toBeInTheDocument();
+    expect(localStorage.getItem(CHESS_DB_DRAFT_KEY)).toBeNull();
+    expect(window.location.pathname).toBe('/');
+
+    const moveHistoryRegion = screen.getByRole('region', { name: '수순 목록' });
+    await user.click(within(moveHistoryRegion).getByRole('button', { name: /e4/ }));
+    await user.clear(screen.getByRole('textbox', { name: '선택 수 코멘트' }));
+    await user.type(screen.getByRole('textbox', { name: '선택 수 코멘트' }), '저장 후 새 수정');
+
+    await waitFor(() => {
+      expect(localStorage.getItem(CHESS_DB_DRAFT_KEY)).not.toBeNull();
+    });
+  });
+
+  it('복원된 초안 기보 저장이 실패하면 localStorage와 메모리 상태를 유지해야 한다', async () => {
+    const user = userEvent.setup();
+    window.history.pushState({}, '', '/');
+    const draftSnapshot = createDraftSnapshotFixture();
+    const serializedDraft = serializeDraft(draftSnapshot);
+    localStorage.setItem(CHESS_DB_DRAFT_KEY, serializedDraft);
+    const fetchMock = vi.fn<typeof fetch>();
+    fetchMock.mockResolvedValueOnce(new Response('저장 실패', { status: 500 }));
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(useGameStore.getState().gameState).toEqual(draftSnapshot.gameState);
+    });
+
+    await user.click(screen.getByRole('button', { name: '기보 저장' }));
+
+    expect(await screen.findByText('기보 저장에 실패했습니다.')).toBeInTheDocument();
+    expect(localStorage.getItem(CHESS_DB_DRAFT_KEY)).toBe(serializedDraft);
+    expect(useGameStore.getState().gameState).toEqual(draftSnapshot.gameState);
+    expect(useMoveHistoryStore.getState().historyItems).toEqual(draftSnapshot.historyItems);
+    expect(useDraftStore.getState().moveComments).toEqual(draftSnapshot.moveComments);
+    expect(useDraftStore.getState().moveAnnotations).toEqual(draftSnapshot.moveAnnotations);
+    expect(useDraftStore.getState().metadata).toEqual(draftSnapshot.metadata);
   });
 });

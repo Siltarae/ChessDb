@@ -1,5 +1,6 @@
 import { useDraftAutosave } from '@/features/draft-autosave';
 import { ResetDraftDialog, useResetDraft } from '@/features/draft-management';
+import { SaveGameButton, useSaveGame } from '@/features/save-game';
 import { Button } from '@/shared/ui/button';
 import type { BoardOrientation } from '@/widgets/chess-board';
 import { BoardShell, NotationInputLayout, SidebarShell } from '@/widgets/notation-input-layout';
@@ -10,6 +11,7 @@ export const NotationInputPage = () => {
   const { isSaveNoticeVisible } = useDraftAutosave();
   const { isResetDialogOpen, requestDraftReset, cancelDraftReset, confirmDraftReset } =
     useResetDraft();
+  const { requestSaveGame, isSaving, canSaveGame, saveStatus } = useSaveGame();
 
   const [boardOrientation, setBoardOrientation] = useState<BoardOrientation>('white');
 
@@ -22,6 +24,7 @@ export const NotationInputPage = () => {
   return (
     <>
       <DraftSavedToast isVisible={isSaveNoticeVisible} />
+      <SaveGameStatusToast saveStatus={saveStatus} />
       <ResetDraftDialog
         open={isResetDialogOpen}
         onOpenChange={(open) => {
@@ -38,15 +41,48 @@ export const NotationInputPage = () => {
             boardOrientation={boardOrientation}
             onToggleBoardOrientation={toggleBoardOrientation}
             toolbarSlot={
-              <Button type="button" variant="outline" size="sm" onClick={requestDraftReset}>
-                <RotateCcw aria-hidden="true" />
-                초기화
-              </Button>
+              <div className="flex items-center gap-2">
+                <SaveGameButton
+                  onSave={requestSaveGame}
+                  isSaving={isSaving}
+                  disabled={!canSaveGame}
+                />
+                <Button type="button" variant="outline" size="sm" onClick={requestDraftReset}>
+                  <RotateCcw aria-hidden="true" />
+                  초기화
+                </Button>
+              </div>
             }
           />
         }
       />
     </>
+  );
+};
+
+const SaveGameStatusToast = ({
+  saveStatus,
+}: {
+  readonly saveStatus: 'idle' | 'success' | 'error';
+}) => {
+  if (saveStatus === 'idle') {
+    return null;
+  }
+
+  const isSuccess = saveStatus === 'success';
+
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className={
+        isSuccess
+          ? 'fixed right-4 top-16 z-50 rounded-md border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 shadow-sm'
+          : 'fixed right-4 top-16 z-50 rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-700 shadow-sm'
+      }
+    >
+      {isSuccess ? '기보가 저장되었습니다.' : '기보 저장에 실패했습니다.'}
+    </div>
   );
 };
 
