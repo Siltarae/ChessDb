@@ -12,6 +12,7 @@ import { PrismaClient } from 'generated/prisma';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
+import { API_ERROR_CODE } from '../src/common/errors/api-error-response';
 
 const VALID_CREATE_GAME_RECORD_REQUEST = {
   result: GAME_RECORD_RESULT.WHITE_WIN,
@@ -36,6 +37,13 @@ type CreateGameResponse = {
   readonly id: string;
 };
 
+type ApiErrorResponse = {
+  readonly statusCode: number;
+  readonly errorCode: string;
+  readonly message: string;
+  readonly details: readonly unknown[];
+};
+
 function assertTestDatabaseUrl(databaseUrl: string | undefined) {
   if (!databaseUrl) {
     throw new Error('e2e 테스트용 DATABASE_URL이 필요합니다.');
@@ -55,6 +63,21 @@ function isCreateGameResponse(value: unknown): value is CreateGameResponse {
     value !== null &&
     'id' in value &&
     typeof value.id === 'string'
+  );
+}
+
+function isApiErrorResponse(value: unknown): value is ApiErrorResponse {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'statusCode' in value &&
+    'errorCode' in value &&
+    'message' in value &&
+    'details' in value &&
+    typeof value.statusCode === 'number' &&
+    typeof value.errorCode === 'string' &&
+    typeof value.message === 'string' &&
+    Array.isArray(value.details)
   );
 }
 
@@ -177,13 +200,25 @@ describe('Games API (e2e)', () => {
     const db = requirePrisma(prisma);
     const server = requireApp(app).getHttpServer();
 
-    await request(server)
+    const response = await request(server)
       .post('/api/games')
       .send({
         ...VALID_CREATE_GAME_RECORD_REQUEST,
         moves: [],
       })
       .expect(400);
+    const responseBody = response.body as unknown;
+
+    expect(isApiErrorResponse(responseBody)).toBe(true);
+    if (!isApiErrorResponse(responseBody)) {
+      throw new Error('API 에러 응답 형식이 올바르지 않습니다.');
+    }
+    expect(responseBody).toMatchObject({
+      statusCode: 400,
+      errorCode: API_ERROR_CODE.VALIDATION_ERROR,
+      message: '요청 값이 올바르지 않습니다.',
+    });
+    expect(responseBody.details.length).toBeGreaterThan(0);
 
     await expect(db.game.count()).resolves.toBe(0);
     await expect(db.gameMove.count()).resolves.toBe(0);
