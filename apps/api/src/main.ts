@@ -2,11 +2,25 @@ import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { cleanupOpenApiDoc } from 'nestjs-zod';
 import { AppModule } from './app.module';
+import { parseEnv } from './core/config/env.config';
+
+const parseAllowedOrigins = (allowedOrigins: string): string[] => {
+  return allowedOrigins
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter((origin) => origin.length > 0);
+};
 
 async function bootstrap() {
+  const env = parseEnv(process.env);
   const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('api');
+
+  app.enableCors({
+    origin: parseAllowedOrigins(env.ALLOWED_ORIGINS),
+    credentials: true,
+  });
 
   const config = new DocumentBuilder()
     .setTitle('ChessDB API')
@@ -17,6 +31,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, cleanupOpenApiDoc(document));
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(env.PORT);
 }
 void bootstrap();

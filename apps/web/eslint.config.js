@@ -1,8 +1,9 @@
-import { fileURLToPath } from 'node:url';
-import globals from 'globals';
+import tanstackQuery from '@tanstack/eslint-plugin-query';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import { defineConfig, globalIgnores } from 'eslint/config';
+import globals from 'globals';
+import { fileURLToPath } from 'node:url';
 import rootConfig from '../../eslint.config.js';
 
 const tsconfigRootDir = fileURLToPath(new URL('.', import.meta.url));
@@ -20,7 +21,11 @@ export default defineConfig([
   ]),
   {
     files: ['**/*.{ts,tsx}'],
-    extends: [reactHooks.configs.flat.recommended, reactRefresh.configs.vite],
+    extends: [
+      reactHooks.configs.flat.recommended,
+      reactRefresh.configs.vite,
+      tanstackQuery.configs['flat/recommended'],
+    ],
     languageOptions: {
       globals: globals.browser,
       parserOptions: {
