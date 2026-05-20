@@ -41,6 +41,15 @@ enum MoveAnnotation {
   @@map("move_annotation")
 }
 
+model Repository {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String   @db.VarChar
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@map("repositories")
+}
+
 model Game {
   id                String                 @id @default(uuid()) @db.Uuid
   result            GameResult

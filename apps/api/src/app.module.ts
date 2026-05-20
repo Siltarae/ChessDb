@@ -8,12 +8,14 @@ import { ApiExceptionFilter } from './common/filters/api-exception.filter';
 import { parseEnv } from './core/config/env.config';
 import { PrismaModule } from './core/database/prisma.module';
 import { GamesModule } from './modules/games/games.module';
+import { RepositoriesModule } from './modules/repositories/repositories.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, validate: parseEnv }),
     PrismaModule,
     GamesModule,
+    RepositoriesModule,
   ],
   controllers: [AppController],
   providers: [
