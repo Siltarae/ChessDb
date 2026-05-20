@@ -66,4 +66,4 @@
 
 ## 💬 9. 추천 커밋 메시지
 
-- `chore: GitHub Actions CI 워크플로우 및 커버리지 게이트 구축 (TASK-091)`
+- `chore: GitHub Actions CI 워크플로우 및 커버리지 게이트 구축`

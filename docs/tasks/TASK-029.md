@@ -111,4 +111,4 @@ const [isCreateDialogOpen, setCreateDialogOpen] = useState(false);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 저장소 생성 다이얼로그 흐름을 추가 (TASK-029)`
+- `feat: 저장소 생성 다이얼로그 흐름을 추가`

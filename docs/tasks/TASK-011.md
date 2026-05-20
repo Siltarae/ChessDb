@@ -154,4 +154,4 @@ const legalMoves = getLegalMoves(state, square);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 체크 상태 및 핀(Pin)을 고려한 합법 수 필터링 로직 구현 (TASK-011)`
+- `feat: 체크 상태 및 핀(Pin)을 고려한 합법 수 필터링 로직 구현`

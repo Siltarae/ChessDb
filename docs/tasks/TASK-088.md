@@ -167,4 +167,4 @@ const app = await NestFactory.create(AppModule);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: apps/api NestJS 프로젝트 초기화 및 Swagger 문서화 설정 (TASK-088)`
+- `feat: apps/api NestJS 프로젝트 초기화 및 Swagger 문서화 설정`

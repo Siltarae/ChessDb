@@ -118,4 +118,4 @@ const nextState = executeMove(state, move);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 수 실행 및 게임 상태 전이 엔진을 구현 (TASK-060)`
+- `feat: 수 실행 및 게임 상태 전이 엔진을 구현`

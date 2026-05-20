@@ -106,4 +106,4 @@ const { canUndo, goToPreviousPosition } = useAnalysisHistory();
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 분석 보드 되돌리기 규칙과 컨트롤을 추가 (TASK-051)`
+- `feat: 분석 보드 되돌리기 규칙과 컨트롤을 추가`

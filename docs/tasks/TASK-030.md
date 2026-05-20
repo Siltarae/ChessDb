@@ -108,4 +108,4 @@ const isValidName = repositoryName.trim().length > 0;
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 저장소 이름 입력 필드와 검증 규칙을 추가 (TASK-030)`
+- `feat: 저장소 이름 입력 필드와 검증 규칙을 추가`

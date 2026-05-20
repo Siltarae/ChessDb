@@ -104,4 +104,4 @@ const orderedRepositories = [...repositories].sort(sortRepositoriesByCreatedAt);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 저장소 목록 기본 정렬을 생성 순으로 고정 (TASK-032)`
+- `feat: 저장소 목록 기본 정렬을 생성 순으로 고정`

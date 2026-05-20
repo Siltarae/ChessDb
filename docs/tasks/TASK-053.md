@@ -154,4 +154,4 @@ const initialAnalysisState = await startAnalysisFromGame(gameId);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 저장된 기보의 특정 시점에서 분석 모드 진입 기능 구현 (TASK-053)`
+- `feat: 저장된 기보의 특정 시점에서 분석 모드 진입 기능 구현`

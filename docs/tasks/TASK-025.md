@@ -163,4 +163,4 @@ await saveGame({ repositoryId, record: draftRecord });
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 기보 정식 저장 확정 흐름을 추가 (TASK-025)`
+- `feat: 기보 정식 저장 확정 흐름을 추가`

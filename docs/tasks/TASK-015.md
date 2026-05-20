@@ -162,4 +162,4 @@ const { selectedSquare, highlightSquares } = useLegalMoveHighlight();
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 기물 선택 하이라이트 및 합법 수 가이드 UI 구현 (TASK-015)`
+- `feat: 기물 선택 하이라이트 및 합법 수 가이드 UI 구현`

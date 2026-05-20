@@ -167,4 +167,4 @@ const inCheck = isCheck(state, color);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 체크(Check) 상태 및 특정 칸 위협 감지 로직 구현 (TASK-010)`
+- `feat: 체크(Check) 상태 및 특정 칸 위협 감지 로직 구현`

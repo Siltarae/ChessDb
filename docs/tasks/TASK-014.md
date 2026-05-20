@@ -153,4 +153,4 @@ const nextState = applyPromotion(state, move, promotionPieceType);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 폰 프로모션(Promotion) 변신 로직 구현 (TASK-014)`
+- `feat: 폰 프로모션(Promotion) 변신 로직 구현`

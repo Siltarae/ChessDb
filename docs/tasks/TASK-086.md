@@ -46,4 +46,4 @@
 
 ## 💬 9. 추천 커밋 메시지
 
-- `chore: packages/shared 공통 도메인 패키지 초기화 (TASK-086)`
+- `chore: packages/shared 공통 도메인 패키지 초기화`

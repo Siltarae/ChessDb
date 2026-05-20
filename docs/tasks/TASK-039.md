@@ -107,4 +107,4 @@ const { data, isLoading } = useGameDetailQuery(gameId);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 기보 상세 편집 화면의 기본 레이아웃과 query를 추가 (TASK-039)`
+- `feat: 기보 상세 편집 화면의 기본 레이아웃과 query를 추가`

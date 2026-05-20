@@ -104,4 +104,4 @@ const nextMoveCandidates = aggregateNextMoves(matchingPositions);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 포지션 다음 수 후보 집계를 추가 (TASK-056)`
+- `feat: 포지션 다음 수 후보 집계를 추가`

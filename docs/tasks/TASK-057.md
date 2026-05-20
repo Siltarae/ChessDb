@@ -104,4 +104,4 @@ const enrichedCandidates = attachOutcomeRates(nextMoveCandidates);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 후보 수별 결과 비율 집계를 추가 (TASK-057)`
+- `feat: 후보 수별 결과 비율 집계를 추가`

@@ -104,4 +104,4 @@ makeAnalysisMove(fromSquare, toSquare);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 분석 보드 직접 수 입력을 연결 (TASK-050)`
+- `feat: 분석 보드 직접 수 입력을 연결`

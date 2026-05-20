@@ -121,4 +121,4 @@ const result = getGameResult(state, history);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 게임 결과 판정 엔진을 구현 (TASK-061)`
+- `feat: 게임 결과 판정 엔진을 구현`

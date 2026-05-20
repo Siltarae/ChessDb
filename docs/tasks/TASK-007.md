@@ -153,4 +153,4 @@ const moves = getRookMoves(square, state);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 룩(Rook) 합법 수 판정 로직 구현 (TASK-007)`
+- `feat: 룩(Rook) 합법 수 판정 로직 구현`

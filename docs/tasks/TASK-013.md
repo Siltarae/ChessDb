@@ -156,4 +156,4 @@ const enPassantMoves = getEnPassantMoves(state, square);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 앙파상(En Passant) 특수 캡처 로직 구현 (TASK-013)`
+- `feat: 앙파상(En Passant) 특수 캡처 로직 구현`

@@ -109,4 +109,4 @@ openRepository(repository.id);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 저장소 선택 진입 라우팅을 추가 (TASK-033)`
+- `feat: 저장소 선택 진입 라우팅을 추가`

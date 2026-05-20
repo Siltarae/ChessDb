@@ -176,4 +176,4 @@ const moves = getSlidingMoves(square, bishopDirections, state);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 비숍 및 공통 슬라이딩 이동 엔진 구현 (TASK-006)`
+- `feat: 비숍 및 공통 슬라이딩 이동 엔진 구현`

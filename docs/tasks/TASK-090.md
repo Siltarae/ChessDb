@@ -161,4 +161,4 @@ type SaveGamePayload = z.infer<typeof SaveGameSchema>;
 
 ## 💬 9. 추천 커밋 메시지
 
-- `refactor: shared 패키지 기반 공통 DTO 및 타입 공유 구조 구축 (TASK-090)`
+- `refactor: shared 패키지 기반 공통 DTO 및 타입 공유 구조 구축`

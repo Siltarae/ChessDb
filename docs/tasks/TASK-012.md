@@ -157,4 +157,4 @@ const castlingMoves = getCastlingMoves(state, color);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 캐슬링(Castling) 가능 여부 판정 및 이동 로직 구현 (TASK-012)`
+- `feat: 캐슬링(Castling) 가능 여부 판정 및 이동 로직 구현`

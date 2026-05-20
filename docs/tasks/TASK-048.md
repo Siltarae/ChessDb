@@ -111,4 +111,4 @@ return <AnalysisBoard boardState={boardState} />;
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 분석 보드 기본 화면 구조를 추가 (TASK-048)`
+- `feat: 분석 보드 기본 화면 구조를 추가`

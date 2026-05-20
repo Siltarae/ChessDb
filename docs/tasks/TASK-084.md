@@ -165,4 +165,4 @@ export default { content: ['./src/**/*.{ts,tsx}'], theme: { extend: {} } };
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: apps/web Tailwind CSS 및 shadcn/ui 스타일링 환경 구축 (TASK-084)`
+- `feat: apps/web Tailwind CSS 및 shadcn/ui 스타일링 환경 구축`

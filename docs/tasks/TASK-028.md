@@ -123,4 +123,4 @@ return <RepositoryList repositories={repositories} isLoading={isLoading} />;
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 저장소 목록 화면과 조회 위젯을 추가 (TASK-028)`
+- `feat: 저장소 목록 화면과 조회 위젯을 추가`

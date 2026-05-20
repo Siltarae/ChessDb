@@ -109,4 +109,4 @@ const { selectedPlyIndex, currentBoardState, setSelectedPlyIndex } = useGameDeta
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 기보 상세 수순 선택과 보드 이동을 연결 (TASK-042)`
+- `feat: 기보 상세 수순 선택과 보드 이동을 연결`

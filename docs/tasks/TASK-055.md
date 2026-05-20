@@ -104,4 +104,4 @@ const matchingPositions = await findMatchingPositions(repositoryId, positionKey)
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 포지션 일치 기보 검색 단계를 추가 (TASK-055)`
+- `feat: 포지션 일치 기보 검색 단계를 추가`

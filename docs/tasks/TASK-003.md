@@ -106,4 +106,4 @@ const currentTurn = useGameStore((state) => state.currentTurn);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 현재 턴 초기화와 전환 규칙을 추가 (TASK-003)`
+- `feat: 현재 턴 초기화와 전환 규칙을 추가`
