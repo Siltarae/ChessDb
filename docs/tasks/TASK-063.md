@@ -121,4 +121,4 @@ const parsedRecord = GameRecordSchema.parse(rawRecord);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 기보 영속성용 GameRecord 스키마를 정의 (TASK-063)`
+- `feat: 기보 영속성용 GameRecord 스키마를 정의`

@@ -128,4 +128,4 @@ const { currentComment, updateComment } = useMoveCommentEdit();
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 반수별 코멘트 입력 규칙과 편집 UI를 추가 (TASK-020)`
+- `feat: 반수별 코멘트 입력 규칙과 편집 UI를 추가`

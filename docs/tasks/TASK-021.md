@@ -136,4 +136,4 @@ const { annotationOptions, selectedAnnotation, updateAnnotation } = useMoveAnnot
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 반수별 착수 평가 기호 입력 규칙을 추가 (TASK-021)`
+- `feat: 반수별 착수 평가 기호 입력 규칙을 추가`

@@ -125,4 +125,4 @@
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: pnpm 워크스페이스 초기화 및 package.json 작성 (TASK-064)`
+- `feat: pnpm 워크스페이스 초기화 및 package.json 작성`

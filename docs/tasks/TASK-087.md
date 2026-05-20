@@ -45,4 +45,4 @@
 
 ## 💬 9. 추천 커밋 메시지
 
-- `test: packages/shared 테스트 및 검증 환경 구축 (TASK-087)`
+- `test: packages/shared 테스트 및 검증 환경 구축`

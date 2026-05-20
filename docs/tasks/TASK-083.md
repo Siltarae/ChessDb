@@ -168,4 +168,4 @@ pnpm create vite apps/web --template react-ts
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: apps/web React + Vite 프로젝트 초기화 (TASK-083)`
+- `feat: apps/web React + Vite 프로젝트 초기화`

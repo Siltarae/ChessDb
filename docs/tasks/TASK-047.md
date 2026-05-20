@@ -159,4 +159,4 @@ await deleteGame(gameId);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 기보 삭제 기능 및 Soft Delete 적용 (TASK-047)`
+- `feat: 기보 삭제 기능 및 Soft Delete 적용`

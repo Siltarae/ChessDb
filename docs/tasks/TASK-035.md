@@ -110,4 +110,4 @@ const startNotationInput = useStartNotationInput();
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 분석 보드에서 새 기보 작성 진입을 추가 (TASK-035)`
+- `feat: 분석 보드에서 새 기보 작성 진입을 추가`

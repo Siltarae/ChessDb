@@ -122,4 +122,4 @@ return <NotationInputLayout boardSlot={<BoardShell />} sidebarSlot={<SidebarShel
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 기보 입력 페이지 기본 레이아웃을 추가 (TASK-001)`
+- `feat: 기보 입력 페이지 기본 레이아웃을 추가`

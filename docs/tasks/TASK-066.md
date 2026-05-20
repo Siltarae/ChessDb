@@ -137,4 +137,4 @@
 
 ## 💬 9. 추천 커밋 메시지
 
-- `chore: 전역 TypeScript 베이스 설정 작성 (TASK-066)`
+- `chore: 전역 TypeScript 베이스 설정 작성`

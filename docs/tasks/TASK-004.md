@@ -115,4 +115,4 @@ const legalMoves = getPawnMoves(state, square);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 폰 합법 수 판정 엔진을 구현 (TASK-004)`
+- `feat: 폰 합법 수 판정 엔진을 구현`

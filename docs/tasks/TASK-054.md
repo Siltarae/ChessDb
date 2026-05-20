@@ -106,4 +106,4 @@ const games = await findPublishedGamesInRepository(repositoryId);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 저장소 통계 집계 대상을 저장소 내 정식 기보로 고정 (TASK-054)`
+- `feat: 저장소 통계 집계 대상을 저장소 내 정식 기보로 고정`

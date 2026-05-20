@@ -174,4 +174,4 @@ const { historyItems } = useMoveHistoryStore();
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 실시간 수순 목록(History) 기록 및 UI 표시 구현 (TASK-017)`
+- `feat: 실시간 수순 목록(History) 기록 및 UI 표시 구현`

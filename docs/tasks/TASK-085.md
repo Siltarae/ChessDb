@@ -156,4 +156,4 @@ pnpm --filter @chess-db/web add zustand react-router-dom @tanstack/react-query z
 
 ## 💬 9. 추천 커밋 메시지
 
-- `chore: apps/web 핵심 상태 관리 및 데이터 페칭 라이브러리 설치 (TASK-085)`
+- `chore: apps/web 핵심 상태 관리 및 데이터 페칭 라이브러리 설치`

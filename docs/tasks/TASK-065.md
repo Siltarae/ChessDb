@@ -140,4 +140,4 @@
 
 ## 💬 9. 추천 커밋 메시지
 
-- `chore: Turborepo 설치 및 turbo.json 설정 (TASK-065)`
+- `chore: Turborepo 설치 및 turbo.json 설정`

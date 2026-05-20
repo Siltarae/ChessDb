@@ -111,4 +111,4 @@ const { selectedAnnotation, updateAnnotation } = useGameAnnotationEdit(gameId, p
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 정식 기보 어노테이션 자동 저장 편집을 추가 (TASK-046)`
+- `feat: 정식 기보 어노테이션 자동 저장 편집을 추가`

@@ -159,4 +159,4 @@ const env = envSchema.parse(process.env);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: Zod를 활용한 서버 환경 변수 강제 검증 체계 구축 (TASK-094)`
+- `feat: Zod를 활용한 서버 환경 변수 강제 검증 체계 구축`

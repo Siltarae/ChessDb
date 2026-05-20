@@ -128,4 +128,4 @@ updateGameMetadata({ termination: 'CHECKMATE' });
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 기보 결과와 종료 사유 입력 규칙을 추가 (TASK-026)`
+- `feat: 기보 결과와 종료 사유 입력 규칙을 추가`

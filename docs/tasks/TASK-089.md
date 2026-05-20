@@ -162,4 +162,4 @@ datasource db { provider = "postgresql"; url = env("DATABASE_URL") }
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: PostgreSQL 컨테이너 구축 및 Prisma ORM 초기 설정 (TASK-089)`
+- `feat: PostgreSQL 컨테이너 구축 및 Prisma ORM 초기 설정`

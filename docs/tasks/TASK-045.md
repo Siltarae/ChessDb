@@ -110,4 +110,4 @@ const { pendingComment, updateComment } = useGameCommentEdit(gameId, plyIndex);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 정식 기보 코멘트 자동 저장 편집을 추가 (TASK-045)`
+- `feat: 정식 기보 코멘트 자동 저장 편집을 추가`

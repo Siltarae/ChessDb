@@ -115,4 +115,4 @@ const san = convertToSan(state, move, nextState);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: SAN 기보 변환 유틸리티를 구현 (TASK-062)`
+- `feat: SAN 기보 변환 유틸리티를 구현`

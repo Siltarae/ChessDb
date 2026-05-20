@@ -78,4 +78,4 @@
 
 ## 💬 9. 추천 커밋 메시지
 
-- `chore: 전역 ESLint 및 Prettier 설정 구축 (TASK-067)`
+- `chore: 전역 ESLint 및 Prettier 설정 구축`

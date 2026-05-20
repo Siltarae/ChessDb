@@ -156,4 +156,4 @@ test: { environment: "jsdom", setupFiles: ["./src/test/setup-tests.ts"] }
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: apps/web Vitest 및 React Testing Library 테스트 환경 구축 (TASK-092)`
+- `feat: apps/web Vitest 및 React Testing Library 테스트 환경 구축`

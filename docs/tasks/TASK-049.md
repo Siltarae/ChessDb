@@ -98,4 +98,4 @@ const initialBoardState = createInitialAnalysisState();
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 분석 보드 초기 포지션 표시 규칙을 추가 (TASK-049)`
+- `feat: 분석 보드 초기 포지션 표시 규칙을 추가`

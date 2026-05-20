@@ -154,4 +154,4 @@ const moduleRef = await Test.createTestingModule({ imports: [AppModule] }).compi
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: apps/api Jest 및 E2E 테스트 인프라 고도화 (TASK-093)`
+- `feat: apps/api Jest 및 E2E 테스트 인프라 고도화`

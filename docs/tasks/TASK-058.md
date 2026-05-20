@@ -156,4 +156,4 @@ const { statisticsItems } = usePositionStatistics(repositoryId, positionKey);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 분석 보드 통계 데이터 시각화 및 승률 바 구현 (TASK-058)`
+- `feat: 분석 보드 통계 데이터 시각화 및 승률 바 구현`

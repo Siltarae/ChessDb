@@ -109,4 +109,4 @@ await createRepository({ name: repositoryName.trim() });
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 저장소 생성 mutation과 확정 흐름을 추가 (TASK-031)`
+- `feat: 저장소 생성 mutation과 확정 흐름을 추가`

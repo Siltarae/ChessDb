@@ -159,4 +159,4 @@ const { startNewDraft } = useNewDraft();
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 입력 중인 초안 폐기 및 새 기보 시작 기능 구현 (TASK-024)`
+- `feat: 입력 중인 초안 폐기 및 새 기보 시작 기능 구현`

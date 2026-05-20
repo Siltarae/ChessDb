@@ -157,4 +157,4 @@ await deleteRepository(repositoryId);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 저장소 삭제 기능 및 안전 확인 절차 구현 (TASK-036)`
+- `feat: 저장소 삭제 기능 및 안전 확인 절차 구현`

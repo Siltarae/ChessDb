@@ -150,4 +150,4 @@ const moves = getQueenMoves(square, state);
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 퀸(Queen) 합법 수 판정 로직 구현 (TASK-008)`
+- `feat: 퀸(Queen) 합법 수 판정 로직 구현`

@@ -123,4 +123,4 @@ return <GameList games={games} isLoading={isLoading} />;
 
 ## 💬 9. 추천 커밋 메시지
 
-- `feat: 저장소 단위 기보 목록 조회 화면을 추가 (TASK-037)`
+- `feat: 저장소 단위 기보 목록 조회 화면을 추가`
