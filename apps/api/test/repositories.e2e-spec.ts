@@ -5,11 +5,19 @@ import { PrismaClient } from 'generated/prisma';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
+import { API_ERROR_CODE } from '../src/common/errors/api-error-response';
 
 type RepositoryListItemResponse = {
   readonly id: string;
   readonly name: string;
   readonly createdAt: string;
+};
+
+type ApiErrorResponse = {
+  readonly statusCode: number;
+  readonly errorCode: string;
+  readonly message: string;
+  readonly details: readonly unknown[];
 };
 
 function assertTestDatabaseUrl(databaseUrl: string | undefined) {
@@ -43,6 +51,21 @@ function isRepositoryListItemResponse(
     typeof value.id === 'string' &&
     typeof value.name === 'string' &&
     typeof value.createdAt === 'string'
+  );
+}
+
+function isApiErrorResponse(value: unknown): value is ApiErrorResponse {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'statusCode' in value &&
+    'errorCode' in value &&
+    'message' in value &&
+    'details' in value &&
+    typeof value.statusCode === 'number' &&
+    typeof value.errorCode === 'string' &&
+    typeof value.message === 'string' &&
+    Array.isArray(value.details)
   );
 }
 
@@ -86,11 +109,15 @@ describe('Repositories API (e2e)', () => {
   beforeEach(async () => {
     const db = requirePrisma(prisma);
 
+    await db.gameMove.deleteMany();
+    await db.game.deleteMany();
     await db.repository.deleteMany();
   });
 
   afterAll(async () => {
     if (prisma) {
+      await prisma.gameMove.deleteMany();
+      await prisma.game.deleteMany();
       await prisma.repository.deleteMany();
       await prisma.$disconnect();
     }
@@ -122,4 +149,82 @@ describe('Repositories API (e2e)', () => {
       },
     ]);
   });
+
+  it('POST /api/repositories 요청으로 저장소를 생성해야 한다', async () => {
+    const db = requirePrisma(prisma);
+    const server = requireApp(app).getHttpServer();
+
+    const response = await request(server)
+      .post('/api/repositories')
+      .send({ name: '  엔드게임 저장소  ' })
+      .expect(201);
+    const responseBody = response.body as unknown;
+
+    expect(isRepositoryListItemResponse(responseBody)).toBe(true);
+    if (!isRepositoryListItemResponse(responseBody)) {
+      throw new Error('저장소 생성 응답 형식이 올바르지 않습니다.');
+    }
+    expect(responseBody.name).toBe('엔드게임 저장소');
+    expect(typeof responseBody.id).toBe('string');
+    expect(typeof responseBody.createdAt).toBe('string');
+
+    await expect(db.repository.findMany()).resolves.toMatchObject([
+      {
+        id: responseBody.id,
+        name: '엔드게임 저장소',
+      },
+    ]);
+  });
+
+  it('공백 이름으로 저장소 생성을 요청하면 400으로 거절해야 한다', async () => {
+    const db = requirePrisma(prisma);
+    const server = requireApp(app).getHttpServer();
+
+    const response = await request(server)
+      .post('/api/repositories')
+      .send({ name: '   ' })
+      .expect(400);
+    const responseBody = response.body as unknown;
+
+    expect(isApiErrorResponse(responseBody)).toBe(true);
+    if (!isApiErrorResponse(responseBody)) {
+      throw new Error('API 에러 응답 형식이 올바르지 않습니다.');
+    }
+    expect(responseBody).toMatchObject({
+      statusCode: 400,
+      errorCode: API_ERROR_CODE.VALIDATION_ERROR,
+      message: '요청 값이 올바르지 않습니다.',
+    });
+
+    await expect(db.repository.count()).resolves.toBe(0);
+  });
+
+  it.each([
+    { label: 'name 누락', requestBody: {} },
+    { label: 'name 숫자 타입', requestBody: { name: 123 } },
+  ])(
+    '$label 요청은 DTO 검증에서 400으로 거절해야 한다',
+    async ({ requestBody }) => {
+      const db = requirePrisma(prisma);
+      const server = requireApp(app).getHttpServer();
+
+      const response = await request(server)
+        .post('/api/repositories')
+        .send(requestBody)
+        .expect(400);
+      const responseBody = response.body as unknown;
+
+      expect(isApiErrorResponse(responseBody)).toBe(true);
+      if (!isApiErrorResponse(responseBody)) {
+        throw new Error('API 에러 응답 형식이 올바르지 않습니다.');
+      }
+      expect(responseBody).toMatchObject({
+        statusCode: 400,
+        errorCode: API_ERROR_CODE.VALIDATION_ERROR,
+        message: '요청 값이 올바르지 않습니다.',
+      });
+
+      await expect(db.repository.count()).resolves.toBe(0);
+    },
+  );
 });
