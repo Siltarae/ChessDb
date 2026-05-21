@@ -1,4 +1,5 @@
 import { cleanup, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type { RepositorySummary } from '@/entities/repository';
@@ -10,9 +11,35 @@ const useRepositoryListQueryMock = vi.fn<
     readonly isLoading: boolean;
   }
 >();
+const invalidateQueriesMock = vi.fn();
+
+vi.mock('@tanstack/react-query', () => ({
+  useQueryClient: () => ({
+    invalidateQueries: invalidateQueriesMock,
+  }),
+}));
 
 vi.mock('@/entities/repository', () => ({
+  repositoryListQueryKey: ['repositories'],
   useRepositoryListQuery: () => useRepositoryListQueryMock(),
+}));
+
+vi.mock('@/features/repository-create', () => ({
+  CreateRepositoryDialog: ({
+    isOpen,
+    onOpenChange,
+  }: {
+    readonly isOpen: boolean;
+    readonly onOpenChange: (open: boolean) => void;
+    readonly onCreated: () => void;
+  }) =>
+    isOpen ? (
+      <section aria-label="저장소 생성 다이얼로그">
+        <button type="button" onClick={() => onOpenChange(false)}>
+          취소
+        </button>
+      </section>
+    ) : null,
 }));
 
 vi.mock('@/widgets/repository-list', () => ({
@@ -34,6 +61,7 @@ describe('RepositoryListPage', () => {
   afterEach(() => {
     cleanup();
     useRepositoryListQueryMock.mockReset();
+    invalidateQueriesMock.mockReset();
   });
 
   it('저장소 목록 조회 결과를 목록 위젯에 전달해야 한다', () => {
@@ -65,5 +93,40 @@ describe('RepositoryListPage', () => {
     render(<RepositoryListPage />);
 
     expect(screen.getByRole('region', { name: '저장소 목록 위젯' })).toHaveTextContent('loading');
+  });
+
+  it('생성 버튼 클릭 시 저장소 생성 다이얼로그가 열린다', async () => {
+    const user = userEvent.setup();
+    useRepositoryListQueryMock.mockReturnValue({
+      data: [],
+      isLoading: false,
+    });
+
+    render(<RepositoryListPage />);
+
+    expect(
+      screen.queryByRole('region', { name: '저장소 생성 다이얼로그' }),
+    ).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: '새 저장소' }));
+
+    expect(screen.getByRole('region', { name: '저장소 생성 다이얼로그' })).toBeInTheDocument();
+  });
+
+  it('저장소 생성 다이얼로그에서 취소하면 다이얼로그가 닫힌다', async () => {
+    const user = userEvent.setup();
+    useRepositoryListQueryMock.mockReturnValue({
+      data: [],
+      isLoading: false,
+    });
+
+    render(<RepositoryListPage />);
+
+    await user.click(screen.getByRole('button', { name: '새 저장소' }));
+    await user.click(screen.getByRole('button', { name: '취소' }));
+
+    expect(
+      screen.queryByRole('region', { name: '저장소 생성 다이얼로그' }),
+    ).not.toBeInTheDocument();
   });
 });
