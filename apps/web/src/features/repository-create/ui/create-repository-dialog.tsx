@@ -17,9 +17,21 @@ export type CreateRepositoryDialogProps = {
   readonly onCreated: () => void;
 };
 
-export const CreateRepositoryDialog = ({ isOpen, onOpenChange }: CreateRepositoryDialogProps) => {
-  const { repositoryName, setRepositoryName, nameError, canSubmit, resetCreateRepositoryForm } =
-    useCreateRepository();
+export const CreateRepositoryDialog = ({
+  isOpen,
+  onOpenChange,
+  onCreated,
+}: CreateRepositoryDialogProps) => {
+  const {
+    repositoryName,
+    setRepositoryName,
+    nameError,
+    canSubmit,
+    resetCreateRepositoryForm,
+    submitCreateRepository,
+    isCreating,
+    createError,
+  } = useCreateRepository({ onCreated });
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -27,6 +39,14 @@ export const CreateRepositoryDialog = ({ isOpen, onOpenChange }: CreateRepositor
     }
 
     onOpenChange(open);
+  };
+
+  const handleSubmitCreateRepository = async () => {
+    const isCreated = await submitCreateRepository();
+
+    if (isCreated) {
+      onOpenChange(false);
+    }
   };
 
   return (
@@ -41,14 +61,23 @@ export const CreateRepositoryDialog = ({ isOpen, onOpenChange }: CreateRepositor
           nameError={nameError}
           onRepositoryNameChange={setRepositoryName}
         />
+        {createError === null ? null : (
+          <p className="text-sm text-destructive" role="alert">
+            {createError}
+          </p>
+        )}
         <DialogFooter>
           <DialogClose asChild>
             <Button type="button" variant="outline">
               취소
             </Button>
           </DialogClose>
-          <Button type="button" disabled={!canSubmit}>
-            생성
+          <Button
+            type="button"
+            disabled={!canSubmit || isCreating}
+            onClick={handleSubmitCreateRepository}
+          >
+            {isCreating ? '생성 중' : '생성'}
           </Button>
         </DialogFooter>
       </DialogContent>
