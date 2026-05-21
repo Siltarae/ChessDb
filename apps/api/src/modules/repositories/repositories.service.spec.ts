@@ -1,10 +1,11 @@
+import { BadRequestException } from '@nestjs/common';
 import { RepositoriesRepository } from './repositories.repository';
 import { RepositoriesService } from './repositories.service';
 
-describe('RepositoriesService.findMany', () => {
+describe('RepositoriesService', () => {
   let repositoriesService: RepositoriesService;
   let repositoriesRepository: jest.Mocked<
-    Pick<RepositoriesRepository, 'findMany'>
+    Pick<RepositoriesRepository, 'findMany' | 'create'>
   >;
 
   beforeEach(() => {
@@ -16,6 +17,11 @@ describe('RepositoriesService.findMany', () => {
           createdAt: new Date('2026-05-20T00:00:00.000Z'),
         },
       ]),
+      create: jest.fn().mockResolvedValue({
+        id: 'repository-2',
+        name: '엔드게임 저장소',
+        createdAt: new Date('2026-05-21T00:00:00.000Z'),
+      }),
     };
 
     repositoriesService = new RepositoriesService(
@@ -33,5 +39,28 @@ describe('RepositoriesService.findMany', () => {
     ]);
 
     expect(repositoriesRepository.findMany).toHaveBeenCalledTimes(1);
+  });
+
+  it('저장소 이름을 trim한 뒤 repository에 생성을 위임한다', async () => {
+    await expect(
+      repositoriesService.create({ name: '  엔드게임 저장소  ' }),
+    ).resolves.toEqual({
+      id: 'repository-2',
+      name: '엔드게임 저장소',
+      createdAt: new Date('2026-05-21T00:00:00.000Z'),
+    });
+
+    expect(repositoriesRepository.create).toHaveBeenCalledTimes(1);
+    expect(repositoriesRepository.create).toHaveBeenCalledWith({
+      name: '엔드게임 저장소',
+    });
+  });
+
+  it('공백 이름이면 BadRequestException으로 거절한다', async () => {
+    await expect(
+      repositoriesService.create({ name: '   ' }),
+    ).rejects.toBeInstanceOf(BadRequestException);
+
+    expect(repositoriesRepository.create).not.toHaveBeenCalled();
   });
 });
