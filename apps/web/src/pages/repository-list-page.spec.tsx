@@ -42,6 +42,10 @@ vi.mock('@/features/repository-create', () => ({
     ) : null,
 }));
 
+vi.mock('@/features/repository-select', () => ({
+  useOpenRepository: () => vi.fn(),
+}));
+
 vi.mock('@/widgets/repository-list', () => ({
   RepositoryList: ({
     repositories,

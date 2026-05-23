@@ -1,6 +1,6 @@
 # 📋 개별 작업 지침서: 저장소 선택 진입 (TASK-033)
 
-**작업 상태**: 대기 중  
+**작업 상태**: 완료  
 **선행 작업**: `[TASK-028]` (저장소 목록 화면 표시)  
 **후속 작업**: `[TASK-034]` (기본 화면 고정)  
 **연관 설계**: `[../architecture/directory-structure.md]`, `[../architecture/patterns.md]`
@@ -9,8 +9,8 @@
 
 ## 0. 현재 코드 상태와 이 작업의 위치
 
-- **현재 상태 요약**: 저장소 목록은 보여도 특정 저장소를 선택해 내부 화면으로 들어가는 라우팅 규칙이 없습니다.
-- **이 작업의 책임**: 저장소 목록 항목 클릭을 저장소 내부 화면 진입으로 연결합니다.
+- **현재 상태 요약**: 저장소 목록 항목 클릭이 `repositoryId` 기반 내부 라우트 진입으로 연결되었습니다.
+- **이 작업의 책임**: 저장소 목록 항목 클릭을 저장소 내부 화면 진입으로 연결했습니다.
 - **이번 작업에서 하지 않는 것**: 저장소 진입 후 어떤 화면이 기본으로 열리는지는 `[TASK-034]`에서 고정합니다.
 - **경계 메모**:
   - 선택 동작과 라우트 전환만 다룹니다.
@@ -21,6 +21,7 @@
 - **이번 작업의 최소 결과물**:
   - `apps/web/src/features/repository-select/model/use-open-repository.ts`
   - `apps/web/src/app/router.tsx`
+  - `apps/web/src/pages/repository-home-page.tsx`
   - `apps/web/src/pages/repository-list-page.tsx`
 - **성공 기준 (AC)**:
   - 목록 항목 클릭 시 저장소 id 기반 라우트로 이동한다.
@@ -31,8 +32,11 @@
 
 - **신규 생성**:
   - `apps/web/src/features/repository-select/model/use-open-repository.ts`
+  - `apps/web/src/features/repository-select/index.ts`
+  - `apps/web/src/pages/repository-home-page.tsx`
 - **수정 대상**:
   - `apps/web/src/app/router.tsx`
+  - `apps/web/src/pages/index.ts`
   - `apps/web/src/widgets/repository-list/ui/repository-list.tsx`
   - `apps/web/src/pages/repository-list-page.tsx`
 - **이번 작업에서 수정하지 않음**:
@@ -103,9 +107,9 @@ openRepository(repository.id);
 
 ## ✅ 7. 완료 판정 체크리스트
 
-- [ ] 저장소 선택이 id 기반 진입으로 연결된다.
-- [ ] 목록 항목이 접근 가능한 클릭 타겟이다.
-- [ ] 기본 화면 결정 책임을 넘지 않았다.
+- [x] 저장소 선택이 id 기반 진입으로 연결된다.
+- [x] 목록 항목이 접근 가능한 클릭 타겟이다.
+- [x] 기본 화면 결정 책임을 넘지 않았다.
 
 ## 💬 9. 추천 커밋 메시지
 
