@@ -3,9 +3,14 @@ import type { RepositorySummary } from '@/entities/repository';
 type RepositoryListProps = {
   readonly repositories: readonly RepositorySummary[];
   readonly isLoading: boolean;
+  readonly onRepositoryOpen?: (repositoryId: string) => void;
 };
 
-export const RepositoryList = ({ repositories, isLoading }: RepositoryListProps) => {
+export const RepositoryList = ({
+  repositories,
+  isLoading,
+  onRepositoryOpen,
+}: RepositoryListProps) => {
   const isEmptyState = !isLoading && repositories.length === 0;
 
   return (
@@ -32,8 +37,15 @@ export const RepositoryList = ({ repositories, isLoading }: RepositoryListProps)
         {!isLoading && repositories.length > 0 ? (
           <ul className="space-y-3">
             {repositories.map((repository) => (
-              <li key={repository.id} className="rounded-md border bg-background px-4 py-3">
-                <div className="text-sm font-semibold">{repository.name}</div>
+              <li key={repository.id}>
+                <button
+                  type="button"
+                  aria-label={`${repository.name} 열기`}
+                  className="w-full rounded-md border bg-background px-4 py-3 text-left transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  onClick={() => onRepositoryOpen?.(repository.id)}
+                >
+                  <span className="block text-sm font-semibold">{repository.name}</span>
+                </button>
               </li>
             ))}
           </ul>

@@ -1,5 +1,6 @@
 import { cleanup, render, screen } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import userEvent from '@testing-library/user-event';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type { RepositorySummary } from '@/entities/repository';
 import { RepositoryList } from './repository-list';
@@ -37,6 +38,22 @@ describe('RepositoryList', () => {
       '오프닝 저장소',
       '엔드게임 저장소',
     ]);
+  });
+
+  it('목록 항목 클릭이 저장소 id로 open callback을 호출한다', async () => {
+    const user = userEvent.setup();
+    const onRepositoryOpen = vi.fn();
+    render(
+      <RepositoryList
+        repositories={repositories}
+        isLoading={false}
+        onRepositoryOpen={onRepositoryOpen}
+      />,
+    );
+
+    await user.click(screen.getByRole('button', { name: '오프닝 저장소 열기' }));
+
+    expect(onRepositoryOpen).toHaveBeenCalledWith('repository-1');
   });
 
   it('빈 목록일 때 빈 상태 메시지를 보여준다', () => {

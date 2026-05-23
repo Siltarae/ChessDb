@@ -3,11 +3,13 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { repositoryListQueryKey, useRepositoryListQuery } from '@/entities/repository';
 import { CreateRepositoryDialog } from '@/features/repository-create';
+import { useOpenRepository } from '@/features/repository-select';
 import { Button } from '@/shared/ui/button';
 import { RepositoryList } from '@/widgets/repository-list';
 
 export const RepositoryListPage = () => {
   const queryClient = useQueryClient();
+  const openRepository = useOpenRepository();
   const [isCreateDialogOpen, setCreateDialogOpen] = useState(false);
   const { data: repositories = [], isLoading } = useRepositoryListQuery();
 
@@ -30,7 +32,11 @@ export const RepositoryListPage = () => {
           </Button>
         </header>
 
-        <RepositoryList repositories={repositories} isLoading={isLoading} />
+        <RepositoryList
+          repositories={repositories}
+          isLoading={isLoading}
+          onRepositoryOpen={openRepository}
+        />
         <CreateRepositoryDialog
           isOpen={isCreateDialogOpen}
           onOpenChange={setCreateDialogOpen}
