@@ -47,3 +47,4 @@
 - `apps/web` E2E 테스트는 현재 범위의 `TASK-099`, `TASK-100`으로 승격했다.
   - 이유: `TASK-016` 이후 실제 보드 입력 사용자 여정을 브라우저 수준에서 검증할 수 있다.
   - 범위: `TASK-099`는 Playwright 환경 구성, `TASK-100`은 기본 착수 흐름 E2E 스모크 테스트로 분리한다.
+- [API E2E 병렬 실행을 위한 DB 격리](./api-e2e-parallel-db-isolation.md)는 순차 실행이 병목이 될 때 worker별 DB 또는 schema 격리로 도입한다.
