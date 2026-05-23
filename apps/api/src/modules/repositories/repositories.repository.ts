@@ -17,6 +17,9 @@ export class RepositoriesRepository {
 
   async findMany(): Promise<RepositorySummary[]> {
     return await this.prisma.repository.findMany({
+      orderBy: {
+        createdAt: 'asc',
+      },
       select: {
         id: true,
         name: true,

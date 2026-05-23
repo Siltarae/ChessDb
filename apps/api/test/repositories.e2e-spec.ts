@@ -150,6 +150,54 @@ describe('Repositories API (e2e)', () => {
     ]);
   });
 
+  it('GET /api/repositories 응답은 저장소 생성 순으로 정렬해야 한다', async () => {
+    const db = requirePrisma(prisma);
+    const server = requireApp(app).getHttpServer();
+    const laterRepository = await db.repository.create({
+      data: {
+        name: '세 번째 저장소',
+        createdAt: new Date('2026-05-22T00:00:00.000Z'),
+      },
+    });
+    const earlierRepository = await db.repository.create({
+      data: {
+        name: '첫 번째 저장소',
+        createdAt: new Date('2026-05-20T00:00:00.000Z'),
+      },
+    });
+    const middleRepository = await db.repository.create({
+      data: {
+        name: '두 번째 저장소',
+        createdAt: new Date('2026-05-21T00:00:00.000Z'),
+      },
+    });
+
+    const response = await request(server).get('/api/repositories').expect(200);
+    const responseBody = response.body as unknown;
+
+    expect(isRepositoryListResponse(responseBody)).toBe(true);
+    if (!isRepositoryListResponse(responseBody)) {
+      throw new Error('저장소 목록 응답 형식이 올바르지 않습니다.');
+    }
+    expect(responseBody).toEqual([
+      {
+        id: earlierRepository.id,
+        name: '첫 번째 저장소',
+        createdAt: earlierRepository.createdAt.toISOString(),
+      },
+      {
+        id: middleRepository.id,
+        name: '두 번째 저장소',
+        createdAt: middleRepository.createdAt.toISOString(),
+      },
+      {
+        id: laterRepository.id,
+        name: '세 번째 저장소',
+        createdAt: laterRepository.createdAt.toISOString(),
+      },
+    ]);
+  });
+
   it('POST /api/repositories 요청으로 저장소를 생성해야 한다', async () => {
     const db = requirePrisma(prisma);
     const server = requireApp(app).getHttpServer();

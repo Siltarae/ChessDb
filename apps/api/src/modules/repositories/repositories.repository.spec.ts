@@ -44,6 +44,9 @@ describe('RepositoriesRepository', () => {
 
     expect(prisma.repository.findMany).toHaveBeenCalledTimes(1);
     expect(prisma.repository.findMany).toHaveBeenCalledWith({
+      orderBy: {
+        createdAt: 'asc',
+      },
       select: {
         id: true,
         name: true,
