@@ -14,4 +14,8 @@ export const router = createBrowserRouter([
     path: '/repositories/:repositoryId',
     element: <RepositoryHomePage />,
   },
+  {
+    path: '/repositories/:repositoryId/new',
+    element: <NotationInputPage />,
+  },
 ]);
