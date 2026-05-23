@@ -1,15 +1,43 @@
 import { useParams } from 'react-router';
+import { useState } from 'react';
+
+import { SaveGameButton } from '@/features/save-game';
+import type { BoardOrientation } from '@/widgets/chess-board';
+import { BoardShell, SidebarShell } from '@/widgets/notation-input-layout';
 
 export const RepositoryHomePage = () => {
   const { repositoryId } = useParams();
+  const [boardOrientation, setBoardOrientation] = useState<BoardOrientation>('white');
+
+  const toggleBoardOrientation = () => {
+    setBoardOrientation((currentOrientation) =>
+      currentOrientation === 'white' ? 'black' : 'white',
+    );
+  };
 
   return (
-    <main className="min-h-screen bg-background px-6 py-6">
-      <div className="mx-auto flex min-h-[calc(100vh-3rem)] max-w-4xl flex-col gap-5">
-        <header>
-          <h1 className="text-xl font-semibold">저장소 내부</h1>
-          <p className="mt-2 text-sm text-muted-foreground">{repositoryId}</p>
-        </header>
+    <main className="min-h-screen bg-background text-foreground">
+      <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-6 px-4 py-4 lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:px-6 lg:py-6">
+        <section
+          aria-label="저장소 보드 작업 영역"
+          className="flex min-w-0 items-center justify-center"
+        >
+          <BoardShell orientation={boardOrientation} />
+        </section>
+
+        <div className="min-h-0 min-w-0 lg:max-h-[calc(100vh-3rem)]">
+          <SidebarShell
+            boardOrientation={boardOrientation}
+            onToggleBoardOrientation={toggleBoardOrientation}
+            toolbarSlot={
+              <div className="flex items-center gap-2">
+                <span className="sr-only">{repositoryId}</span>
+                <h1 className="sr-only">저장소 보드</h1>
+                <SaveGameButton onSave={() => undefined} isSaving={false} disabled />
+              </div>
+            }
+          />
+        </div>
       </div>
     </main>
   );
