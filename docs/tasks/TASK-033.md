@@ -40,7 +40,7 @@
   - `apps/web/src/widgets/repository-list/ui/repository-list.tsx`
   - `apps/web/src/pages/repository-list-page.tsx`
 - **이번 작업에서 수정하지 않음**:
-  - `apps/web/src/pages/analysis-board-page.tsx`의 내부 구성
+- `apps/web/src/pages/repository-home-page.tsx`의 내부 구성
 - **아티팩트 작성 규칙**:
   - 파일 경로는 `apps/web`, `apps/api`, `packages/shared` 기준의 실제 예상 위치로 고정합니다.
   - 후속 태스크 책임 파일은 같은 폴더에 있더라도 이번 문서 범위에서 같이 닫지 않습니다.
