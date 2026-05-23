@@ -1,6 +1,7 @@
 import { useParams } from 'react-router';
 import { useState } from 'react';
 
+import { StartNotationInputButton, useStartNotationInput } from '@/features/new-game-entry';
 import { SaveGameButton } from '@/features/save-game';
 import type { BoardOrientation } from '@/widgets/chess-board';
 import { BoardShell, SidebarShell } from '@/widgets/notation-input-layout';
@@ -8,6 +9,7 @@ import { BoardShell, SidebarShell } from '@/widgets/notation-input-layout';
 export const RepositoryHomePage = () => {
   const { repositoryId } = useParams();
   const [boardOrientation, setBoardOrientation] = useState<BoardOrientation>('white');
+  const { startNotationInput } = useStartNotationInput({ hasDraftToReplace: false });
 
   const toggleBoardOrientation = () => {
     setBoardOrientation((currentOrientation) =>
@@ -33,6 +35,14 @@ export const RepositoryHomePage = () => {
               <div className="flex items-center gap-2">
                 <span className="sr-only">{repositoryId}</span>
                 <h1 className="sr-only">저장소 보드</h1>
+                <StartNotationInputButton
+                  onStart={() => {
+                    if (repositoryId !== undefined) {
+                      startNotationInput(repositoryId);
+                    }
+                  }}
+                  disabled={repositoryId === undefined}
+                />
                 <SaveGameButton onSave={() => undefined} isSaving={false} disabled />
               </div>
             }

@@ -1,4 +1,5 @@
 import { cleanup, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router';
 
@@ -36,6 +37,23 @@ describe('RepositoryHomePage', () => {
     );
 
     expect(screen.getByRole('button', { name: '기보 저장' })).toBeDisabled();
+  });
+
+  it('새 기보 작성 버튼 클릭 시 저장소 새 기보 입력 뷰로 이동한다', async () => {
+    const user = userEvent.setup();
+
+    render(
+      <MemoryRouter initialEntries={['/repositories/repository-1']}>
+        <Routes>
+          <Route path="/repositories/:repositoryId" element={<RepositoryHomePage />} />
+          <Route path="/repositories/:repositoryId/new" element={<div>새 기보 입력</div>} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    await user.click(screen.getByRole('button', { name: '새 기보 작성' }));
+
+    expect(screen.getByText('새 기보 입력')).toBeInTheDocument();
   });
 
   it('FEATURE-006 통계 분석 화면으로 렌더링하지 않는다', () => {
