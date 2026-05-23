@@ -30,6 +30,15 @@ describe('RepositoryList', () => {
     expect(screen.getByText('엔드게임 저장소')).toBeInTheDocument();
   });
 
+  it('전달받은 저장소 순서를 다시 변경하지 않는다', () => {
+    render(<RepositoryList repositories={repositories} isLoading={false} />);
+
+    expect(screen.getAllByRole('listitem').map((item) => item.textContent)).toEqual([
+      '오프닝 저장소',
+      '엔드게임 저장소',
+    ]);
+  });
+
   it('빈 목록일 때 빈 상태 메시지를 보여준다', () => {
     render(<RepositoryList repositories={[]} isLoading={false} />);
 

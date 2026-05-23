@@ -1,6 +1,6 @@
 # 📋 개별 작업 지침서: 저장소 목록 생성 순 정렬 (TASK-032)
 
-**작업 상태**: 대기 중  
+**작업 상태**: 완료  
 **선행 작업**: `[TASK-028]` (저장소 목록 화면 표시)  
 **후속 작업**: `[TASK-033]` (저장소 선택 진입)  
 **연관 설계**: `[../architecture/project-rules.md]`, `[../architecture/patterns.md]`
@@ -9,8 +9,8 @@
 
 ## 0. 현재 코드 상태와 이 작업의 위치
 
-- **현재 상태 요약**: 저장소 목록은 표시되지만 생성 순 기본 정렬 규칙이 문서와 query에 고정되어 있지 않습니다.
-- **이 작업의 책임**: 저장소 목록의 기본 정렬을 생성 순으로 고정하고 UI와 query가 같은 규칙을 따르도록 합니다.
+- **현재 상태 요약**: 저장소 목록의 생성 순 기본 정렬 규칙이 API 조회와 widget 순서 보존 테스트에 고정되었습니다.
+- **이 작업의 책임**: 저장소 목록의 기본 정렬을 API에서 생성 순으로 고정하고 UI가 받은 순서를 그대로 렌더링하도록 합니다.
 - **이번 작업에서 하지 않는 것**: 이름순, 수동 정렬, 사용자 설정 정렬은 현재 범위에 포함하지 않습니다.
 - **경계 메모**:
   - 기본 정렬 규칙만 다루며 정렬 UI는 만들지 않습니다.
@@ -20,6 +20,7 @@
 - **최종 상태**: 저장소 목록이 생성 순으로 안정적으로 렌더링됩니다.
 - **이번 작업의 최소 결과물**:
   - `apps/web/src/entities/repository/model/repository-list-query.ts`
+  - `apps/api/src/modules/repositories/repositories.repository.ts`
   - `apps/web/src/widgets/repository-list/ui/repository-list.tsx`
 - **성공 기준 (AC)**:
   - 기본 목록이 생성 순으로 표시된다.
@@ -32,6 +33,7 @@
   - 없음
 - **수정 대상**:
   - `apps/web/src/entities/repository/model/repository-list-query.ts`
+  - `apps/api/src/modules/repositories/repositories.repository.ts`
   - `apps/web/src/widgets/repository-list/ui/repository-list.tsx`
 - **이번 작업에서 수정하지 않음**:
   - 정렬 토글 UI 전부
@@ -42,14 +44,14 @@
 ## 🛠️ 3. 상세 기술 사양
 
 - **핵심 구현 대상**:
-  - query 결과를 서버에서 정렬하거나, 클라이언트 fallback 정렬을 한 곳에서만 적용합니다.
+  - API 응답에서 기본 정렬을 고정합니다.
   - widget은 받은 순서를 다시 섞지 않고 그대로 렌더링합니다.
 - **데이터 모델 해석**:
   - 정렬 기준은 `createdAt` 또는 서버가 보장하는 생성 순 필드입니다.
 - **외부 의존성**:
   - `@tanstack/react-query`
 - **import/export 규칙**:
-  - 정렬은 query layer 또는 API layer 한 곳에서만 수행합니다.
+  - 정렬은 API layer 한 곳에서만 수행합니다.
 - **권장 네이밍**:
   - `sortRepositoriesByCreatedAt`, `orderedRepositories`
 - **이름별 사용 의도와 적용 시점**:
@@ -69,7 +71,7 @@ const orderedRepositories = [...repositories].sort(sortRepositoriesByCreatedAt);
 - **최소 테스트 개수**:
   - 최소 2개
 - **반드시 포함할 실패 시나리오**:
-  - query와 widget 양쪽에서 서로 다른 정렬을 적용하는 경우
+  - API와 widget 양쪽에서 서로 다른 정렬을 적용하는 경우
 
 ## ⚖️ 4. 기술 제약 및 규칙
 
@@ -88,19 +90,21 @@ const orderedRepositories = [...repositories].sort(sortRepositoriesByCreatedAt);
 
 ## 🚀 6. 권장 작업 순서
 
-1. query 또는 API 응답에서 기본 정렬을 고정합니다.
+1. API 응답에서 기본 정렬을 고정합니다.
 2. widget이 순서를 다시 바꾸지 않는지 정리합니다.
 3. 정렬 snapshot 테스트를 추가합니다.
 
 - **검증 실행**:
+  - `pnpm --filter @chess-db/api test -- repositories.repository.spec.ts`
+  - `pnpm --filter @chess-db/api test:e2e -- repositories.e2e-spec.ts`
   - `pnpm --filter @chess-db/web test`
   - `pnpm --filter @chess-db/web build`
 
 ## ✅ 7. 완료 판정 체크리스트
 
-- [ ] 기본 정렬이 생성 순이다.
-- [ ] 정렬 규칙이 한 곳에만 있다.
-- [ ] 정렬 UI가 섞여 들어오지 않았다.
+- [x] 기본 정렬이 생성 순이다.
+- [x] 정렬 규칙이 한 곳에만 있다.
+- [x] 정렬 UI가 섞여 들어오지 않았다.
 
 ## 💬 9. 추천 커밋 메시지
 

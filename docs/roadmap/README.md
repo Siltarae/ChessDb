@@ -37,6 +37,7 @@
 - [커스텀 ApiException 도입](./custom-api-exception.md)은 도메인별 API 에러 분기가 필요해질 때 도입한다.
 - [API 예외 로깅 도입](./api-exception-logging.md)은 클라이언트 응답과 서버 내부 오류 추적을 분리해야 할 때 도입한다.
 - [체스 엔진 기반 기보 메타데이터 자동 반영](./chess-engine-derived-metadata.md)은 엔진 계산 결과를 저장 메타데이터에 연결하는 후순위 UX 개선으로 관리한다.
+- [저장소 목록 정렬 옵션 확장](./repository-list-sort-options.md)은 이름순, 최신순, 사용자 선택 정렬이 필요해질 때 도입한다.
 
 ### 품질 게이트 확장 메모
 
