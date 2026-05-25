@@ -1,15 +1,20 @@
+import { Trash2 } from 'lucide-react';
+
 import type { RepositorySummary } from '@/entities/repository';
+import { Button } from '@/shared/ui/button';
 
 type RepositoryListProps = {
   readonly repositories: readonly RepositorySummary[];
   readonly isLoading: boolean;
   readonly onRepositoryOpen?: (repositoryId: string) => void;
+  readonly onRepositoryDeleteRequest?: (repository: RepositorySummary) => void;
 };
 
 export const RepositoryList = ({
   repositories,
   isLoading,
   onRepositoryOpen,
+  onRepositoryDeleteRequest,
 }: RepositoryListProps) => {
   const isEmptyState = !isLoading && repositories.length === 0;
 
@@ -38,14 +43,25 @@ export const RepositoryList = ({
           <ul className="space-y-3">
             {repositories.map((repository) => (
               <li key={repository.id}>
-                <button
-                  type="button"
-                  aria-label={`${repository.name} 열기`}
-                  className="w-full rounded-md border bg-background px-4 py-3 text-left transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  onClick={() => onRepositoryOpen?.(repository.id)}
-                >
-                  <span className="block text-sm font-semibold">{repository.name}</span>
-                </button>
+                <div className="flex items-center gap-2 rounded-md border bg-background p-2">
+                  <button
+                    type="button"
+                    aria-label={`${repository.name} 열기`}
+                    className="min-w-0 flex-1 rounded-sm px-2 py-1.5 text-left transition-colors hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    onClick={() => onRepositoryOpen?.(repository.id)}
+                  >
+                    <span className="block truncate text-sm font-semibold">{repository.name}</span>
+                  </button>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    aria-label={`${repository.name} 삭제`}
+                    onClick={() => onRepositoryDeleteRequest?.(repository)}
+                  >
+                    <Trash2 aria-hidden="true" />
+                  </Button>
+                </div>
               </li>
             ))}
           </ul>

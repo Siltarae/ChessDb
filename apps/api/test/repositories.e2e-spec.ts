@@ -198,6 +198,37 @@ describe('Repositories API (e2e)', () => {
     ]);
   });
 
+  it('GET /api/repositories 응답은 삭제된 저장소를 제외해야 한다', async () => {
+    const db = requirePrisma(prisma);
+    const server = requireApp(app).getHttpServer();
+    const visibleRepository = await db.repository.create({
+      data: {
+        name: '표시 저장소',
+      },
+    });
+    await db.repository.create({
+      data: {
+        name: '삭제된 저장소',
+        deletedAt: new Date('2026-05-25T00:00:00.000Z'),
+      },
+    });
+
+    const response = await request(server).get('/api/repositories').expect(200);
+    const responseBody = response.body as unknown;
+
+    expect(isRepositoryListResponse(responseBody)).toBe(true);
+    if (!isRepositoryListResponse(responseBody)) {
+      throw new Error('저장소 목록 응답 형식이 올바르지 않습니다.');
+    }
+    expect(responseBody).toEqual([
+      {
+        id: visibleRepository.id,
+        name: '표시 저장소',
+        createdAt: visibleRepository.createdAt.toISOString(),
+      },
+    ]);
+  });
+
   it('POST /api/repositories 요청으로 저장소를 생성해야 한다', async () => {
     const db = requirePrisma(prisma);
     const server = requireApp(app).getHttpServer();
@@ -275,4 +306,89 @@ describe('Repositories API (e2e)', () => {
       await expect(db.repository.count()).resolves.toBe(0);
     },
   );
+
+  it('DELETE /api/repositories/:repositoryId 요청으로 저장소와 하위 기보를 soft delete 해야 한다', async () => {
+    const db = requirePrisma(prisma);
+    const server = requireApp(app).getHttpServer();
+    const repository = await db.repository.create({
+      data: {
+        name: '삭제 대상 저장소',
+      },
+    });
+    const game = await db.game.create({
+      data: {
+        repositoryId: repository.id,
+        result: 'WHITE_WIN',
+        terminationReason: 'CHECKMATE',
+        playedAt: new Date('2026-05-20T00:00:00.000Z'),
+        gameMoves: {
+          create: [
+            {
+              halfMoveIndex: 0,
+              san: 'e4',
+              move: {
+                from: 12,
+                to: 28,
+                kind: 1,
+              },
+              comment: null,
+              annotation: 'GOOD',
+            },
+          ],
+        },
+      },
+    });
+
+    await request(server)
+      .delete(`/api/repositories/${repository.id}`)
+      .expect(204);
+
+    const deletedRepository = await db.repository.findUnique({
+      where: { id: repository.id },
+    });
+    const deletedGame = await db.game.findUnique({ where: { id: game.id } });
+
+    expect(deletedRepository?.deletedAt).toBeInstanceOf(Date);
+    expect(deletedGame?.deletedAt).toBeInstanceOf(Date);
+    await expect(db.gameMove.count()).resolves.toBe(1);
+    await expect(
+      request(server).get('/api/repositories').expect(200),
+    ).resolves.toMatchObject({ body: [] });
+  });
+
+  it('이미 삭제된 저장소 삭제 요청은 404로 거절해야 한다', async () => {
+    const db = requirePrisma(prisma);
+    const server = requireApp(app).getHttpServer();
+    const repository = await db.repository.create({
+      data: {
+        name: '이미 삭제된 저장소',
+        deletedAt: new Date('2026-05-25T00:00:00.000Z'),
+      },
+    });
+
+    await request(server)
+      .delete(`/api/repositories/${repository.id}`)
+      .expect(404);
+  });
+
+  it('존재하지 않는 저장소 삭제 요청은 404로 거절해야 한다', async () => {
+    const db = requirePrisma(prisma);
+    const server = requireApp(app).getHttpServer();
+
+    const response = await request(server)
+      .delete('/api/repositories/11111111-1111-4111-8111-111111111111')
+      .expect(404);
+    const responseBody = response.body as unknown;
+
+    expect(isApiErrorResponse(responseBody)).toBe(true);
+    if (!isApiErrorResponse(responseBody)) {
+      throw new Error('API 에러 응답 형식이 올바르지 않습니다.');
+    }
+    expect(responseBody).toMatchObject({
+      statusCode: 404,
+      errorCode: API_ERROR_CODE.NOT_FOUND,
+      message: '요청한 리소스를 찾을 수 없습니다.',
+    });
+    await expect(db.repository.count()).resolves.toBe(0);
+  });
 });

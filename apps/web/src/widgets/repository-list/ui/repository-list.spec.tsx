@@ -34,10 +34,28 @@ describe('RepositoryList', () => {
   it('전달받은 저장소 순서를 다시 변경하지 않는다', () => {
     render(<RepositoryList repositories={repositories} isLoading={false} />);
 
-    expect(screen.getAllByRole('listitem').map((item) => item.textContent)).toEqual([
-      '오프닝 저장소',
-      '엔드게임 저장소',
-    ]);
+    expect(
+      screen.getAllByRole('button', { name: /열기$/ }).map((button) => button.textContent),
+    ).toEqual(['오프닝 저장소', '엔드게임 저장소']);
+  });
+
+  it('삭제 버튼 클릭이 저장소 객체로 delete request callback을 호출한다', async () => {
+    const user = userEvent.setup();
+    const onRepositoryOpen = vi.fn();
+    const onRepositoryDeleteRequest = vi.fn();
+    render(
+      <RepositoryList
+        repositories={repositories}
+        isLoading={false}
+        onRepositoryOpen={onRepositoryOpen}
+        onRepositoryDeleteRequest={onRepositoryDeleteRequest}
+      />,
+    );
+
+    await user.click(screen.getByRole('button', { name: '오프닝 저장소 삭제' }));
+
+    expect(onRepositoryDeleteRequest).toHaveBeenCalledWith(repositories[0]);
+    expect(onRepositoryOpen).not.toHaveBeenCalled();
   });
 
   it('목록 항목 클릭이 저장소 id로 open callback을 호출한다', async () => {

@@ -2,7 +2,9 @@ import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { repositoryListQueryKey, useRepositoryListQuery } from '@/entities/repository';
+import type { RepositorySummary } from '@/entities/repository';
 import { CreateRepositoryDialog } from '@/features/repository-create';
+import { DeleteRepositoryDialog, useDeleteRepository } from '@/features/repository-delete';
 import { useOpenRepository } from '@/features/repository-select';
 import { Button } from '@/shared/ui/button';
 import { RepositoryList } from '@/widgets/repository-list';
@@ -11,10 +13,23 @@ export const RepositoryListPage = () => {
   const queryClient = useQueryClient();
   const openRepository = useOpenRepository();
   const [isCreateDialogOpen, setCreateDialogOpen] = useState(false);
+  const [repositoryToDelete, setRepositoryToDelete] = useState<RepositorySummary | null>(null);
   const { data: repositories = [], isLoading } = useRepositoryListQuery();
+  const { requestDeleteRepository, isDeleting, deleteError } = useDeleteRepository();
 
   const handleRepositoryCreated = () => {
     void queryClient.invalidateQueries({ queryKey: repositoryListQueryKey });
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!repositoryToDelete) {
+      return;
+    }
+
+    const isDeleted = await requestDeleteRepository(repositoryToDelete.id);
+    if (isDeleted) {
+      setRepositoryToDelete(null);
+    }
   };
 
   return (
@@ -36,11 +51,27 @@ export const RepositoryListPage = () => {
           repositories={repositories}
           isLoading={isLoading}
           onRepositoryOpen={openRepository}
+          onRepositoryDeleteRequest={setRepositoryToDelete}
         />
+        {deleteError ? (
+          <p role="alert" className="text-sm text-destructive">
+            {deleteError}
+          </p>
+        ) : null}
         <CreateRepositoryDialog
           isOpen={isCreateDialogOpen}
           onOpenChange={setCreateDialogOpen}
           onCreated={handleRepositoryCreated}
+        />
+        <DeleteRepositoryDialog
+          open={repositoryToDelete !== null}
+          onOpenChange={(open) => {
+            if (!open) {
+              setRepositoryToDelete(null);
+            }
+          }}
+          onConfirmDelete={handleConfirmDelete}
+          isDeleting={isDeleting}
         />
       </div>
     </main>
