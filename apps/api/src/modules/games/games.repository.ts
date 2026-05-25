@@ -8,6 +8,7 @@ export class GamesRepository {
   async createGame(payload: CreateGameRecordRequest): Promise<{ id: string }> {
     return await this.prisma.game.create({
       data: {
+        repositoryId: payload.repositoryId,
         result: payload.result,
         terminationReason: payload.terminationReason,
         playedAt: payload.playedAt ? new Date(payload.playedAt) : null,

@@ -21,6 +21,7 @@ import { CHESS_DB_DRAFT_KEY, saveDraft, serializeDraft } from '@/shared/lib/stor
 import { useSaveGame } from './use-save-game';
 
 const SAVED_AT_FIXTURE = '2026-05-18T00:00:00.000Z';
+const REPOSITORY_ID_FIXTURE = '11111111-1111-4111-8111-111111111111';
 
 const createMove = (
   from: Move['from'],
@@ -76,7 +77,7 @@ const seedValidDraft = () => {
   );
 };
 
-const renderUseSaveGame = () => {
+const renderUseSaveGame = (repositoryId: string | null = REPOSITORY_ID_FIXTURE) => {
   const queryClient = new QueryClient({
     defaultOptions: {
       mutations: {
@@ -88,7 +89,7 @@ const renderUseSaveGame = () => {
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 
-  return renderHook(() => useSaveGame(), { wrapper });
+  return renderHook(() => useSaveGame({ repositoryId }), { wrapper });
 };
 
 const createPendingResponse = () => {
@@ -154,6 +155,22 @@ describe('useSaveGame', () => {
     const fetchMock = vi.fn<typeof fetch>();
     vi.stubGlobal('fetch', fetchMock);
     const { result } = renderUseSaveGame();
+
+    expect(result.current.canSaveGame).toBe(false);
+
+    await act(async () => {
+      await result.current.requestSaveGame();
+    });
+
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(result.current.saveStatus).toBe('error');
+  });
+
+  it('저장소 ID가 없으면 API를 호출하지 않고 실패 상태를 노출해야 한다', async () => {
+    seedValidDraft();
+    const fetchMock = vi.fn<typeof fetch>();
+    vi.stubGlobal('fetch', fetchMock);
+    const { result } = renderUseSaveGame(null);
 
     expect(result.current.canSaveGame).toBe(false);
 

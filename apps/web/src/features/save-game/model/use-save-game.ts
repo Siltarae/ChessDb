@@ -14,6 +14,10 @@ import { buildCreateGameRecordRequest } from './build-create-game-record-request
 
 export type SaveGameStatus = 'idle' | 'success' | 'error';
 
+export type UseSaveGameOptions = {
+  readonly repositoryId: string | null;
+};
+
 export type UseSaveGameResult = {
   readonly requestSaveGame: () => Promise<void>;
   readonly isSaving: boolean;
@@ -22,7 +26,7 @@ export type UseSaveGameResult = {
   readonly saveStatus: SaveGameStatus;
 };
 
-export const useSaveGame = (): UseSaveGameResult => {
+export const useSaveGame = ({ repositoryId }: UseSaveGameOptions): UseSaveGameResult => {
   const historyItems = useMoveHistoryStore(selectMoveHistoryItems);
   const moveComments = useDraftStore(selectMoveComments);
   const moveAnnotations = useDraftStore(selectMoveAnnotations);
@@ -34,12 +38,13 @@ export const useSaveGame = (): UseSaveGameResult => {
   const createGameRecordRequest = useMemo(
     () =>
       buildCreateGameRecordRequest({
+        repositoryId,
         historyItems,
         metadata,
         moveAnnotations,
         moveComments,
       }),
-    [historyItems, metadata, moveAnnotations, moveComments],
+    [historyItems, metadata, moveAnnotations, moveComments, repositoryId],
   );
 
   const requestSaveGame = useCallback(async () => {

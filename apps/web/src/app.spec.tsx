@@ -83,20 +83,17 @@ describe('App', () => {
     resetStores();
   });
 
-  it('루트 라우트에서 기보 입력 화면을 렌더링해야 한다', () => {
+  it('루트 라우트에서 저장소 목록 화면으로 이동해야 한다', async () => {
     window.history.pushState({}, '', '/');
 
     render(<App />);
 
-    expect(screen.getByRole('main')).toBeInTheDocument();
-    expect(screen.getByRole('region', { name: '기보 입력 보드 영역' })).toBeInTheDocument();
-    expect(
-      screen.getByRole('complementary', { name: '기보 입력 사이드 패널' }),
-    ).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: '저장소 선택' })).toBeInTheDocument();
+    expect(window.location.pathname).toBe('/repositories');
   });
 
   it('새로고침 복원 시 저장 토스트를 먼저 표시하지 않아야 한다', async () => {
-    window.history.pushState({}, '', '/');
+    window.history.pushState({}, '', '/repositories/11111111-1111-4111-8111-111111111111/new');
     const draftSnapshot = createDraftSnapshotFixture();
     localStorage.setItem(CHESS_DB_DRAFT_KEY, serializeDraft(draftSnapshot));
 
@@ -116,7 +113,7 @@ describe('App', () => {
   });
 
   it('새로고침 복원 토스트는 StrictMode에서도 2초 뒤 사라져야 한다', async () => {
-    window.history.pushState({}, '', '/');
+    window.history.pushState({}, '', '/repositories/11111111-1111-4111-8111-111111111111/new');
     localStorage.setItem(CHESS_DB_DRAFT_KEY, serializeDraft(createDraftSnapshotFixture()));
 
     render(
@@ -137,7 +134,7 @@ describe('App', () => {
 
   it('복원된 초안 초기화를 취소하면 기존 상태와 storage를 유지해야 한다', async () => {
     const user = userEvent.setup();
-    window.history.pushState({}, '', '/');
+    window.history.pushState({}, '', '/repositories/11111111-1111-4111-8111-111111111111/new');
     const draftSnapshot = createDraftSnapshotFixture();
     localStorage.setItem(CHESS_DB_DRAFT_KEY, serializeDraft(draftSnapshot));
 
@@ -161,7 +158,7 @@ describe('App', () => {
 
   it('복원된 초안 초기화를 확인하면 메모리 상태와 storage를 초기화해야 한다', async () => {
     const user = userEvent.setup();
-    window.history.pushState({}, '', '/');
+    window.history.pushState({}, '', '/repositories/11111111-1111-4111-8111-111111111111/new');
     const draftSnapshot = createDraftSnapshotFixture();
     localStorage.setItem(CHESS_DB_DRAFT_KEY, serializeDraft(draftSnapshot));
 
@@ -191,7 +188,7 @@ describe('App', () => {
 
   it('복원된 초안을 기보 저장하면 성공 후 localStorage 초안을 삭제하고 상세 이동하지 않아야 한다', async () => {
     const user = userEvent.setup();
-    window.history.pushState({}, '', '/');
+    window.history.pushState({}, '', '/repositories/11111111-1111-4111-8111-111111111111/new');
     const draftSnapshot = createDraftSnapshotFixture();
     localStorage.setItem(CHESS_DB_DRAFT_KEY, serializeDraft(draftSnapshot));
     const fetchMock = vi.fn<typeof fetch>();
@@ -210,7 +207,7 @@ describe('App', () => {
 
     expect(await screen.findByText('기보가 저장되었습니다.')).toBeInTheDocument();
     expect(localStorage.getItem(CHESS_DB_DRAFT_KEY)).toBeNull();
-    expect(window.location.pathname).toBe('/');
+    expect(window.location.pathname).toBe('/repositories/11111111-1111-4111-8111-111111111111/new');
 
     const moveHistoryRegion = screen.getByRole('region', { name: '수순 목록' });
     await user.click(within(moveHistoryRegion).getByRole('button', { name: /e4/ }));
@@ -224,7 +221,7 @@ describe('App', () => {
 
   it('복원된 초안 기보 저장이 실패하면 localStorage와 메모리 상태를 유지해야 한다', async () => {
     const user = userEvent.setup();
-    window.history.pushState({}, '', '/');
+    window.history.pushState({}, '', '/repositories/11111111-1111-4111-8111-111111111111/new');
     const draftSnapshot = createDraftSnapshotFixture();
     const serializedDraft = serializeDraft(draftSnapshot);
     localStorage.setItem(CHESS_DB_DRAFT_KEY, serializedDraft);

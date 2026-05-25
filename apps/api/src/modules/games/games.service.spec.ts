@@ -16,7 +16,7 @@ describe('GamesService.createGame', () => {
     );
   });
 
-  it('저장소 선택이 없어도 검증된 요청을 repository에 위임하고 ID를 반환한다', async () => {
+  it('저장소 ID가 포함된 검증 요청을 repository에 위임하고 ID를 반환한다', async () => {
     await expect(
       gamesService.createGame(VALID_CREATE_GAME_RECORD_REQUEST),
     ).resolves.toEqual({ id: 'game-1' });

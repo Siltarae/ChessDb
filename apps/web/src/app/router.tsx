@@ -1,10 +1,11 @@
 import { NotationInputPage, RepositoryHomePage, RepositoryListPage } from '@/pages';
-import { createBrowserRouter } from 'react-router';
+import { Navigate, createBrowserRouter } from 'react-router';
 
-export const router = createBrowserRouter([
+export const createAppRouter = () =>
+  createBrowserRouter([
   {
     path: '/',
-    element: <NotationInputPage />,
+    element: <Navigate to="/repositories" replace />,
   },
   {
     path: '/repositories',
@@ -18,4 +19,4 @@ export const router = createBrowserRouter([
     path: '/repositories/:repositoryId/new',
     element: <NotationInputPage />,
   },
-]);
+  ]);

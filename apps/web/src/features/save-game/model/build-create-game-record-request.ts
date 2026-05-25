@@ -8,6 +8,7 @@ import type { DraftGameMetadata, DraftMoveAnnotation, DraftMoveComment } from '@
 import type { MoveHistoryItem } from '@/entities/move-history';
 
 export type BuildCreateGameRecordRequestInput = {
+  readonly repositoryId: string | null;
   readonly historyItems: readonly MoveHistoryItem[];
   readonly moveComments: readonly DraftMoveComment[];
   readonly moveAnnotations: readonly DraftMoveAnnotation[];
@@ -17,6 +18,10 @@ export type BuildCreateGameRecordRequestInput = {
 export const buildCreateGameRecordRequest = (
   input: BuildCreateGameRecordRequestInput,
 ): CreateGameRecordRequest | null => {
+  if (input.repositoryId === null) {
+    return null;
+  }
+
   if (input.historyItems.length === 0) {
     return null;
   }
@@ -24,6 +29,7 @@ export const buildCreateGameRecordRequest = (
   const result = input.metadata.result ?? GAME_RECORD_RESULT.ONGOING;
 
   const request = {
+    repositoryId: input.repositoryId,
     result,
     terminationReason: input.metadata.result === null ? null : input.metadata.terminationReason,
     playedAt: input.metadata.playedAt,

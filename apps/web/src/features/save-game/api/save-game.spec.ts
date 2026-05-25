@@ -11,6 +11,7 @@ import { HttpError } from '@/shared/api';
 import { saveGame, SaveGameResponseError } from './save-game';
 
 const CREATE_GAME_RECORD_REQUEST_FIXTURE: CreateGameRecordRequest = {
+  repositoryId: '11111111-1111-4111-8111-111111111111',
   result: GAME_RECORD_RESULT.WHITE_WIN,
   terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
   playedAt: '2026-05-16',

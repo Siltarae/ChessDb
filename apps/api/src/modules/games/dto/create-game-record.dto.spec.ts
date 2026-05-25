@@ -8,6 +8,7 @@ import {
 import { CreateGameRecordDto } from './create-game-record.dto';
 
 const VALID_CREATE_GAME_RECORD_REQUEST = {
+  repositoryId: '11111111-1111-4111-8111-111111111111',
   result: GAME_RECORD_RESULT.WHITE_WIN,
   terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
   playedAt: '2026-05-12',
@@ -34,6 +35,7 @@ describe('CreateGameRecordDto', () => {
       );
 
       expect(result).toMatchObject({
+        repositoryId: '11111111-1111-4111-8111-111111111111',
         result: GAME_RECORD_RESULT.WHITE_WIN,
         moves: [{ san: 'e4' }],
       });
