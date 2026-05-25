@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   RepositoriesRepository,
   type RepositorySummary,
@@ -30,5 +34,17 @@ export class RepositoriesService {
     }
 
     return await this.repositoriesRepository.create({ name: repositoryName });
+  }
+
+  async delete(repositoryId: string): Promise<void> {
+    const isDeleted = await this.repositoriesRepository.delete({
+      repositoryId,
+    });
+
+    if (!isDeleted) {
+      throw new NotFoundException({
+        message: 'repository not found',
+      });
+    }
   }
 }

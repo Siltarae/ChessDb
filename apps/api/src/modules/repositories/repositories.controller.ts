@@ -1,7 +1,17 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+} from '@nestjs/common';
 import {
   ApiBody,
   ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
 } from '@nestjs/swagger';
@@ -50,5 +60,18 @@ export class RepositoriesController {
   })
   create(@Body() createRepositoryDto: CreateRepositoryDto) {
     return this.repositoriesService.create(createRepositoryDto);
+  }
+
+  @Delete(':repositoryId')
+  @HttpCode(204)
+  @ApiOperation({ summary: '저장소 삭제' })
+  @ApiNoContentResponse({
+    description: '저장소 삭제 성공',
+  })
+  @ApiNotFoundResponse({
+    description: '저장소를 찾을 수 없음',
+  })
+  async delete(@Param('repositoryId') repositoryId: string): Promise<void> {
+    await this.repositoriesService.delete(repositoryId);
   }
 }

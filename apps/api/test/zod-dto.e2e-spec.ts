@@ -15,6 +15,7 @@ import {
 import { CreateGameRecordDto } from '../src/modules/games/dto/create-game-record.dto';
 
 const VALID_CREATE_GAME_RECORD_REQUEST = {
+  repositoryId: '11111111-1111-4111-8111-111111111111',
   result: GAME_RECORD_RESULT.WHITE_WIN,
   terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
   playedAt: '2026-05-12',
@@ -110,6 +111,7 @@ describe('Zod DTO 공유 구조 (e2e)', () => {
       expect(createGameRecordSchema?.type).toBe('object');
       expect(Object.keys(createGameRecordSchema?.properties ?? {})).toEqual(
         expect.arrayContaining([
+          'repositoryId',
           'result',
           'terminationReason',
           'playedAt',

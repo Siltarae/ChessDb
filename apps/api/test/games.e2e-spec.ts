@@ -15,6 +15,7 @@ import { AppModule } from '../src/app.module';
 import { API_ERROR_CODE } from '../src/common/errors/api-error-response';
 
 const VALID_CREATE_GAME_RECORD_REQUEST = {
+  repositoryId: '11111111-1111-4111-8111-111111111111',
   result: GAME_RECORD_RESULT.WHITE_WIN,
   terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
   playedAt: '2026-05-12',
@@ -123,12 +124,14 @@ describe('Games API (e2e)', () => {
 
     await db.gameMove.deleteMany();
     await db.game.deleteMany();
+    await db.repository.deleteMany();
   });
 
   afterAll(async () => {
     if (prisma) {
       await prisma.gameMove.deleteMany();
       await prisma.game.deleteMany();
+      await prisma.repository.deleteMany();
       await prisma.$disconnect();
     }
 
@@ -139,10 +142,18 @@ describe('Games API (e2e)', () => {
     const firstMove = VALID_CREATE_GAME_RECORD_REQUEST.moves[0]!;
     const db = requirePrisma(prisma);
     const server = requireApp(app).getHttpServer();
+    const repository = await db.repository.create({
+      data: {
+        name: '기보 저장소',
+      },
+    });
 
     const response = await request(server)
       .post('/api/games')
-      .send(VALID_CREATE_GAME_RECORD_REQUEST)
+      .send({
+        ...VALID_CREATE_GAME_RECORD_REQUEST,
+        repositoryId: repository.id,
+      })
       .expect(201);
     const responseBody = response.body as unknown;
 
@@ -158,6 +169,7 @@ describe('Games API (e2e)', () => {
     const savedMove = savedGame?.gameMoves[0];
 
     expect(savedGame).not.toBeNull();
+    expect(savedGame?.repositoryId).toBe(repository.id);
     expect(savedGame?.result).toBe(GAME_RECORD_RESULT.WHITE_WIN);
     expect(savedGame?.terminationReason).toBe(
       GAME_TERMINATION_REASON.CHECKMATE,
@@ -174,11 +186,17 @@ describe('Games API (e2e)', () => {
   it('playedAt이 null이면 실제 DB에도 null로 저장해야 한다', async () => {
     const db = requirePrisma(prisma);
     const server = requireApp(app).getHttpServer();
+    const repository = await db.repository.create({
+      data: {
+        name: '기보 저장소',
+      },
+    });
 
     const response = await request(server)
       .post('/api/games')
       .send({
         ...VALID_CREATE_GAME_RECORD_REQUEST,
+        repositoryId: repository.id,
         playedAt: null,
       })
       .expect(201);
@@ -199,11 +217,17 @@ describe('Games API (e2e)', () => {
   it('유효하지 않은 요청은 DB에 저장하지 않고 400으로 거절해야 한다', async () => {
     const db = requirePrisma(prisma);
     const server = requireApp(app).getHttpServer();
+    const repository = await db.repository.create({
+      data: {
+        name: '기보 저장소',
+      },
+    });
 
     const response = await request(server)
       .post('/api/games')
       .send({
         ...VALID_CREATE_GAME_RECORD_REQUEST,
+        repositoryId: repository.id,
         moves: [],
       })
       .expect(400);

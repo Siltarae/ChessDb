@@ -46,6 +46,7 @@ model Repository {
   name      String   @db.VarChar
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(6)
   games     Game[]
 
   @@map("repositories")
@@ -59,6 +60,7 @@ model Game {
   playedAt          DateTime?              @map("played_at") @db.Timestamptz(6)
   createdAt         DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt         DateTime               @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt         DateTime?              @map("deleted_at") @db.Timestamptz(6)
   repository        Repository             @relation(fields: [repositoryId], references: [id])
   gameMoves         GameMove[]
 

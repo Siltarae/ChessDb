@@ -1,7 +1,7 @@
 import { act, cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, describe, expect, it, vi } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type { UseSaveGameOptions, UseSaveGameResult } from '@/features/save-game';
 import { NotationInputPage } from './notation-input-page';
@@ -25,7 +25,10 @@ const createUseSaveGameResult = (override: Partial<UseSaveGameResult> = {}): Use
   saveStatus: 'idle',
   ...override,
 });
-const useSaveGameMock = vi.fn((_options: UseSaveGameOptions) => createUseSaveGameResult());
+const useSaveGameMock = vi.fn((options: UseSaveGameOptions) => {
+  void options;
+  return createUseSaveGameResult();
+});
 
 vi.mock('@/features/draft-autosave', () => ({
   useDraftAutosave: () => {
@@ -83,7 +86,9 @@ vi.mock('@/widgets/notation-input-layout', () => ({
 }));
 
 describe('NotationInputPage', () => {
-  const renderNotationInputPage = (initialEntry = '/repositories/11111111-1111-4111-8111-111111111111/new') => {
+  const renderNotationInputPage = (
+    initialEntry = '/repositories/11111111-1111-4111-8111-111111111111/new',
+  ) => {
     return render(
       <MemoryRouter initialEntries={[initialEntry]}>
         <Routes>
