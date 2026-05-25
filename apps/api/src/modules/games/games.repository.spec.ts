@@ -30,6 +30,7 @@ describe('GamesRepository.createGame', () => {
     expect(prisma.game.create).toHaveBeenCalledTimes(1);
     expect(prisma.game.create).toHaveBeenCalledWith({
       data: {
+        repositoryId: VALID_CREATE_GAME_RECORD_REQUEST.repositoryId,
         result: VALID_CREATE_GAME_RECORD_REQUEST.result,
         terminationReason: VALID_CREATE_GAME_RECORD_REQUEST.terminationReason,
         playedAt: new Date(VALID_CREATE_GAME_RECORD_REQUEST.playedAt!),
@@ -61,6 +62,7 @@ describe('GamesRepository.createGame', () => {
 
     expect(prisma.game.create).toHaveBeenCalledWith({
       data: {
+        repositoryId: VALID_CREATE_GAME_RECORD_REQUEST.repositoryId,
         result: VALID_CREATE_GAME_RECORD_REQUEST.result,
         terminationReason: VALID_CREATE_GAME_RECORD_REQUEST.terminationReason,
         playedAt: null,

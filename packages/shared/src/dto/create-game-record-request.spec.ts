@@ -12,6 +12,7 @@ import {
 } from './create-game-record-request.js';
 
 const VALID_CREATE_GAME_RECORD_REQUEST: CreateGameRecordRequest = {
+  repositoryId: '11111111-1111-4111-8111-111111111111',
   result: GAME_RECORD_RESULT.WHITE_WIN,
   terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
   playedAt: '2026-05-12',
@@ -53,6 +54,28 @@ describe('CreateGameRecordRequestSchema', () => {
       };
 
       const result = CreateGameRecordRequestSchema.safeParse(requestWithServerFields);
+
+      expect(result.success).toBe(false);
+    });
+
+    it('repositoryId가 없으면 실패해야 한다', () => {
+      const requestWithoutRepositoryId: Partial<CreateGameRecordRequest> = {
+        ...VALID_CREATE_GAME_RECORD_REQUEST,
+      };
+      delete requestWithoutRepositoryId.repositoryId;
+
+      const result = CreateGameRecordRequestSchema.safeParse(requestWithoutRepositoryId);
+
+      expect(result.success).toBe(false);
+    });
+
+    it('repositoryId가 UUID 형식이 아니면 실패해야 한다', () => {
+      const requestWithInvalidRepositoryId = {
+        ...VALID_CREATE_GAME_RECORD_REQUEST,
+        repositoryId: 'repository-1',
+      };
+
+      const result = CreateGameRecordRequestSchema.safeParse(requestWithInvalidRepositoryId);
 
       expect(result.success).toBe(false);
     });

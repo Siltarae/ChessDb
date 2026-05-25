@@ -56,6 +56,7 @@ const DEFAULT_HISTORY_ITEM = createMoveHistoryItem(
 describe('buildCreateGameRecordRequest', () => {
   it('수순과 draft 메타데이터를 저장 요청 payload로 변환해야 한다', () => {
     const request = buildCreateGameRecordRequest({
+      repositoryId: '11111111-1111-4111-8111-111111111111',
       historyItems: [DEFAULT_HISTORY_ITEM],
       metadata: DEFAULT_METADATA,
       moveAnnotations: [{ halfMoveIndex: 0, annotation: MOVE_ANNOTATION.GOOD }],
@@ -63,6 +64,7 @@ describe('buildCreateGameRecordRequest', () => {
     });
 
     expect(request).toEqual({
+      repositoryId: '11111111-1111-4111-8111-111111111111',
       result: GAME_RECORD_RESULT.WHITE_WIN,
       terminationReason: GAME_TERMINATION_REASON.CHECKMATE,
       playedAt: '2026-05-16',
@@ -84,7 +86,20 @@ describe('buildCreateGameRecordRequest', () => {
 
   it('수순이 없으면 null을 반환해야 한다', () => {
     const request = buildCreateGameRecordRequest({
+      repositoryId: '11111111-1111-4111-8111-111111111111',
       historyItems: [],
+      metadata: DEFAULT_METADATA,
+      moveAnnotations: [],
+      moveComments: [],
+    });
+
+    expect(request).toBeNull();
+  });
+
+  it('repositoryId가 없으면 null을 반환해야 한다', () => {
+    const request = buildCreateGameRecordRequest({
+      repositoryId: null,
+      historyItems: [DEFAULT_HISTORY_ITEM],
       metadata: DEFAULT_METADATA,
       moveAnnotations: [],
       moveComments: [],
@@ -95,6 +110,7 @@ describe('buildCreateGameRecordRequest', () => {
 
   it('결과가 없으면 진행 중 기보로 변환해야 한다', () => {
     const request = buildCreateGameRecordRequest({
+      repositoryId: '11111111-1111-4111-8111-111111111111',
       historyItems: [DEFAULT_HISTORY_ITEM],
       metadata: { ...DEFAULT_METADATA, result: null },
       moveAnnotations: [],
@@ -107,6 +123,7 @@ describe('buildCreateGameRecordRequest', () => {
 
   it('종료된 결과에 종료 사유가 없으면 null을 반환해야 한다', () => {
     const request = buildCreateGameRecordRequest({
+      repositoryId: '11111111-1111-4111-8111-111111111111',
       historyItems: [DEFAULT_HISTORY_ITEM],
       metadata: { ...DEFAULT_METADATA, terminationReason: null },
       moveAnnotations: [],
@@ -118,6 +135,7 @@ describe('buildCreateGameRecordRequest', () => {
 
   it('진행 중 결과에 종료 사유가 있으면 null을 반환해야 한다', () => {
     const request = buildCreateGameRecordRequest({
+      repositoryId: '11111111-1111-4111-8111-111111111111',
       historyItems: [DEFAULT_HISTORY_ITEM],
       metadata: {
         ...DEFAULT_METADATA,
@@ -133,6 +151,7 @@ describe('buildCreateGameRecordRequest', () => {
 
   it('진행 중 결과와 null 종료 사유는 허용해야 한다', () => {
     const request = buildCreateGameRecordRequest({
+      repositoryId: '11111111-1111-4111-8111-111111111111',
       historyItems: [DEFAULT_HISTORY_ITEM],
       metadata: {
         ...DEFAULT_METADATA,
@@ -149,6 +168,7 @@ describe('buildCreateGameRecordRequest', () => {
 
   it('comment와 annotation이 없으면 null로 병합해야 한다', () => {
     const request = buildCreateGameRecordRequest({
+      repositoryId: '11111111-1111-4111-8111-111111111111',
       historyItems: [DEFAULT_HISTORY_ITEM],
       metadata: DEFAULT_METADATA,
       moveAnnotations: [{ halfMoveIndex: 1, annotation: MOVE_ANNOTATION.MISTAKE }],
@@ -161,6 +181,7 @@ describe('buildCreateGameRecordRequest', () => {
 
   it('UI 전용 상태와 서버 생성 필드를 payload에 포함하지 않아야 한다', () => {
     const request = buildCreateGameRecordRequest({
+      repositoryId: '11111111-1111-4111-8111-111111111111',
       historyItems: [DEFAULT_HISTORY_ITEM],
       metadata: {
         ...DEFAULT_METADATA,
@@ -178,7 +199,6 @@ describe('buildCreateGameRecordRequest', () => {
     expect(serializedRequest).not.toContain('boardOrientation');
     expect(serializedRequest).not.toContain('activeTab');
     expect(serializedRequest).not.toContain('resultSource');
-    expect(serializedRequest).not.toContain('repositoryId');
     expect(serializedRequest).not.toContain('createdAt');
     expect(serializedRequest).not.toContain('updatedAt');
   });

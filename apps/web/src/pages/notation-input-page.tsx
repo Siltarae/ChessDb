@@ -7,13 +7,17 @@ import type { BoardOrientation } from '@/widgets/chess-board';
 import { BoardShell, NotationInputLayout, SidebarShell } from '@/widgets/notation-input-layout';
 import { RotateCcw } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
 
 export const NotationInputPage = () => {
+  const { repositoryId } = useParams();
   useEngineDerivedMetadataAutofill();
   const { lastSavedAt, isSaveFailureNoticeVisible, isSaveNoticeVisible } = useDraftAutosave();
   const { isResetDialogOpen, requestDraftReset, cancelDraftReset, confirmDraftReset } =
     useResetDraft();
-  const { requestSaveGame, isSaving, canSaveGame, saveStatus } = useSaveGame();
+  const { requestSaveGame, isSaving, canSaveGame, saveStatus } = useSaveGame({
+    repositoryId: repositoryId ?? null,
+  });
 
   const [boardOrientation, setBoardOrientation] = useState<BoardOrientation>('white');
 

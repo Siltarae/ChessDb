@@ -1,8 +1,9 @@
 import { act, cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { MemoryRouter, Route, Routes } from 'react-router';
 
-import type { UseSaveGameResult } from '@/features/save-game';
+import type { UseSaveGameOptions, UseSaveGameResult } from '@/features/save-game';
 import { NotationInputPage } from './notation-input-page';
 
 const useDraftAutosaveMock = vi.fn();
@@ -24,7 +25,7 @@ const createUseSaveGameResult = (override: Partial<UseSaveGameResult> = {}): Use
   saveStatus: 'idle',
   ...override,
 });
-const useSaveGameMock = vi.fn<() => UseSaveGameResult>(() => createUseSaveGameResult());
+const useSaveGameMock = vi.fn((_options: UseSaveGameOptions) => createUseSaveGameResult());
 
 vi.mock('@/features/draft-autosave', () => ({
   useDraftAutosave: () => {
@@ -47,7 +48,7 @@ vi.mock('@/features/save-game', () => ({
       {isSaving ? '저장 중' : '기보 저장'}
     </button>
   ),
-  useSaveGame: () => useSaveGameMock(),
+  useSaveGame: (options: UseSaveGameOptions) => useSaveGameMock(options),
 }));
 
 vi.mock('@/widgets/notation-input-layout', () => ({
@@ -82,6 +83,17 @@ vi.mock('@/widgets/notation-input-layout', () => ({
 }));
 
 describe('NotationInputPage', () => {
+  const renderNotationInputPage = (initialEntry = '/repositories/11111111-1111-4111-8111-111111111111/new') => {
+    return render(
+      <MemoryRouter initialEntries={[initialEntry]}>
+        <Routes>
+          <Route path="/repositories/:repositoryId/new" element={<NotationInputPage />} />
+          <Route path="/" element={<NotationInputPage />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+  };
+
   afterEach(() => {
     cleanup();
     vi.useRealTimers();
@@ -97,20 +109,28 @@ describe('NotationInputPage', () => {
   });
 
   it('페이지 렌더링 시 초안 자동 저장 훅을 활성화해야 한다', () => {
-    render(<NotationInputPage />);
+    renderNotationInputPage();
 
     expect(useDraftAutosaveMock).toHaveBeenCalledTimes(1);
   });
 
+  it('URL의 저장소 ID를 기보 저장 훅에 전달해야 한다', () => {
+    renderNotationInputPage();
+
+    expect(useSaveGameMock).toHaveBeenCalledWith({
+      repositoryId: '11111111-1111-4111-8111-111111111111',
+    });
+  });
+
   it('기존 보드와 사이드바 슬롯에 기본 백 시점 값을 전달해야 한다', () => {
-    render(<NotationInputPage />);
+    renderNotationInputPage();
 
     expect(screen.getByTestId('board-shell')).toHaveTextContent('white');
     expect(screen.getByTestId('sidebar-shell')).toHaveTextContent('white');
   });
 
   it('초안 저장 시 토스트 상태를 표시해야 한다', () => {
-    render(<NotationInputPage />);
+    renderNotationInputPage();
 
     expect(screen.getByRole('status')).toHaveTextContent('초안 저장됨');
   });
@@ -122,13 +142,13 @@ describe('NotationInputPage', () => {
       isSaveFailureNoticeVisible: true,
     };
 
-    render(<NotationInputPage />);
+    renderNotationInputPage();
 
     expect(screen.getByRole('status')).toHaveTextContent('초안 저장 실패');
   });
 
   it('초안 저장 이벤트가 바뀌면 토스트 강조 상태를 갱신해야 한다', () => {
-    const { rerender } = render(<NotationInputPage />);
+    const { rerender } = renderNotationInputPage();
 
     const firstToast = screen.getByRole('status');
 
@@ -140,7 +160,13 @@ describe('NotationInputPage', () => {
       isSaveNoticeVisible: true,
       isSaveFailureNoticeVisible: false,
     };
-    rerender(<NotationInputPage />);
+    rerender(
+      <MemoryRouter initialEntries={['/repositories/11111111-1111-4111-8111-111111111111/new']}>
+        <Routes>
+          <Route path="/repositories/:repositoryId/new" element={<NotationInputPage />} />
+        </Routes>
+      </MemoryRouter>,
+    );
 
     expect(screen.getByRole('status')).toHaveAttribute(
       'data-save-event-id',
@@ -150,7 +176,7 @@ describe('NotationInputPage', () => {
 
   it('초기화 버튼을 누르면 확인 다이얼로그를 표시해야 한다', async () => {
     const user = userEvent.setup();
-    render(<NotationInputPage />);
+    renderNotationInputPage();
 
     await user.click(screen.getByRole('button', { name: '초기화' }));
 
@@ -162,7 +188,7 @@ describe('NotationInputPage', () => {
 
   it('기보 저장 버튼을 표시하고 클릭하면 저장 요청을 실행해야 한다', async () => {
     const user = userEvent.setup();
-    render(<NotationInputPage />);
+    renderNotationInputPage();
 
     await user.click(screen.getByRole('button', { name: '기보 저장' }));
 
@@ -176,7 +202,7 @@ describe('NotationInputPage', () => {
       }),
     );
 
-    render(<NotationInputPage />);
+    renderNotationInputPage();
 
     expect(screen.getByRole('button', { name: '기보 저장' })).toBeDisabled();
   });
@@ -189,7 +215,7 @@ describe('NotationInputPage', () => {
       }),
     );
 
-    render(<NotationInputPage />);
+    renderNotationInputPage();
 
     expect(screen.getByText('기보가 저장되었습니다.')).toBeInTheDocument();
   });
@@ -203,7 +229,7 @@ describe('NotationInputPage', () => {
       }),
     );
 
-    render(<NotationInputPage />);
+    renderNotationInputPage();
 
     expect(screen.getByText('기보가 저장되었습니다.')).toBeInTheDocument();
 
@@ -223,7 +249,7 @@ describe('NotationInputPage', () => {
       }),
     );
 
-    const { rerender } = render(<NotationInputPage />);
+    const { rerender } = renderNotationInputPage();
 
     act(() => {
       vi.advanceTimersByTime(3000);
@@ -232,7 +258,13 @@ describe('NotationInputPage', () => {
     expect(screen.queryByText('기보가 저장되었습니다.')).not.toBeInTheDocument();
 
     useSaveGameMock.mockReturnValue(createUseSaveGameResult({ saveStatus: 'idle' }));
-    rerender(<NotationInputPage />);
+    rerender(
+      <MemoryRouter initialEntries={['/repositories/11111111-1111-4111-8111-111111111111/new']}>
+        <Routes>
+          <Route path="/repositories/:repositoryId/new" element={<NotationInputPage />} />
+        </Routes>
+      </MemoryRouter>,
+    );
 
     useSaveGameMock.mockReturnValue(
       createUseSaveGameResult({
@@ -240,7 +272,13 @@ describe('NotationInputPage', () => {
         saveStatus: 'success',
       }),
     );
-    rerender(<NotationInputPage />);
+    rerender(
+      <MemoryRouter initialEntries={['/repositories/11111111-1111-4111-8111-111111111111/new']}>
+        <Routes>
+          <Route path="/repositories/:repositoryId/new" element={<NotationInputPage />} />
+        </Routes>
+      </MemoryRouter>,
+    );
 
     expect(screen.getByText('기보가 저장되었습니다.')).toBeInTheDocument();
   });
@@ -252,7 +290,7 @@ describe('NotationInputPage', () => {
       }),
     );
 
-    render(<NotationInputPage />);
+    renderNotationInputPage();
 
     expect(screen.getByText('기보 저장에 실패했습니다.')).toBeInTheDocument();
   });

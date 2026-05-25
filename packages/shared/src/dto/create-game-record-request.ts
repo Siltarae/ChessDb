@@ -61,6 +61,7 @@ export const CreateGameMoveRecordRequestSchema = z
 
 export const CreateGameRecordRequestSchema = z
   .object({
+    repositoryId: z.uuid(),
     result: ResultSchema,
     terminationReason: TerminationReasonSchema,
     playedAt: PlayedAtSchema,
