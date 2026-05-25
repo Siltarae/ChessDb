@@ -93,6 +93,7 @@ describe('NotationInputPage', () => {
       <MemoryRouter initialEntries={[initialEntry]}>
         <Routes>
           <Route path="/repositories/:repositoryId/new" element={<NotationInputPage />} />
+          <Route path="/repositories/:repositoryId" element={<div>저장소 홈 화면</div>} />
           <Route path="/" element={<NotationInputPage />} />
         </Routes>
       </MemoryRouter>,
@@ -125,6 +126,15 @@ describe('NotationInputPage', () => {
     expect(useSaveGameMock).toHaveBeenCalledWith({
       repositoryId: '11111111-1111-4111-8111-111111111111',
     });
+  });
+
+  it('저장소로 돌아가기를 누르면 현재 저장소 홈으로 이동해야 한다', async () => {
+    const user = userEvent.setup();
+    renderNotationInputPage();
+
+    await user.click(screen.getByRole('button', { name: '저장소로 돌아가기' }));
+
+    expect(screen.getByText('저장소 홈 화면')).toBeInTheDocument();
   });
 
   it('기존 보드와 사이드바 슬롯에 기본 백 시점 값을 전달해야 한다', () => {

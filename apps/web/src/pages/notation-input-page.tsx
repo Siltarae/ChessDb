@@ -5,12 +5,13 @@ import { SaveGameButton, useSaveGame } from '@/features/save-game';
 import { Button } from '@/shared/ui/button';
 import type { BoardOrientation } from '@/widgets/chess-board';
 import { BoardShell, NotationInputLayout, SidebarShell } from '@/widgets/notation-input-layout';
-import { RotateCcw } from 'lucide-react';
+import { ChevronLeft, RotateCcw } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 export const NotationInputPage = () => {
   const { repositoryId } = useParams();
+  const navigate = useNavigate();
   useEngineDerivedMetadataAutofill();
   const { lastSavedAt, isSaveFailureNoticeVisible, isSaveNoticeVisible } = useDraftAutosave();
   const { isResetDialogOpen, requestDraftReset, cancelDraftReset, confirmDraftReset } =
@@ -25,6 +26,12 @@ export const NotationInputPage = () => {
     setBoardOrientation((currentOrientation) =>
       currentOrientation === 'white' ? 'black' : 'white',
     );
+  };
+
+  const navigateToRepositoryHome = () => {
+    if (repositoryId !== undefined) {
+      navigate(`/repositories/${repositoryId}`);
+    }
   };
 
   return (
@@ -53,6 +60,16 @@ export const NotationInputPage = () => {
             onToggleBoardOrientation={toggleBoardOrientation}
             toolbarSlot={
               <div className="flex items-center gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon-sm"
+                  aria-label="저장소로 돌아가기"
+                  onClick={navigateToRepositoryHome}
+                  disabled={repositoryId === undefined}
+                >
+                  <ChevronLeft aria-hidden="true" />
+                </Button>
                 <SaveGameButton
                   onSave={requestSaveGame}
                   isSaving={isSaving}
