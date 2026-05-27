@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { GamesRepository } from './games.repository';
 import { GamesService } from './games.service';
 import { VALID_CREATE_GAME_RECORD_REQUEST } from './test-utils/create-game-record-request.fixture';
@@ -25,5 +26,13 @@ describe('GamesService.createGame', () => {
     expect(gamesRepository.createGame).toHaveBeenCalledWith(
       VALID_CREATE_GAME_RECORD_REQUEST,
     );
+  });
+
+  it('저장소가 없거나 soft delete 되었으면 NotFoundException을 던진다', async () => {
+    gamesRepository.createGame.mockResolvedValueOnce(null);
+
+    await expect(
+      gamesService.createGame(VALID_CREATE_GAME_RECORD_REQUEST),
+    ).rejects.toThrow(NotFoundException);
   });
 });
