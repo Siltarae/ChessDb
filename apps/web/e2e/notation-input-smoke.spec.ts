@@ -1,8 +1,10 @@
 import { expect, type Locator, type Page, test } from '@playwright/test';
 
+const NOTATION_INPUT_PATH = '/repositories/11111111-1111-4111-8111-111111111111/new';
+
 test.describe('기보 입력 핵심 흐름 E2E 스모크', () => {
   test('e2 백 폰을 e4로 착수하면 보드와 현재 턴이 갱신된다', async ({ page }) => {
-    await page.goto('/');
+    await page.goto(NOTATION_INPUT_PATH);
 
     const e2 = square(page, 'e2');
     const e4 = square(page, 'e4');
@@ -28,7 +30,7 @@ test.describe('기보 입력 핵심 흐름 E2E 스모크', () => {
   });
 
   test('실제 보드 착수 뒤 우측 수순 목록에 SAN이 순서대로 표시된다', async ({ page }) => {
-    await page.goto('/');
+    await page.goto(NOTATION_INPUT_PATH);
 
     const moveHistoryPanel = page.getByRole('region', { name: '수순 목록' });
 
@@ -68,7 +70,7 @@ test.describe('기보 입력 핵심 흐름 E2E 스모크', () => {
   test('보드 시점 전환 버튼을 누르면 흑 기준으로 보드 칸 순서가 바뀌고 착수는 실제 좌표로 동작한다', async ({
     page,
   }) => {
-    await page.goto('/');
+    await page.goto(NOTATION_INPUT_PATH);
 
     const board = page.getByRole('region', { name: '기보 입력 보드 영역' });
     const squares = board.locator('[data-square]');
@@ -89,7 +91,7 @@ test.describe('기보 입력 핵심 흐름 E2E 스모크', () => {
   });
 
   test('좌우 방향키로 수순 표시 시점을 되돌리고 다시 진행할 수 있다', async ({ page }) => {
-    await page.goto('/');
+    await page.goto(NOTATION_INPUT_PATH);
 
     const moveHistoryPanel = page.getByRole('region', { name: '수순 목록' });
 
@@ -123,7 +125,7 @@ test.describe('기보 입력 핵심 흐름 E2E 스모크', () => {
   });
 
   test('불법 칸을 클릭하면 보드 상태와 현재 턴이 유지된다', async ({ page }) => {
-    await page.goto('/');
+    await page.goto(NOTATION_INPUT_PATH);
 
     const e2 = square(page, 'e2');
     const e4 = square(page, 'e4');
@@ -143,7 +145,7 @@ test.describe('기보 입력 핵심 흐름 E2E 스모크', () => {
   });
 
   test('다른 아군 기물을 재선택하면 합법 수 후보가 새 선택 기준으로 바뀐다', async ({ page }) => {
-    await page.goto('/');
+    await page.goto(NOTATION_INPUT_PATH);
 
     await square(page, 'e2').click();
 
@@ -161,7 +163,7 @@ test.describe('기보 입력 핵심 흐름 E2E 스모크', () => {
   });
 
   test('턴 전환 뒤에는 흑 기물만 새로 선택할 수 있다', async ({ page }) => {
-    await page.goto('/');
+    await page.goto(NOTATION_INPUT_PATH);
 
     await square(page, 'e2').click();
     await square(page, 'e4').click();
@@ -180,7 +182,7 @@ test.describe('기보 입력 핵심 흐름 E2E 스모크', () => {
   });
 
   test('상대 기물이 있는 합법 수를 클릭하면 캡처하고 턴이 전환된다', async ({ page }) => {
-    await page.goto('/');
+    await page.goto(NOTATION_INPUT_PATH);
 
     await move(page, 'e2', 'e4');
     await move(page, 'd7', 'd5');
@@ -202,7 +204,7 @@ test.describe('기보 입력 핵심 흐름 E2E 스모크', () => {
   test('프로모션 후보 칸을 클릭하면 선택 전에는 착수가 확정되지 않고 기물 선택 후 확정된다', async ({
     page,
   }) => {
-    await page.goto('/');
+    await page.goto(NOTATION_INPUT_PATH);
 
     await openWhitePromotionSelector(page);
 
@@ -224,7 +226,7 @@ test.describe('기보 입력 핵심 흐름 E2E 스모크', () => {
   });
 
   test('프로모션 선택 UI 바깥을 클릭하면 보류 중인 프로모션을 취소한다', async ({ page }) => {
-    await page.goto('/');
+    await page.goto(NOTATION_INPUT_PATH);
 
     await openWhitePromotionSelector(page);
 

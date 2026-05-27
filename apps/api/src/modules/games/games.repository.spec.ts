@@ -5,6 +5,9 @@ import { VALID_CREATE_GAME_RECORD_REQUEST } from './test-utils/create-game-recor
 describe('GamesRepository.createGame', () => {
   let gamesRepository: GamesRepository;
   let prisma: {
+    readonly repository: {
+      readonly findFirst: jest.Mock;
+    };
     readonly game: {
       readonly create: jest.Mock;
     };
@@ -12,6 +15,9 @@ describe('GamesRepository.createGame', () => {
 
   beforeEach(() => {
     prisma = {
+      repository: {
+        findFirst: jest.fn().mockResolvedValue({ id: 'repository-1' }),
+      },
       game: {
         create: jest.fn().mockResolvedValue({ id: 'game-1' }),
       },
@@ -27,6 +33,15 @@ describe('GamesRepository.createGame', () => {
       gamesRepository.createGame(VALID_CREATE_GAME_RECORD_REQUEST),
     ).resolves.toEqual({ id: 'game-1' });
 
+    expect(prisma.repository.findFirst).toHaveBeenCalledWith({
+      where: {
+        id: VALID_CREATE_GAME_RECORD_REQUEST.repositoryId,
+        deletedAt: null,
+      },
+      select: {
+        id: true,
+      },
+    });
     expect(prisma.game.create).toHaveBeenCalledTimes(1);
     expect(prisma.game.create).toHaveBeenCalledWith({
       data: {
@@ -82,5 +97,24 @@ describe('GamesRepository.createGame', () => {
         id: true,
       },
     });
+  });
+
+  it('저장소가 없거나 soft delete 되었으면 Game을 저장하지 않고 null을 반환한다', async () => {
+    prisma.repository.findFirst.mockResolvedValueOnce(null);
+
+    await expect(
+      gamesRepository.createGame(VALID_CREATE_GAME_RECORD_REQUEST),
+    ).resolves.toBeNull();
+
+    expect(prisma.repository.findFirst).toHaveBeenCalledWith({
+      where: {
+        id: VALID_CREATE_GAME_RECORD_REQUEST.repositoryId,
+        deletedAt: null,
+      },
+      select: {
+        id: true,
+      },
+    });
+    expect(prisma.game.create).not.toHaveBeenCalled();
   });
 });
